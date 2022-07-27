@@ -1,6 +1,7 @@
 import axios from 'axios'
 import memoize from 'lodash/memoize'
-
+// https://stackoverflow.com/questions/51269431/jest-mock-inner-function
+import * as utils from './utils'
 import { getContentFromENS } from 'src/logic/wallets/getWeb3'
 import appsIconSvg from 'src/assets/icons/apps.svg'
 import { FETCH_STATUS } from 'src/utils/requests'
@@ -143,7 +144,7 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string, validateManifest
   }
 
   const concatenatedImgPath = `${noTrailingSlashUrl}/${appInfoData.iconPath}`
-  if (await canLoadAppImage(concatenatedImgPath)) {
+  if (await utils.canLoadAppImage(concatenatedImgPath)) {
     res.iconUrl = concatenatedImgPath
   }
 
@@ -196,7 +197,7 @@ export const uniqueApp =
     return exists ? 'This app is already registered.' : undefined
   }
 
-const canLoadAppImage = (path: string, timeout = 10000) =>
+export const canLoadAppImage = (path: string, timeout = 10000) =>
   new Promise(function (resolve) {
     try {
       const image = new Image()
