@@ -2,18 +2,10 @@ import { ReactElement } from 'react'
 import styled from 'styled-components'
 import { PermissionRequest } from '@gnosis.pm/safe-apps-sdk/dist/src/types/permissions'
 import { Text } from '@gnosis.pm/safe-react-components'
-
-import { Modal } from 'src/components/Modal'
 import { Divider } from '@material-ui/core'
 
-const DESCRIPTIONS = {
-  requestAddressBook: 'Access to your address book',
-}
-
-const getDescription = (permission: PermissionRequest): string => {
-  const method = Object.keys(permission)[0]
-  return DESCRIPTIONS[method] || method
-}
+import { Modal } from 'src/components/Modal'
+import { SAFE_PERMISSIONS_TEXTS } from 'src/routes/safe/components/Apps/hooks/permissions'
 
 interface PermissionsPromptProps {
   origin: string
@@ -51,7 +43,9 @@ const PermissionsPrompt = ({
           </Text>
           <ul>
             {permissions.map((permission, index) => (
-              <li key={index}>{getDescription(permission)}</li>
+              <li key={index}>
+                <Text size="xl">{SAFE_PERMISSIONS_TEXTS[Object.keys(permission)[0]].description}</Text>
+              </li>
             ))}
           </ul>
         </Modal.Body>

@@ -1,9 +1,11 @@
 import React from 'react'
-import { Checkbox, Icon, Text } from '@gnosis.pm/safe-react-components'
-import styled from 'styled-components'
+import { Icon, Text } from '@gnosis.pm/safe-react-components'
 
 import { AllowedFeatures, AllowedFeatureSelection } from 'src/routes/safe/components/Apps/types'
 import { StyledSecurityTitle } from 'src/routes/safe/components/Apps/components/SecurityFeedbackModal/styles'
+import PermissionsCheckbox from 'src/routes/safe/components/Apps/components/PermissionCheckbox'
+import { BROWSER_PERMISSIONS_TEXTS } from 'src/routes/safe/components/Apps/hooks/permissions'
+import { Box } from '@material-ui/core'
 
 type SecurityFeedbackAllowedFeaturesProps = {
   features: AllowedFeatureSelection[]
@@ -18,25 +20,23 @@ const SecurityFeedbackAllowedFeatures: React.FC<SecurityFeedbackAllowedFeaturesP
     <>
       <Icon size="md" type="privacyPolicy" />
       <StyledSecurityTitle size="lg">Manage the features Safe App can use</StyledSecurityTitle>
-      <StyledFeaturesContainer>
+      <Box mx={1} my={3}>
         <Text size="xl">This app is requesting permission to use:</Text>
         <br />
-        {features.map(({ feature, checked }, index) => (
-          <Checkbox
-            key={index}
-            name="checkbox"
-            checked={checked}
-            onChange={(_, checked) => onFeatureSelectionChange(feature, checked)}
-            label={feature}
-          />
-        ))}
-      </StyledFeaturesContainer>
+        <Box display="flex" flexDirection="column" ml={2}>
+          {features.map(({ feature, checked }, index) => (
+            <PermissionsCheckbox
+              key={index}
+              name="checkbox"
+              checked={checked}
+              onChange={(_, checked) => onFeatureSelectionChange(feature, checked)}
+              label={BROWSER_PERMISSIONS_TEXTS[feature].displayName}
+            />
+          ))}
+        </Box>
+      </Box>
     </>
   )
 }
-
-const StyledFeaturesContainer = styled.div`
-  padding: 20px 20px 0 20px;
-`
 
 export default SecurityFeedbackAllowedFeatures

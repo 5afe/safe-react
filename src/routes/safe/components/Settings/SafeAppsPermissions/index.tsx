@@ -1,15 +1,19 @@
 import { ReactElement, useCallback, useMemo } from 'react'
 import styled from 'styled-components'
-import { Grid, Checkbox, FormControlLabel } from '@material-ui/core'
+import { Grid } from '@material-ui/core'
 import { Text, Link } from '@gnosis.pm/safe-react-components'
 
 import Block from 'src/components/layout/Block'
 import { grey400, lg } from 'src/theme/variables'
 import Heading from 'src/components/layout/Heading'
-import { useSafePermissions, useBrowserPermissions } from 'src/routes/safe/components/Apps/hooks/permissions'
+import {
+  useSafePermissions,
+  useBrowserPermissions,
+  SAFE_PERMISSIONS_TEXTS,
+  BROWSER_PERMISSIONS_TEXTS,
+} from 'src/routes/safe/components/Apps/hooks/permissions'
 import { AllowedFeatures, PermissionStatus } from 'src/routes/safe/components/Apps/types'
-
-const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1)
+import PermissionsCheckbox from 'src/routes/safe/components/Apps/components/PermissionCheckbox'
 
 const SafeAppsPermissions = (): ReactElement => {
   const {
@@ -82,7 +86,7 @@ const SafeAppsPermissions = (): ReactElement => {
                   <Grid key={parentCapability} item xs={12} sm={6} lg={4} xl={3}>
                     <PermissionsCheckbox
                       name={parentCapability}
-                      label={parentCapability}
+                      label={SAFE_PERMISSIONS_TEXTS[parentCapability].displayName}
                       onChange={(_, checked: boolean) => handleSafePermissionsChange(domain, parentCapability, checked)}
                       checked={!isUserRestricted(caveats)}
                     />
@@ -94,7 +98,7 @@ const SafeAppsPermissions = (): ReactElement => {
                   <Grid key={feature} item xs={12} sm={6} lg={4} xl={3}>
                     <PermissionsCheckbox
                       name={feature.toString()}
-                      label={capitalize(feature.toString())}
+                      label={BROWSER_PERMISSIONS_TEXTS[feature].displayName}
                       onChange={(_, checked: boolean) => handleBrowserPermissionsChange(domain, feature, checked)}
                       checked={status === PermissionStatus.GRANTED ? true : false}
                     />
@@ -116,10 +120,6 @@ const SafeAppsPermissions = (): ReactElement => {
     </StyledContainer>
   )
 }
-
-const PermissionsCheckbox = ({ label, checked, onChange, name }) => (
-  <StyledFormControlLabel control={<Checkbox checked={checked} onChange={onChange} name={name} />} label={label} />
-)
 
 const StyledContainer = styled(Block)`
   padding: ${lg};
@@ -147,13 +147,6 @@ const StyledSafeAppInfo = styled(Grid)`
 const StyledLink = styled(Link)`
   text-decoration: none;
   margin-left: 16px;
-`
-
-const StyledFormControlLabel = styled(FormControlLabel)`
-  flex: 1;
-  .MuiIconButton-root:not(.Mui-checked) {
-    color: ${({ theme }) => theme.colors.inputDisabled};
-  }
 `
 
 export default SafeAppsPermissions
