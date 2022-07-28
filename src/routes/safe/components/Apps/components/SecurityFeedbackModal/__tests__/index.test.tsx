@@ -104,7 +104,7 @@ describe('<SecurityFeedbackModal />', () => {
 
     render(<SecurityFeedbackModal {...baseProps} isPermissionsReviewCompleted={false} features={features} />)
 
-    expect(await screen.findByText('camera')).toBeInTheDocument()
-    expect(await screen.findByText('microphone')).toBeInTheDocument()
+    expect(await screen.findByText('Camera')).toBeInTheDocument()
+    expect(await screen.findByText('Microphone')).toBeInTheDocument()
   })
 })
