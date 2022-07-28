@@ -14,15 +14,16 @@ import {
 } from 'src/routes/safe/components/Apps/hooks/permissions'
 import { AllowedFeatures, PermissionStatus } from 'src/routes/safe/components/Apps/types'
 import PermissionsCheckbox from 'src/routes/safe/components/Apps/components/PermissionCheckbox'
+import { useAppList } from '../../Apps/hooks/appList/useAppList'
 
 const SafeAppsPermissions = (): ReactElement => {
+  const { isLoading, allApps } = useAppList()
   const {
     permissions: safePermissions,
     updatePermission: updateSafePermission,
     isUserRestricted,
   } = useSafePermissions()
   const { permissions: browserPermissions, updatePermission: updateBrowserPermission } = useBrowserPermissions()
-
   const domains = useMemo(() => {
     const safePermissionsSet = new Set(Object.keys(safePermissions))
     const browserPermissionsSet = new Set(Object.keys(browserPermissions))
@@ -70,6 +71,19 @@ const SafeAppsPermissions = (): ReactElement => {
     [updateAllPermissions],
   )
 
+  const appNames = useMemo(() => {
+    const appNames = allApps.reduce((acc, app) => {
+      acc[app.url] = app.name
+      return acc
+    }, {})
+
+    return appNames
+  }, [allApps])
+
+  if (isLoading) {
+    return <div />
+  }
+
   return (
     <StyledContainer>
       <Heading tag="h2">Safe Apps Permissions</Heading>
@@ -78,6 +92,9 @@ const SafeAppsPermissions = (): ReactElement => {
         <StyledPermissionsCard item key={domain}>
           <StyledPermissionsCardBody container>
             <StyledSafeAppInfo item xs={12} sm={5}>
+              <Text size="xl" strong>
+                {appNames[domain]}
+              </Text>
               <Text size="lg">{domain}</Text>
             </StyledSafeAppInfo>
             <Grid container item xs={12} sm={7}>
