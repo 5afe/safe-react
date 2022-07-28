@@ -15,10 +15,12 @@ type SafePermissionsRequest = {
   request: PermissionRequest[]
 }
 
+type SafePermissionChangeSet = { capability: string; selected: boolean }[]
+
 type UseSafePermissionsReturnType = {
   permissions: SafePermissions
   getPermissions: (origin: string) => Permission[]
-  updatePermission: (origin: string, capability: string, selected: boolean) => void
+  updatePermission: (origin: string, changeset: SafePermissionChangeSet) => void
   removePermissions: (origin: string) => void
   permissionsRequest: SafePermissionsRequest | undefined
   setPermissionsRequest: (permissionsRequest?: SafePermissionsRequest) => void
@@ -39,12 +41,14 @@ const useSafePermissions = (): UseSafePermissionsReturnType => {
   )
 
   const updatePermission = useCallback(
-    (origin: string, capability: string, selected: boolean) => {
+    (origin: string, changeset: SafePermissionChangeSet) => {
       setPermissions({
         ...permissions,
         [origin]: permissions[origin].map((permission) => {
-          if (permission.parentCapability === capability) {
-            if (selected) {
+          const change = changeset.find((change) => change.capability === permission.parentCapability)
+
+          if (change) {
+            if (change.selected) {
               permission.caveats = permission.caveats?.filter((caveat) => caveat.type !== USER_RESTRICTED) || []
             } else if (!isUserRestricted(permission.caveats)) {
               permission.caveats = [

@@ -8,10 +8,12 @@ export type BrowserPermission = { feature: AllowedFeatures; status: PermissionSt
 
 type BrowserPermissions = { [origin: string]: BrowserPermission[] }
 
+type BrowserPermissionChangeSet = { feature: AllowedFeatures; selected: boolean }[]
+
 type UseBrowserPermissionsReturnType = {
   permissions: BrowserPermissions
   getPermissions: (origin: string) => BrowserPermission[]
-  updatePermission: (origin: string, feature: AllowedFeatures, selected: boolean) => void
+  updatePermission: (origin: string, changeset: BrowserPermissionChangeSet) => void
   addPermissions: (origin: string, permissions: BrowserPermission[]) => void
   removePermissions: (origin: string) => void
   getAllowedFeaturesList: (origin: string) => string
@@ -28,12 +30,14 @@ const useBrowserPermissions = (): UseBrowserPermissionsReturnType => {
   )
 
   const updatePermission = useCallback(
-    (origin: string, feature: AllowedFeatures, selected: boolean) => {
+    (origin: string, changeset: BrowserPermissionChangeSet) => {
       setPermissions({
         ...permissions,
         [origin]: permissions[origin].map((p) => {
-          if (p.feature === feature) {
-            p.status = selected ? PermissionStatus.GRANTED : PermissionStatus.DENIED
+          const change = changeset.find((change) => change.feature === p.feature)
+
+          if (change) {
+            p.status = change.selected ? PermissionStatus.GRANTED : PermissionStatus.DENIED
           }
 
           return p

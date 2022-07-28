@@ -1,12 +1,13 @@
-import { ReactElement, useMemo } from 'react'
-import Block from 'src/components/layout/Block'
+import { ReactElement, useCallback, useMemo } from 'react'
 import styled from 'styled-components'
+import { Grid, Checkbox, FormControlLabel } from '@material-ui/core'
+import { Text, Link } from '@gnosis.pm/safe-react-components'
+
+import Block from 'src/components/layout/Block'
 import { grey400, lg } from 'src/theme/variables'
 import Heading from 'src/components/layout/Heading'
 import { useSafePermissions, useBrowserPermissions } from 'src/routes/safe/components/Apps/hooks/permissions'
-import { Grid, Checkbox, FormControlLabel } from '@material-ui/core'
-import { Text, Link } from '@gnosis.pm/safe-react-components'
-import { AllowedFeatures, PermissionStatus } from '../../Apps/types'
+import { AllowedFeatures, PermissionStatus } from 'src/routes/safe/components/Apps/types'
 
 const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1)
 
@@ -27,20 +28,43 @@ const SafeAppsPermissions = (): ReactElement => {
   }, [safePermissions, browserPermissions])
 
   const handleSafePermissionsChange = (origin: string, capability: string, checked: boolean) =>
-    updateSafePermission(origin, capability, checked)
+    updateSafePermission(origin, [{ capability, selected: checked }])
 
   const handleBrowserPermissionsChange = (origin: string, feature: AllowedFeatures, checked: boolean) =>
-    updateBrowserPermission(origin, feature, checked)
+    updateBrowserPermission(origin, [{ feature, selected: checked }])
 
-  const handleAllowAll = (event: React.MouseEvent, origin: string) => {
-    event.preventDefault()
-    console.log(origin)
-  }
+  const updateAllPermissions = useCallback(
+    (origin: string, selected: boolean) => {
+      if (safePermissions[origin]?.length)
+        updateSafePermission(
+          origin,
+          safePermissions[origin].map(({ parentCapability }) => ({ capability: parentCapability, selected })),
+        )
 
-  const handleClearAll = (event: React.MouseEvent, origin: string) => {
-    event.preventDefault()
-    console.log(origin)
-  }
+      if (browserPermissions[origin]?.length)
+        updateBrowserPermission(
+          origin,
+          browserPermissions[origin].map(({ feature }) => ({ feature, selected })),
+        )
+    },
+    [browserPermissions, safePermissions, updateBrowserPermission, updateSafePermission],
+  )
+
+  const handleAllowAll = useCallback(
+    (event: React.MouseEvent, origin: string) => {
+      event.preventDefault()
+      updateAllPermissions(origin, true)
+    },
+    [updateAllPermissions],
+  )
+
+  const handleClearAll = useCallback(
+    (event: React.MouseEvent, origin: string) => {
+      event.preventDefault()
+      updateAllPermissions(origin, false)
+    },
+    [updateAllPermissions],
+  )
 
   return (
     <StyledContainer>
@@ -49,13 +73,13 @@ const SafeAppsPermissions = (): ReactElement => {
       {domains.map((domain) => (
         <StyledPermissionsCard item key={domain}>
           <StyledPermissionsCardBody container>
-            <StyledSafeAppInfo item xs={5}>
+            <StyledSafeAppInfo item xs={12} sm={5}>
               <Text size="lg">{domain}</Text>
             </StyledSafeAppInfo>
-            <Grid container item xs={7}>
+            <Grid container item xs={12} sm={7}>
               {safePermissions[domain]?.map(({ parentCapability, caveats }) => {
                 return (
-                  <Grid key={parentCapability} item xs={12} sm={12} lg={4} xl={3}>
+                  <Grid key={parentCapability} item xs={12} sm={6} lg={4} xl={3}>
                     <PermissionsCheckbox
                       name={parentCapability}
                       label={parentCapability}
