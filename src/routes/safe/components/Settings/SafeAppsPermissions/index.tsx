@@ -1,11 +1,11 @@
 import { ReactElement, useMemo } from 'react'
 import Block from 'src/components/layout/Block'
 import styled from 'styled-components'
-import { lg } from 'src/theme/variables'
+import { grey400, lg } from 'src/theme/variables'
 import Heading from 'src/components/layout/Heading'
 import { useSafePermissions, useBrowserPermissions } from 'src/routes/safe/components/Apps/hooks/permissions'
-import { Box } from '@material-ui/core'
-import { Checkbox, Text, Accordion, AccordionSummary, AccordionDetails } from '@gnosis.pm/safe-react-components'
+import { Box, Grid, Link } from '@material-ui/core'
+import { Checkbox, Text } from '@gnosis.pm/safe-react-components'
 import { AllowedFeatures, PermissionStatus } from '../../Apps/types'
 
 const SafeAppsPermissions = (): ReactElement => {
@@ -31,47 +31,72 @@ const SafeAppsPermissions = (): ReactElement => {
     updateBrowserPermission(origin, feature, checked)
 
   return (
-    <Container>
+    <StyledContainer>
       <Heading tag="h2">Safe Apps Permissions</Heading>
-      <Box mt={2}>
+      <Box flexDirection="column">
         {domains.map((domain) => (
-          <Accordion compact key={domain}>
-            <AccordionSummary>
-              <Text size="lg">{domain}</Text>
-            </AccordionSummary>
-            <AccordionDetails>
+          <StyledPermissionsCard item key={domain}>
+            <StyledPermissionsCardBody container direction="row" alignItems="center">
+              <Grid item>
+                <Text size="lg">{domain}</Text>
+              </Grid>
               {safePermissions[domain]?.map(({ parentCapability, caveats }) => {
                 return (
-                  <Checkbox
-                    key={parentCapability}
-                    name={parentCapability}
-                    checked={!isUserRestricted(caveats)}
-                    onChange={(_, checked) => handleSafePermissionsChange(domain, parentCapability, checked)}
-                    label={parentCapability}
-                  />
+                  <Grid item key={parentCapability}>
+                    <Checkbox
+                      name={parentCapability}
+                      checked={!isUserRestricted(caveats)}
+                      onChange={(_, checked) => handleSafePermissionsChange(domain, parentCapability, checked)}
+                      label={parentCapability}
+                    />
+                  </Grid>
                 )
               })}
               {browserPermissions[domain]?.map(({ feature, status }) => {
                 return (
-                  <Checkbox
-                    key={feature}
-                    name={feature.toString()}
-                    checked={status === PermissionStatus.GRANTED ? true : false}
-                    onChange={(_, checked) => handleBrowserPermissionsChange(domain, feature, checked)}
-                    label={feature}
-                  />
+                  <Grid item key={feature}>
+                    <Checkbox
+                      name={feature.toString()}
+                      checked={status === PermissionStatus.GRANTED ? true : false}
+                      onChange={(_, checked) => handleBrowserPermissionsChange(domain, feature, checked)}
+                      label={feature}
+                    />
+                  </Grid>
                 )
               })}
-            </AccordionDetails>
-          </Accordion>
+            </StyledPermissionsCardBody>
+            <StyledPermissionsCardFooter item>
+              <Link href={`https://${domain}`} target="_blank">
+                Allow all
+              </Link>
+              <Link href={`https://${domain}`} target="_blank">
+                Clear all
+              </Link>
+            </StyledPermissionsCardFooter>
+          </StyledPermissionsCard>
         ))}
       </Box>
-    </Container>
+    </StyledContainer>
   )
 }
 
-const Container = styled(Block)`
+const StyledContainer = styled(Block)`
   padding: ${lg};
+`
+
+const StyledPermissionsCard = styled(Grid)`
+  border: 2px solid ${grey400};
+  border-radius: 8px;
+  margin-bottom: 16px;
+`
+
+const StyledPermissionsCardBody = styled(Grid)`
+  padding: 24px;
+  border-bottom: 2px solid ${grey400};
+`
+
+const StyledPermissionsCardFooter = styled(Grid)`
+  padding: 12px;
 `
 
 export default SafeAppsPermissions

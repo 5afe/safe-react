@@ -17,7 +17,7 @@ const SecurityFeedbackAllowedFeatures: React.FC<SecurityFeedbackAllowedFeaturesP
   return (
     <>
       <Icon size="md" type="privacyPolicy" />
-      <StyledSecurityTitle size="lg">Manage the features the Safe App can use</StyledSecurityTitle>
+      <StyledSecurityTitle size="lg">Manage the features Safe App can use</StyledSecurityTitle>
       <StyledFeaturesContainer>
         <Text size="xl">This app is requesting permission to use:</Text>
         <br />
