@@ -20,6 +20,7 @@ const wallets = (chainId: ChainId): Wallet[] => {
 
   return [
     { walletName: WALLETS.METAMASK, preferred: true, desktop: false },
+    { walletName: WALLETS.EXODUS, preferred: true, desktop: true },
     { walletName: WALLETS.TALLYHO, preferred: false, desktop: false },
     {
       walletName: WALLETS.WALLET_CONNECT,

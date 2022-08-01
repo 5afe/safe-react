@@ -20,6 +20,7 @@ export enum WALLETS {
   SAFE_MOBILE = 'safeMobile',
   METAMASK = 'metamask',
   TALLYHO = 'tally',
+  EXODUS = 'exodus',
   WALLET_CONNECT = 'walletConnect',
   TREZOR = 'trezor',
   LEDGER = 'ledger',
