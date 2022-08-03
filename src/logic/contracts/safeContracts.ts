@@ -82,7 +82,7 @@ const getGnosisSafeContractInstance = (web3: Web3, chainId: ChainId): GnosisSafe
  * @param {ChainId} chainId
  */
 const getProxyFactoryContractInstance = (web3: Web3, chainId: ChainId): ProxyFactory => {
-  const proxyFactoryDeployment =
+  let proxyFactoryDeployment =
     getProxyFactoryDeployment({
       version: LATEST_SAFE_VERSION,
       network: chainId.toString(),
@@ -90,7 +90,18 @@ const getProxyFactoryContractInstance = (web3: Web3, chainId: ChainId): ProxyFac
     getProxyFactoryDeployment({
       version: LATEST_SAFE_VERSION,
     })
-  const contractAddress = proxyFactoryDeployment?.networkAddresses[chainId]
+  let contractAddress = proxyFactoryDeployment?.networkAddresses[chainId]
+  if (chainId === '11115') {
+    contractAddress = '0xE3af6150ac95A63Ea88c9Fe4bF77D9De56d2a0EF'
+    proxyFactoryDeployment =
+      getProxyFactoryDeployment({
+        version: LATEST_SAFE_VERSION,
+        network: '1',
+      }) ||
+      getProxyFactoryDeployment({
+        version: LATEST_SAFE_VERSION,
+      })
+  }
 
   if (!contractAddress) {
     throw new Error(`GnosisSafeProxyFactory contract not found for chainId: ${chainId}`)
