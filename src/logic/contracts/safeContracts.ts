@@ -24,12 +24,15 @@ import { SignMessageLib } from 'src/types/contracts/sign_message_lib.d'
 import { MultiSend } from 'src/types/contracts/multi_send.d'
 import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { NonPayableTransactionObject } from 'src/types/contracts/types'
+import { getMultiSendDeployment } from '@gnosis.pm/safe-deployments/dist/libs'
+import { MultiSendCallOnly } from 'src/types/contracts/multi_send_call_only'
 
 export const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001'
 
 let proxyFactoryMaster: ProxyFactory
 let safeMaster: GnosisSafe
 let fallbackHandler: CompatibilityFallbackHandler
+let multiSendCallOnly: MultiSendCallOnly
 let multiSend: MultiSend
 
 const getSafeContractDeployment = ({ safeVersion }: { safeVersion: string }): SingletonDeployment | undefined => {
@@ -130,11 +133,30 @@ const getFallbackHandlerContractInstance = (web3: Web3, chainId: ChainId): Compa
  * @param {Web3} web3
  * @param {ChainId} chainId
  */
-const getMultiSendContractInstance = (web3: Web3, chainId: ChainId): MultiSend => {
+const getMultiSendCallOnlyContractInstance = (web3: Web3, chainId: ChainId): MultiSendCallOnly => {
   const multiSendDeployment =
     getMultiSendCallOnlyDeployment({
       network: chainId.toString(),
     }) || getMultiSendCallOnlyDeployment()
+  const contractAddress = multiSendDeployment?.networkAddresses[chainId]
+
+  if (!contractAddress) {
+    throw new Error(`MultiSendCallOnly contract not found for chainId: ${chainId}`)
+  }
+
+  return new web3.eth.Contract(multiSendDeployment?.abi as AbiItem[], contractAddress) as unknown as MultiSendCallOnly
+}
+
+/**
+ * Creates a Contract instance of the MultiSend contract
+ * @param {Web3} web3
+ * @param {ChainId} chainId
+ */
+const getMultiSendContractInstance = (web3: Web3, chainId: ChainId): MultiSend => {
+  const multiSendDeployment =
+    getMultiSendDeployment({
+      network: chainId.toString(),
+    }) || getMultiSendDeployment()
   const contractAddress = multiSendDeployment?.networkAddresses[chainId]
 
   if (!contractAddress) {
@@ -212,6 +234,9 @@ export const instantiateSafeContracts = (): void => {
 
   // Create MultiSend contract
   multiSend = getMultiSendContractInstance(web3, chainId)
+
+  // Create MultiSendCallOnly contract
+  multiSendCallOnly = getMultiSendCallOnlyContractInstance(web3, chainId)
 }
 
 export const getSafeMasterContract = (): GnosisSafe => {
@@ -227,11 +252,19 @@ export const getFallbackHandlerContractAddress = (): string => {
   return fallbackHandler.options.address
 }
 
-export const getMultisendContract = (): MultiSend => {
+export const getMultiSendCallOnlyContract = (): MultiSendCallOnly => {
+  return multiSendCallOnly
+}
+
+export const getMultiSendCallOnlyContractAddress = (): string => {
+  return multiSendCallOnly.options.address
+}
+
+export const getMultiSendContract = (): MultiSend => {
   return multiSend
 }
 
-export const getMultisendContractAddress = (): string => {
+export const getMultiSendContractAddress = (): string => {
   return multiSend.options.address
 }
 

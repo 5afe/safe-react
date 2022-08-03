@@ -33,7 +33,7 @@ jest.mock('src/logic/hooks/useEstimateTransactionGas', () => {
 
 describe('Advanced Settings Component', () => {
   beforeEach(() => {
-    jest.spyOn(safeContracts, 'getMultisendContractAddress').mockReturnValue('mockAddress')
+    jest.spyOn(safeContracts, 'getMultiSendCallOnlyContractAddress').mockReturnValue('mockAddress')
   })
   it('Renders Advanced Settings Component', () => {
     const customState = {

@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { toBN } from 'web3-utils'
 
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
+import { getMultiSendCallOnlyContractAddress } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
 import { getExplorerInfo, getNativeCurrency } from 'src/config'
@@ -79,7 +79,7 @@ export const ReviewConfirm = ({
   const isOwner = useSelector(grantedSelector)
 
   const txRecipient: string | undefined = useMemo(
-    () => (isMultiSend ? getMultisendContractAddress() : txs[0]?.to),
+    () => (isMultiSend ? getMultiSendCallOnlyContractAddress() : txs[0]?.to),
     [txs, isMultiSend],
   )
   const txData: string | undefined = useMemo(

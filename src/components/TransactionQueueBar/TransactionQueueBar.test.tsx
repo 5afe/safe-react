@@ -7,7 +7,7 @@ import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
 const MULTISEND_ADDRESS = '0x4242424242424242424242424242424242424242'
 jest.mock('src/logic/contracts/safeContracts', () => ({
   ...jest.requireActual('src/logic/contracts/safeContracts'),
-  getMultisendContractAddress: () => MULTISEND_ADDRESS,
+  getMultiSendCallOnlyContractAddress: () => MULTISEND_ADDRESS,
 }))
 
 const safeAddress = '0x57CB13cbef735FbDD65f5f2866638c546464E45F'

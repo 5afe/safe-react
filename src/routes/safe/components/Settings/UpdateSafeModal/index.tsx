@@ -9,7 +9,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getUpgradeSafeTransactionHash } from 'src/logic/safe/utils/upgradeSafe'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
+import { getMultiSendCallOnlyContractAddress } from 'src/logic/contracts/safeContracts'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
@@ -39,7 +39,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
     dispatch(
       createTransaction({
         safeAddress,
-        to: getMultisendContractAddress(),
+        to: getMultiSendCallOnlyContractAddress(),
         valueInWei: '0',
         txData: multiSendCallData,
         txNonce: txParameters.safeNonce,
@@ -56,7 +56,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
   return (
     <TxModalWrapper
       txData={multiSendCallData}
-      txTo={getMultisendContractAddress()}
+      txTo={getMultiSendCallOnlyContractAddress()}
       operation={Operation.DELEGATE}
       onSubmit={handleSubmit}
       onClose={onClose}
