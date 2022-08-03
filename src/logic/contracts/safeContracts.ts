@@ -91,6 +91,7 @@ const getProxyFactoryContractInstance = (web3: Web3, chainId: ChainId): ProxyFac
       version: LATEST_SAFE_VERSION,
     })
   let contractAddress = proxyFactoryDeployment?.networkAddresses[chainId]
+  console.log(chainId, chainId === '11115')
   if (chainId === '11115') {
     contractAddress = '0xE3af6150ac95A63Ea88c9Fe4bF77D9De56d2a0EF'
     proxyFactoryDeployment =
