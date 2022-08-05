@@ -9,7 +9,7 @@ import { isCustomTxInfo, Transaction } from 'src/logic/safe/store/models/types/g
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
 import { getExecutionTransaction } from 'src/logic/safe/transactions'
-import { getGnosisSafeInstanceAt, getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
+import { getGnosisSafeInstanceAt, getMultiSendCallOnlyContractAddress } from 'src/logic/contracts/safeContracts'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { encodeMultiSendCall, getMultiSendJoinedTxs, MultiSendTx } from 'src/logic/safe/transactions/multisend'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
@@ -141,7 +141,7 @@ export const BatchExecute = React.memo((): ReactElement | null => {
   const dispatch = useDispatch<Dispatch>()
   const { address: safeAddress, currentVersion } = useSelector(currentSafe)
   const account = useSelector(userAccountSelector)
-  const multiSendContractAddress = getMultisendContractAddress()
+  const multiSendContractAddress = getMultiSendCallOnlyContractAddress()
   const batchableTransactions = useSelector(getBatchableTransactions)
   const [txsWithDetails, setTxsWithDetails] = useState<Transaction[]>([])
   const [isModalOpen, setModalOpen] = useState(false)
@@ -195,7 +195,7 @@ export const BatchExecute = React.memo((): ReactElement | null => {
     const txs = toMultiSendTxs(txsWithDetails, safeAddress, currentVersion, account)
     return {
       data: encodeMultiSendCall(txs),
-      to: getMultisendContractAddress(),
+      to: getMultiSendCallOnlyContractAddress(),
     }
   }, [account, txsWithDetails, currentVersion, safeAddress])
 

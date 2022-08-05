@@ -4,7 +4,8 @@ import { isSupportedMultiSendCall } from 'src/logic/safe/transactions/multisend'
 const MULTISEND_ADDRESS = '0x40a2accbd92bca938b02010e17a5b8929b49130d'
 jest.mock('src/logic/contracts/safeContracts', () => ({
   ...jest.requireActual('src/logic/contracts/safeContracts'),
-  getMultisendContractAddress: () => MULTISEND_ADDRESS,
+  getMultiSendCallOnlyContractAddress: () => MULTISEND_ADDRESS,
+  getMultiSendContractAddress: () => MULTISEND_ADDRESS,
 }))
 
 describe('isSupportedMultiSendCall', () => {

@@ -8,8 +8,8 @@ import * as estimateTxGas from 'src/logic/hooks/useEstimateTransactionGas'
 const MULTISEND_ADDRESS = '0x4242424242424242424242424242424242424242'
 jest.mock('src/logic/contracts/safeContracts', () => ({
   ...jest.requireActual('src/logic/contracts/safeContracts'),
-  getMultisendContractAddress: () => MULTISEND_ADDRESS,
-  getMultisendContract: () => ({
+  getMultiSendCallOnlyContractAddress: () => MULTISEND_ADDRESS,
+  getMultiSendCallOnlyContract: () => ({
     methods: {
       multiSend: () => ({
         encodeABI: () => '0x',
