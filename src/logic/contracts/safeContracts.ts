@@ -152,8 +152,10 @@ const getMultiSendContractInstance = (web3: Web3, chainId: ChainId): MultiSend =
     getMultiSendCallOnlyDeployment({
       network: chainId.toString(),
     }) || getMultiSendCallOnlyDeployment()
-  const contractAddress = multiSendDeployment?.networkAddresses[chainId]
-
+  let contractAddress = multiSendDeployment?.networkAddresses[chainId]
+  if (chainId === '11115') {
+    contractAddress = '0x63B2a0E9b14E549A31D5bFE3bBdC877Ff9Dca9F9'
+  }
   if (!contractAddress) {
     throw new Error(`MultiSend contract not found for chainId: ${chainId}`)
   }
