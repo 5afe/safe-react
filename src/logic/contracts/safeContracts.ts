@@ -126,7 +126,11 @@ const getFallbackHandlerContractInstance = (web3: Web3, chainId: ChainId): Compa
     getFallbackHandlerDeployment({
       version: LATEST_SAFE_VERSION,
     })
-  const contractAddress = fallbackHandlerDeployment?.networkAddresses[chainId]
+  let contractAddress = fallbackHandlerDeployment?.networkAddresses[chainId]
+
+  if (chainId === '11115') {
+    contractAddress = '0x366abb4C2A50F302960b80acB8D8b4bB30650E0C'
+  }
 
   if (!contractAddress) {
     throw new Error(`FallbackHandler contract not found for chainId: ${chainId}`)
