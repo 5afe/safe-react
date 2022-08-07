@@ -67,8 +67,10 @@ const getSafeContractDeployment = ({ safeVersion }: { safeVersion: string }): Si
  */
 const getGnosisSafeContractInstance = (web3: Web3, chainId: ChainId): GnosisSafe => {
   const safeSingletonDeployment = getSafeContractDeployment({ safeVersion: LATEST_SAFE_VERSION })
-  const contractAddress = safeSingletonDeployment?.networkAddresses[chainId]
-
+  let contractAddress = safeSingletonDeployment?.networkAddresses[chainId]
+  if (chainId === '11115') {
+    contractAddress = '0x59ddcFAA49E30606E1434b3EA11E05A0b64BFd07'
+  }
   if (!contractAddress) {
     throw new Error(`GnosisSafe contract not found for chainId: ${chainId}`)
   }
@@ -91,7 +93,6 @@ const getProxyFactoryContractInstance = (web3: Web3, chainId: ChainId): ProxyFac
       version: LATEST_SAFE_VERSION,
     })
   let contractAddress = proxyFactoryDeployment?.networkAddresses[chainId]
-  console.log(chainId, chainId === '11115')
   if (chainId === '11115') {
     contractAddress = '0xE3af6150ac95A63Ea88c9Fe4bF77D9De56d2a0EF'
     proxyFactoryDeployment =
