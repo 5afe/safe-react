@@ -69,7 +69,7 @@ const getGnosisSafeContractInstance = (web3: Web3, chainId: ChainId): GnosisSafe
   const safeSingletonDeployment = getSafeContractDeployment({ safeVersion: LATEST_SAFE_VERSION })
   let contractAddress = safeSingletonDeployment?.networkAddresses[chainId]
   if (chainId === '11115') {
-    contractAddress = '0x59ddcFAA49E30606E1434b3EA11E05A0b64BFd07'
+    contractAddress = '0x0CE168BCF6c33c35010e675f361C9B9C6e9CEBD1'
   }
   if (!contractAddress) {
     throw new Error(`GnosisSafe contract not found for chainId: ${chainId}`)
