@@ -69,7 +69,7 @@ const getGnosisSafeContractInstance = (web3: Web3, chainId: ChainId): GnosisSafe
   const safeSingletonDeployment = getSafeContractDeployment({ safeVersion: LATEST_SAFE_VERSION })
   let contractAddress = safeSingletonDeployment?.networkAddresses[chainId]
   if (chainId === '11115') {
-    contractAddress = '0x0CE168BCF6c33c35010e675f361C9B9C6e9CEBD1'
+    contractAddress = '0x33eF3698B7E794B249E5C94DAFCAc7FED509C663'
   }
   if (!contractAddress) {
     throw new Error(`GnosisSafe contract not found for chainId: ${chainId}`)
@@ -94,7 +94,7 @@ const getProxyFactoryContractInstance = (web3: Web3, chainId: ChainId): ProxyFac
     })
   let contractAddress = proxyFactoryDeployment?.networkAddresses[chainId]
   if (chainId === '11115') {
-    contractAddress = '0x00bf733F22cc9B1Cd1ccf93fCdb3BAe98A72Ae56'
+    contractAddress = '0x9ede2D10e78c22919Bc3C22F53aeB6923Cb53FaE'
     proxyFactoryDeployment =
       getProxyFactoryDeployment({
         version: LATEST_SAFE_VERSION,
@@ -129,7 +129,7 @@ const getFallbackHandlerContractInstance = (web3: Web3, chainId: ChainId): Compa
   let contractAddress = fallbackHandlerDeployment?.networkAddresses[chainId]
 
   if (chainId === '11115') {
-    contractAddress = '0x366abb4C2A50F302960b80acB8D8b4bB30650E0C'
+    contractAddress = '0x81510fFD6df3a1bcDe947019c9Ea6f645535Dcc5'
   }
 
   if (!contractAddress) {
@@ -154,7 +154,7 @@ const getMultiSendContractInstance = (web3: Web3, chainId: ChainId): MultiSend =
     }) || getMultiSendCallOnlyDeployment()
   let contractAddress = multiSendDeployment?.networkAddresses[chainId]
   if (chainId === '11115') {
-    contractAddress = '0x63B2a0E9b14E549A31D5bFE3bBdC877Ff9Dca9F9'
+    contractAddress = '0x27e2191eD22695158F3Ce819A0B918F1Df913F65'
   }
   if (!contractAddress) {
     throw new Error(`MultiSend contract not found for chainId: ${chainId}`)
