@@ -12,7 +12,7 @@ import Img from 'src/components/layout/Img'
 import Row from 'src/components/layout/Row'
 import { headerHeight, md, screenSm, sm } from 'src/theme/variables'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
-import SafeLogo from '../assets/gnosis-safe-multisig-logo.svg'
+import SafeLogo from '../assets/astra_logo.svg'
 import { ROOT_ROUTE } from 'src/routes/routes'
 import WalletSwitch from 'src/components/WalletSwitch'
 import Divider from 'src/components/layout/Divider'
@@ -67,6 +67,13 @@ const styles = () => ({
     minWidth: '180px',
     padding: '0',
   },
+  newLogo: {
+    display: 'flex',
+    minWidth: '135px',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    textDecoration: 'none',
+  },
 })
 
 const WalletPopup = ({ anchorEl, providerDetails, classes, open, onClose }) => {
@@ -90,6 +97,10 @@ const WalletPopup = ({ anchorEl, providerDetails, classes, open, onClose }) => {
   )
 }
 
+const TextLogo = ({ text }) => {
+  return <div style={{ fontSize: '20px', fontWeight: 'bold', paddingTop: '3px' }}>{text}</div>
+}
+
 const Layout = ({ classes, providerDetails, providerInfo }) => {
   const { clickAway: clickAwayNotifications, open: openNotifications, toggle: toggleNotifications } = useStateHandler()
   const { clickAway: clickAwayWallet, open: openWallet, toggle: toggleWallet } = useStateHandler()
@@ -100,8 +111,9 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
     <Row className={classes.summary}>
       <Col className={classes.logo} middle="xs" start="xs">
         <Track {...OVERVIEW_EVENTS.HOME}>
-          <Link to={ROOT_ROUTE}>
-            <Img alt="Gnosis Safe" height={36} src={SafeLogo} testId="heading-gnosis-logo" id="safe-logo" />
+          <Link to={ROOT_ROUTE} className={classes.newLogo}>
+            <Img alt="Astra Safe" height={36} src={SafeLogo} testId="heading-gnosis-logo" id="safe-logo" />
+            <TextLogo text="Astra Safe" />
           </Link>
         </Track>
       </Col>
