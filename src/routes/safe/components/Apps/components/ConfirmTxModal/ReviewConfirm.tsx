@@ -62,6 +62,7 @@ const parseTxValue = (value: string | number): string => {
 export const ReviewConfirm = ({
   app,
   txs,
+  params,
   safeAddress,
   ethBalance,
   safeName,
@@ -146,6 +147,7 @@ export const ReviewConfirm = ({
       onSubmit={confirmTransactions}
       isSubmitDisabled={!isOwner}
       onBack={onReject}
+      safeTxGas={params?.safeTxGas?.toString()}
     >
       <div>
         <ModalHeader title={app.name} iconUrl={app.iconUrl} onClose={onReject} />
