@@ -23,7 +23,7 @@ describe('Safe Apps -> AppFrame', () => {
   })
 
   it('should render the correct allow attribute', async () => {
-    render(<AppFrame appUrl="http://test.eth" allowList="camera; microphone" />)
+    render(<AppFrame appUrl="http://test.eth" allowedFeaturesList="camera; microphone" />)
 
     const iframeElement = await screen.findByTitle('Safe Test App')
 

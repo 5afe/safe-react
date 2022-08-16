@@ -55,7 +55,7 @@ const Apps = (): React.ReactElement => {
 
     return (
       <SafeAppsErrorBoundary render={() => <SafeAppsLoadError />}>
-        <AppFrame appUrl={url} allowList={getAllowedFeaturesList(url)} />
+        <AppFrame appUrl={url} allowedFeaturesList={getAllowedFeaturesList(url)} />
       </SafeAppsErrorBoundary>
     )
   } else {

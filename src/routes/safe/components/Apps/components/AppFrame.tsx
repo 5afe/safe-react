@@ -78,7 +78,7 @@ type ConfirmTransactionModalState = {
 
 type Props = {
   appUrl: string
-  allowList: string
+  allowedFeaturesList: string
 }
 
 const APP_LOAD_ERROR_TIMEOUT = 30000
@@ -93,7 +93,7 @@ const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
 const URL_NOT_PROVIDED_ERROR = 'App url No provided or it is invalid.'
 const APP_LOAD_ERROR = 'There was an error loading the Safe App. There might be a problem with the App provider.'
 
-const AppFrame = ({ appUrl, allowList }: Props): ReactElement => {
+const AppFrame = ({ appUrl, allowedFeaturesList }: Props): ReactElement => {
   const { address: safeAddress, ethBalance, owners, threshold } = useSelector(currentSafe)
   const { nativeCurrency, chainId, chainName, shortName, blockExplorerUriTemplate } = getChainInfo()
   const safeName = useSelector((state) => addressBookEntryName(state, { address: safeAddress }))
@@ -396,7 +396,7 @@ const AppFrame = ({ appUrl, allowList }: Props): ReactElement => {
           src={appUrl}
           title={safeApp.name}
           onLoad={onIframeLoad}
-          allow={allowList}
+          allow={allowedFeaturesList}
         />
       </StyledCard>
 
