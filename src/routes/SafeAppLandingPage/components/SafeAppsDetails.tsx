@@ -1,4 +1,4 @@
-import { ReactElement, SyntheticEvent, useMemo } from 'react'
+import { ReactElement, SyntheticEvent } from 'react'
 import styled from 'styled-components'
 import Divider from '@material-ui/core/Divider'
 import { Title, Text } from '@gnosis.pm/safe-react-components'
@@ -11,20 +11,22 @@ import UnknownAppWarning from 'src/routes/safe/components/Apps/components/Securi
 import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
 
 type SafeAppDetailsTypes = {
-  url: string
   iconUrl: string
   name: string
   description: string
   availableChains: string[]
+  isInDefaultList: boolean
 }
 
-const SafeAppDetails = ({ url, iconUrl, name, description, availableChains }: SafeAppDetailsTypes): ReactElement => {
+const SafeAppDetails = ({
+  iconUrl,
+  name,
+  description,
+  availableChains,
+  isInDefaultList,
+}: SafeAppDetailsTypes): ReactElement => {
   const showAvailableChains = availableChains?.length > 0
-  const { isLoading: isSafeAppListLoading, getSafeApp } = useAppList()
-
-  const isSafeAppInDefaultList = useMemo(() => {
-    return !!getSafeApp(url)
-  }, [getSafeApp, url])
+  const { isLoading: isSafeAppListLoading } = useAppList()
 
   return (
     <>
@@ -56,7 +58,7 @@ const SafeAppDetails = ({ url, iconUrl, name, description, availableChains }: Sa
           <Separator />
         </>
       )}
-      {!isSafeAppListLoading && !isSafeAppInDefaultList && (
+      {!isSafeAppListLoading && !isInDefaultList && (
         <>
           <UnknownAppWarning />
           <Separator />
