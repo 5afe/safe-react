@@ -80,6 +80,7 @@ const SafeAppLandingPage = (): ReactElement => {
             {/* Safe App details */}
             {safeAppDetails && (
               <SafeAppDetails
+                url={safeAppDetails.url}
                 iconUrl={safeAppDetails.iconUrl}
                 name={safeAppDetails.name}
                 description={safeAppDetails?.description}
