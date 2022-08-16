@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
-import { FETCH_STATUS } from 'src/utils/requests'
 import { getAppInfoFromUrl, getEmptySafeApp } from '../utils'
 import { SafeApp } from '../types'
 
@@ -11,9 +10,7 @@ type UseSafeAppFromManifestReturnType = {
 
 const useSafeAppFromManifest = (appUrl: string): UseSafeAppFromManifestReturnType => {
   const [safeApp, setSafeApp] = useState<SafeApp>(() => getEmptySafeApp(appUrl))
-  const [status, setStatus] = useState<FETCH_STATUS>(FETCH_STATUS.NOT_ASKED)
-
-  const isLoading = status === FETCH_STATUS.LOADING
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     if (!appUrl) {
@@ -21,14 +18,14 @@ const useSafeAppFromManifest = (appUrl: string): UseSafeAppFromManifestReturnTyp
     }
 
     const loadApp = async () => {
-      setStatus(FETCH_STATUS.LOADING)
+      setIsLoading(true)
       try {
         const app = await getAppInfoFromUrl(appUrl)
         setSafeApp(app)
-        setStatus(FETCH_STATUS.SUCCESS)
       } catch (e) {
-        setStatus(FETCH_STATUS.ERROR)
         logError(Errors._900, `${appUrl}, ${e.message}`)
+      } finally {
+        setIsLoading(false)
       }
     }
 
