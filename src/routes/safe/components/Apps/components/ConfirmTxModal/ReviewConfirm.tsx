@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { toBN } from 'web3-utils'
 
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
+import { getMultiSendCallOnlyContractAddress } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
 import { getExplorerInfo, getNativeCurrency } from 'src/config'
@@ -62,6 +62,7 @@ const parseTxValue = (value: string | number): string => {
 export const ReviewConfirm = ({
   app,
   txs,
+  params,
   safeAddress,
   ethBalance,
   safeName,
@@ -79,7 +80,7 @@ export const ReviewConfirm = ({
   const isOwner = useSelector(grantedSelector)
 
   const txRecipient: string | undefined = useMemo(
-    () => (isMultiSend ? getMultisendContractAddress() : txs[0]?.to),
+    () => (isMultiSend ? getMultiSendCallOnlyContractAddress() : txs[0]?.to),
     [txs, isMultiSend],
   )
   const txData: string | undefined = useMemo(
@@ -146,6 +147,7 @@ export const ReviewConfirm = ({
       onSubmit={confirmTransactions}
       isSubmitDisabled={!isOwner}
       onBack={onReject}
+      safeTxGas={params?.safeTxGas?.toString()}
     >
       <div>
         <ModalHeader title={app.name} iconUrl={app.iconUrl} onClose={onReject} />

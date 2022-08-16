@@ -3,7 +3,7 @@ import { isMultisigExecutionInfo, Transaction } from 'src/logic/safe/store/model
 import { MultiSend } from 'src/types/contracts/multi_send.d'
 import { addPendingTransaction, removePendingTransaction } from 'src/logic/safe/store/actions/pendingTransactions'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { getMultisendContract } from 'src/logic/contracts/safeContracts'
+import { getMultiSendCallOnlyContract } from 'src/logic/contracts/safeContracts'
 import { createTxNotifications } from 'src/logic/notifications'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
@@ -31,7 +31,7 @@ export class TxMultiSender {
   constructor({ transactions, multiSendCallData, dispatch, account, safeAddress }: TxMultiSenderProps) {
     this.transactions = transactions
     this.multiSendCallData = multiSendCallData
-    this.multiSendContract = getMultisendContract()
+    this.multiSendContract = getMultiSendCallOnlyContract()
     this.dispatch = dispatch
     this.account = account
     this.notifications = createTxNotifications(dispatch, TX_NOTIFICATION_TYPES.STANDARD_TX)
