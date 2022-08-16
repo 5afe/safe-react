@@ -41,7 +41,7 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { useRemoteSafeApps } from 'src/routes/safe/components/Apps/hooks/appList/useRemoteSafeApps'
 import { trackSafeAppOpenCount } from 'src/routes/safe/components/Apps/trackAppUsageCount'
 import PermissionsPrompt from 'src/routes/safe/components/Apps/components/PermissionsPrompt'
-import { useSafeAppManifest } from 'src/routes/safe/components/Apps/hooks/useSafeAppManifest'
+import { useSafeAppFromManifest } from 'src/routes/safe/components/Apps/hooks/useSafeAppFromManifest'
 import { useSafePermissions } from 'src/routes/safe/components/Apps/hooks/permissions'
 
 const AppWrapper = styled.div`
@@ -118,7 +118,7 @@ const AppFrame = ({ appUrl, allowList }: Props): ReactElement => {
     () => new Web3.providers.HttpProvider(safeAppsRpc, web3HttpProviderOptions),
     [safeAppsRpc],
   )
-  const { safeApp } = useSafeAppManifest(appUrl)
+  const { safeApp } = useSafeAppFromManifest(appUrl)
 
   useEffect(() => {
     const clearTimeouts = () => {

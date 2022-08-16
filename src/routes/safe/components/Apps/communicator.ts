@@ -71,7 +71,7 @@ class AppCommunicator {
         app: this.app,
         method: msg.data.method,
         params: msg.data.params,
-        sdkVersion: msg.data?.env?.sdkVersion,
+        sdkVersion: msg.data.env.sdkVersion,
       })
 
       const handler = this.handlers.get(msg.data.method)

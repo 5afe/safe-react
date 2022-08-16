@@ -99,12 +99,11 @@ describe('<SecurityFeedbackModal />', () => {
   })
 
   it('should prompt the user for permissions', async () => {
-    // @ts-ignore
-    const features: AllowedFeatures[] = ['camera', 'microphone']
+    const features: AllowedFeatures[] = [AllowedFeatures.camera, AllowedFeatures.microphone]
 
     render(<SecurityFeedbackModal {...baseProps} isPermissionsReviewCompleted={false} features={features} />)
 
-    expect(await screen.findByText('Camera')).toBeInTheDocument()
-    expect(await screen.findByText('Microphone')).toBeInTheDocument()
+    expect(await screen.findByText(AllowedFeatures.camera.toString())).toBeInTheDocument()
+    expect(await screen.findByText(AllowedFeatures.microphone.toString())).toBeInTheDocument()
   })
 })
