@@ -27,13 +27,13 @@ const PermissionsPrompt = ({
   return (
     <Modal
       description="Requested permissions"
-      handleClose={() => onReject()}
+      handleClose={onReject}
       open={isOpen}
       title="Requested permissions"
       style={{ top: '25%' }}
     >
       <Container>
-        <Modal.Header onClose={() => onReject()}>
+        <Modal.Header onClose={onReject}>
           <Modal.Header.Title>Permissions Request</Modal.Header.Title>
         </Modal.Header>
         <Divider />
