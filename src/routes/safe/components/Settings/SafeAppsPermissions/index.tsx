@@ -25,9 +25,7 @@ const SafeAppsPermissions = (): ReactElement => {
   } = useSafePermissions()
   const { permissions: browserPermissions, updatePermission: updateBrowserPermission } = useBrowserPermissions()
   const domains = useMemo(() => {
-    const safePermissionsSet = new Set(Object.keys(safePermissions))
-    const browserPermissionsSet = new Set(Object.keys(browserPermissions))
-    const mergedPermissionsSet = new Set([...safePermissionsSet, ...browserPermissionsSet])
+    const mergedPermissionsSet = new Set(Object.keys(browserPermissions).concat(Object.keys(safePermissions)))
 
     return Array.from(mergedPermissionsSet)
   }, [safePermissions, browserPermissions])
