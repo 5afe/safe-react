@@ -11,7 +11,6 @@ describe('Safe Apps -> AppFrame', () => {
     safeAppsUtils.canLoadAppImage = jest.fn().mockResolvedValue(true)
     // @ts-ignore
     axios.get.mockImplementation((url: string) => {
-      console.log(url)
       return Promise.resolve({
         data: {
           name: 'Safe Test App',
