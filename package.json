@@ -75,7 +75,7 @@
     ]
   },
   "dependencies": {
-    "@ethersproject/hash": "^5.5.0",
+    "@ethersproject/hash": "^5.6.1",
     "@gnosis.pm/safe-apps-sdk": "7.3.0",
     "@gnosis.pm/safe-apps-sdk-v1": "npm:@gnosis.pm/safe-apps-sdk@0.4.2",
     "@gnosis.pm/safe-core-sdk": "^2.0.0",
@@ -123,6 +123,7 @@
     "react-gtm-module": "^2.0.11",
     "react-hook-form": "^7.29.0",
     "react-intersection-observer": "^8.32.0",
+    "react-json-view": "^1.21.3",
     "react-papaparse": "^3.16.1",
     "react-qr-reader": "^2.2.1",
     "react-redux": "7.2.4",

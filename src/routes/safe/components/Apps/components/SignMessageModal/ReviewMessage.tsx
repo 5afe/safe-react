@@ -20,6 +20,8 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import Paragraph from 'src/components/layout/Paragraph'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
+import { Methods } from '@gnosis.pm/safe-apps-sdk'
+import ReactJson from 'react-json-view'
 
 const Container = styled.div`
   max-width: 480px;
@@ -70,6 +72,7 @@ export const ReviewMessage = ({
   onClose,
   onTxReject,
   requestId,
+  method,
   utf8Message,
   txData,
   txRecipient,
@@ -126,7 +129,7 @@ export const ReviewMessage = ({
       <Hairline />
 
       <Container>
-        {/* Safe */}
+        Safe
         <PrefixedEthHashInfo
           name={safeName}
           hash={safeAddress}
@@ -139,31 +142,38 @@ export const ReviewMessage = ({
           <Text size="md">Balance:</Text>
           <Text size="md" strong>{`${ethBalance} ${nativeCurrency.symbol}`}</Text>
         </StyledBlock>
-
         <Divider withArrow />
-
-        <BasicTxInfo txRecipient={txRecipient} txData={txData} txValue="0" recipientName="SignMessageLib" />
-
+        <BasicTxInfo
+          txRecipient={txRecipient}
+          txData={txData}
+          txValue="0"
+          signMethod={method.toString()}
+          recipientName="SignMessageLib"
+        />
         <Text size="lg" strong>
           Signing message:
         </Text>
-        <MessageTextArea
-          rows="2"
-          multiline
-          disabled
-          fullWidth
-          label="Message to sign"
-          inputProps={{
-            type: 'text',
-            value: utf8Message,
-            name: 'Message to sign',
-            onChange: () => {},
-            placeholder: '',
-          }}
-          InputProps={{
-            disableUnderline: true,
-          }}
-        />
+        {method == Methods.signTypedMessage ? (
+          <ReactJson src={JSON.parse(utf8Message)} name={'Message to sign'} />
+        ) : (
+          <MessageTextArea
+            rows="2"
+            multiline
+            disabled
+            fullWidth
+            label="Message to sign"
+            inputProps={{
+              type: 'text',
+              value: utf8Message,
+              name: 'Message to sign',
+              onChange: () => {},
+              placeholder: '',
+            }}
+            InputProps={{
+              disableUnderline: true,
+            }}
+          />
+        )}
         <InfoMessage>
           <Icon size="md" type="info" color="warning" />
           Signing a message with the Gnosis Safe requires a transaction on the blockchain

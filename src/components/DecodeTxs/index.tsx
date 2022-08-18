@@ -55,11 +55,13 @@ export const BasicTxInfo = ({
   txRecipient,
   txData,
   txValue,
+  signMethod,
   recipientName,
 }: {
   txRecipient: string
   txData: string
   txValue: string
+  signMethod?: string
   recipientName?: string
 }): ReactElement => {
   return (
@@ -94,6 +96,21 @@ export const BasicTxInfo = ({
           <CopyToClipboardBtn textToCopy={txData} />
         </FlexWrapper>
       </>
+      {signMethod && (
+        <>
+          {/* Method */}
+          <Row margin="xs">
+            <Paragraph color="disabled" noMargin size="lg">
+              Signing Method:
+            </Paragraph>
+          </Row>
+          <FlexWrapper margin={5}>
+            <Paragraph noMargin size="lg">
+              {signMethod}
+            </Paragraph>
+          </FlexWrapper>
+        </>
+      )}
     </BasicTxInfoWrapper>
   )
 }
