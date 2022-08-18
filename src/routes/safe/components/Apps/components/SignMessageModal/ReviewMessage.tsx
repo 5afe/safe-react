@@ -20,8 +20,6 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import Paragraph from 'src/components/layout/Paragraph'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
-import { Methods } from '@gnosis.pm/safe-apps-sdk'
-import ReactJson from 'react-json-view'
 
 const Container = styled.div`
   max-width: 480px;
@@ -153,27 +151,23 @@ export const ReviewMessage = ({
         <Text size="lg" strong>
           Signing message:
         </Text>
-        {method == Methods.signTypedMessage ? (
-          <ReactJson src={JSON.parse(utf8Message)} name={'Message to sign'} />
-        ) : (
-          <MessageTextArea
-            rows="2"
-            multiline
-            disabled
-            fullWidth
-            label="Message to sign"
-            inputProps={{
-              type: 'text',
-              value: utf8Message,
-              name: 'Message to sign',
-              onChange: () => {},
-              placeholder: '',
-            }}
-            InputProps={{
-              disableUnderline: true,
-            }}
-          />
-        )}
+        <MessageTextArea
+          rows="2"
+          multiline
+          disabled
+          fullWidth
+          label="Message to sign"
+          inputProps={{
+            type: 'text',
+            value: utf8Message,
+            name: 'Message to sign',
+            onChange: () => {},
+            placeholder: '',
+          }}
+          InputProps={{
+            disableUnderline: true,
+          }}
+        />
         <InfoMessage>
           <Icon size="md" type="info" color="warning" />
           Signing a message with the Gnosis Safe requires a transaction on the blockchain

@@ -64,7 +64,7 @@ export const SignMessageModal = ({ message, isOpen, method, ...rest }: SignMessa
         ),
       )
       .encodeABI()
-    readableData = message
+    readableData = JSON.stringify(JSON.parse(message), undefined, 4)
   } else {
     throw new Error(`Unsupported method for displaying: ${method}`)
   }
