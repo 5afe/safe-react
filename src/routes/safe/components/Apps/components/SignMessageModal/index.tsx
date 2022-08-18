@@ -64,9 +64,18 @@ export const SignMessageModal = ({ message, isOpen, method, ...rest }: SignMessa
         ),
       )
       .encodeABI()
-    readableData = JSON.stringify(JSON.parse(message), undefined, 4)
+    try {
+      readableData = JSON.stringify(JSON.parse(message), undefined, 4)
+    } catch (e) {
+      // As the signing method is SignTypedMessage, the message should be a valid JSON.
+      // When it is not, we will reject the tx and close the modal.
+      rest.onTxReject(rest.requestId)
+      rest.onClose()
+    }
   } else {
-    throw new Error(`Unsupported method for displaying: ${method}`)
+    // Unsupported method
+    rest.onTxReject(rest.requestId)
+    rest.onClose()
   }
 
   return (
