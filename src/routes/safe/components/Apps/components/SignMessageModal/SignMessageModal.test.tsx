@@ -174,6 +174,6 @@ describe('SignMessageModal Component', () => {
         app={getEmptySafeApp()}
       />,
     )
-    expect(screen.getByText(JSON.stringify(typedMessage))).toBeVisible()
+    expect(screen.getByText('signTypedMessage')).toBeVisible()
   })
 })
