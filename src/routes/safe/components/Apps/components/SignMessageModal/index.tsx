@@ -53,9 +53,16 @@ export const SignMessageModal = ({ message, isOpen, method, ...rest }: SignMessa
       .encodeABI()
     readableData = convertToHumanReadableMessage(message)
   } else if (method == Methods.signTypedMessage) {
-    const typedMessage = JSON.parse(message)
+    // Here we firstly convert the typed message to safe typed message which contains the safe address and the current chainId,
+    // then we hash it using ethers.utils._TypedDataEncoder.
     txData = getSignMessageLibContractInstance(web3, networkId)
-      .methods.signMessage(_TypedDataEncoder.hash(typedMessage.domain, typedMessage.types, typedMessage.message))
+      .methods.signMessage(
+        _TypedDataEncoder.hash(
+          { verifyingContract: rest.safeAddress, chainId: parseInt(networkId) },
+          { SafeMessage: [{ type: 'string', name: 'message' }] },
+          { message: message },
+        ),
+      )
       .encodeABI()
     readableData = message
   } else {
