@@ -146,8 +146,8 @@ function LoadSafeAddressStep(): ReactElement {
     <Container data-testid={'load-safe-address-step'}>
       <Block margin="md">
         <Paragraph color="primary" noMargin size="lg">
-          You are about to add an existing Gnosis Safe on <NetworkLabel />. First, choose a name and enter the Safe
-          address. The name is only stored locally and will never be shared with Gnosis or any third parties.
+          You are about to add an existing Evmos Safe on <NetworkLabel />. First, choose a name and enter the Safe
+          address. The name is only stored locally and will never be shared with Evmos or any third parties.
         </Paragraph>
         <Paragraph color="primary" size="lg">
           Your connected wallet does not have to be the owner of this Safe. In this case, the interface will provide you

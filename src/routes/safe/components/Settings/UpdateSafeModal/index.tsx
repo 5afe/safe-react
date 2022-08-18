@@ -71,7 +71,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
           <Paragraph>
             To check details about updates added by this smart contract version please visit{' '}
             <Link target="_blank" to={`https://github.com/gnosis/safe-contracts/releases/tag/v${LATEST_SAFE_VERSION}`}>
-              latest Gnosis Safe contracts changelog
+              latest Evmos Safe contracts changelog
             </Link>
           </Paragraph>
           <Paragraph noMargin>

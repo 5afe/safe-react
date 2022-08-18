@@ -94,7 +94,7 @@ const PairingDetails = ({ vertical = false }: PairingDetailsProps): ReactElement
   const content = (
     <StyledContent>
       <Paragraph size="sm">
-        Scan this code in the Gnosis Safe mobile app to sign transactions with your mobile device.{' '}
+        Scan this code in the Evmos Safe mobile app to sign transactions with your mobile device.{' '}
         <Link href="https://help.gnosis-safe.io/en/articles/5584901-desktop-pairing">
           Learn more about this feature.
         </Link>
