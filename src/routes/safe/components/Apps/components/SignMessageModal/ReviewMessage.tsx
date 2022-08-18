@@ -129,7 +129,7 @@ export const ReviewMessage = ({
       <Hairline />
 
       <Container>
-        Safe
+        {/* Safe */}
         <PrefixedEthHashInfo
           name={safeName}
           hash={safeAddress}
