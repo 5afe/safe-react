@@ -175,5 +175,16 @@ describe('SignMessageModal Component', () => {
       />,
     )
     expect(screen.getByText('signTypedMessage')).toBeVisible()
+    expect(
+      screen.getByText(JSON.stringify(typedMessage), {
+        normalizer: (str) => {
+          try {
+            return JSON.stringify(JSON.parse(str))
+          } catch (e) {
+            return str
+          }
+        },
+      }),
+    ).toBeVisible()
   })
 })
