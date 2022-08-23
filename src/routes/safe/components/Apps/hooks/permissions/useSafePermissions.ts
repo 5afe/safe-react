@@ -30,7 +30,7 @@ type UseSafePermissionsReturnType = {
 }
 
 const useSafePermissions = (): UseSafePermissionsReturnType => {
-  const [permissions, setPermissions] = usePermissions<SafePermissions>({}, SAFE_PERMISSIONS)
+  const [permissions, setPermissions] = usePermissions<SafePermissions>(SAFE_PERMISSIONS)
   const [permissionsRequest, setPermissionsRequest] = useState<SafePermissionsRequest | undefined>()
 
   const getPermissions = useCallback(

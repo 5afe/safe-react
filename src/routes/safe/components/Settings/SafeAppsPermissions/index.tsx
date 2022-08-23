@@ -86,6 +86,7 @@ const SafeAppsPermissions = (): ReactElement => {
     <StyledContainer>
       <Heading tag="h2">Safe Apps Permissions</Heading>
       <br />
+      {!domains.length && <Text size="lg">There are no Safe Apps using permissions</Text>}
       {domains.map((domain) => (
         <StyledPermissionsCard item key={domain}>
           <StyledPermissionsCardBody container>

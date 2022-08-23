@@ -20,7 +20,7 @@ type UseBrowserPermissionsReturnType = {
 }
 
 const useBrowserPermissions = (): UseBrowserPermissionsReturnType => {
-  const [permissions, setPermissions] = usePermissions<BrowserPermissions>({}, BROWSER_PERMISSIONS)
+  const [permissions, setPermissions] = usePermissions<BrowserPermissions>(BROWSER_PERMISSIONS)
 
   const getPermissions = useCallback(
     (origin: string) => {
