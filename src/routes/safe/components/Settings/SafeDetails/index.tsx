@@ -168,7 +168,7 @@ const SafeDetails = (): ReactElement => {
             <Block className={classes.formContainer}>
               <Heading tag="h2">Modify Safe Name</Heading>
               <Paragraph>
-                You can change the name of this Safe. This name is only stored locally and never shared with Safe or any
+                You can change the name of this Safe. This name is only stored locally and never shared with us or any
                 third parties.
               </Paragraph>
               <Block className={classes.root}>
