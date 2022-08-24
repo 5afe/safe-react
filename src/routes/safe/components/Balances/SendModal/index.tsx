@@ -11,24 +11,25 @@ import { ReviewTxProp } from './screens/ReviewSendFundsTx'
 import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
 import { SendCollectibleTxInfo } from './screens/SendCollectible'
 import { Erc721Transfer } from '@gnosis.pm/safe-react-gateway-sdk'
+import { retry } from 'src/utils/retry'
 
-const ChooseTxType = lazy(() => import('./screens/ChooseTxType'))
+const ChooseTxType = lazy(() => retry(() => import('./screens/ChooseTxType')))
 
-const SendFunds = lazy(() => import('./screens/SendFunds'))
+const SendFunds = lazy(() => retry(() => import('./screens/SendFunds')))
 
-const SendCollectible = lazy(() => import('./screens/SendCollectible'))
+const SendCollectible = lazy(() => retry(() => import('./screens/SendCollectible')))
 
-const ReviewCollectible = lazy(() => import('./screens/ReviewCollectible'))
+const ReviewCollectible = lazy(() => retry(() => import('./screens/ReviewCollectible')))
 
-const ReviewSendFundsTx = lazy(() => import('./screens/ReviewSendFundsTx'))
+const ReviewSendFundsTx = lazy(() => retry(() => import('./screens/ReviewSendFundsTx')))
 
-const ContractInteraction = lazy(() => import('./screens/ContractInteraction'))
+const ContractInteraction = lazy(() => retry(() => import('./screens/ContractInteraction')))
 
-const ContractInteractionReview: any = lazy(() => import('./screens/ContractInteraction/Review'))
+const ContractInteractionReview: any = lazy(() => retry(() => import('./screens/ContractInteraction/Review')))
 
-const SendCustomTx = lazy(() => import('./screens/ContractInteraction/SendCustomTx'))
+const SendCustomTx = lazy(() => retry(() => import('./screens/ContractInteraction/SendCustomTx')))
 
-const ReviewCustomTx = lazy(() => import('./screens/ContractInteraction/ReviewCustomTx'))
+const ReviewCustomTx = lazy(() => retry(() => import('./screens/ContractInteraction/ReviewCustomTx')))
 
 const useStyles = makeStyles({
   loaderStyle: {

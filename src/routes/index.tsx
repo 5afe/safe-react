@@ -23,11 +23,13 @@ import { setChainIdFromUrl } from 'src/utils/history'
 import { usePageTracking } from 'src/utils/googleTagManager'
 import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
-const Welcome = React.lazy(() => import('./welcome/Welcome'))
-const CreateSafePage = React.lazy(() => import('./CreateSafePage/CreateSafePage'))
-const LoadSafePage = React.lazy(() => import('./LoadSafePage/LoadSafePage'))
-const SafeAppLandingPage = React.lazy(() => import('./SafeAppLandingPage/SafeAppLandingPage'))
-const SafeContainer = React.lazy(() => import('./safe/container'))
+import { retry } from 'src/utils/retry'
+
+const Welcome = React.lazy(() => retry(() => import('./welcome/Welcome')))
+const CreateSafePage = React.lazy(() => retry(() => import('./CreateSafePage/CreateSafePage')))
+const LoadSafePage = React.lazy(() => retry(() => import('./LoadSafePage/LoadSafePage')))
+const SafeAppLandingPage = React.lazy(() => retry(() => import('./SafeAppLandingPage/SafeAppLandingPage')))
+const SafeContainer = React.lazy(() => retry(() => import('./safe/container')))
 
 const Routes = (): React.ReactElement => {
   const location = useLocation()

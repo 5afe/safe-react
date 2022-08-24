@@ -13,9 +13,10 @@ import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { generatePrefixedAddressRoutes, SAFE_ROUTES, SAFE_SUBSECTION_ROUTE } from 'src/routes/routes'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
+import { retry } from 'src/utils/retry'
 
-const Collectibles = lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
-const Coins = lazy(() => import('src/routes/safe/components/Balances/Coins'))
+const Collectibles = lazy(() => retry(() => import('src/routes/safe/components/Balances/Collectibles')))
+const Coins = lazy(() => retry(() => import('src/routes/safe/components/Balances/Coins')))
 
 export const MANAGE_TOKENS_BUTTON_TEST_ID = 'manage-tokens-btn'
 export const BALANCE_ROW_TEST_ID = 'balance-row'

@@ -13,6 +13,7 @@ import SafeLoadError from '../components/SafeLoadError'
 import { useLoadSafe } from 'src/logic/safe/hooks/useLoadSafe'
 import { useSafeScheduledUpdates } from 'src/logic/safe/hooks/useSafeScheduledUpdates'
 import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
+import { retry } from 'src/utils/retry'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
@@ -22,12 +23,12 @@ export const ADDRESS_BOOK_TAB_BTN_TEST_ID = 'address-book-tab-btn'
 export const SAFE_VIEW_NAME_HEADING_TEST_ID = 'safe-name-heading'
 export const TRANSACTIONS_TAB_NEW_BTN_TEST_ID = 'transactions-tab-new-btn'
 
-const Home = lazy(() => import('src/routes/Home'))
-const Apps = lazy(() => import('src/routes/safe/components/Apps'))
-const Settings = lazy(() => import('src/routes/safe/components/Settings'))
-const Balances = lazy(() => import('src/routes/safe/components/Balances'))
-const TxList = lazy(() => import('src/routes/safe/components/Transactions/TxList'))
-const AddressBookTable = lazy(() => import('src/routes/safe/components/AddressBook'))
+const Home = lazy(() => retry(() => import('src/routes/Home')))
+const Apps = lazy(() => retry(() => import('src/routes/safe/components/Apps')))
+const Settings = lazy(() => retry(() => import('src/routes/safe/components/Settings')))
+const Balances = lazy(() => retry(() => import('src/routes/safe/components/Balances')))
+const TxList = lazy(() => retry(() => import('src/routes/safe/components/Transactions/TxList')))
+const AddressBookTable = lazy(() => retry(() => import('src/routes/safe/components/AddressBook')))
 
 const Container = (): React.ReactElement => {
   const featuresEnabled = useSelector(currentSafeFeaturesEnabled)

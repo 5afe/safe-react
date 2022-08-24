@@ -18,9 +18,10 @@ import onboard, { loadLastUsedProvider, removeLastUsedProvider } from 'src/logic
 import { isSupportedWallet } from 'src/logic/wallets/utils/walletList'
 import { initPairing, isPairingSupported } from 'src/logic/wallets/pairing/utils'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
+import { retry } from 'src/utils/retry'
 
-const HidePairingModule = lazy(
-  () => import('src/components/AppLayout/Header/components/ProviderDetails/HidePairingModule'),
+const HidePairingModule = lazy(() =>
+  retry(() => import('src/components/AppLayout/Header/components/ProviderDetails/HidePairingModule')),
 )
 
 const HeaderComponent = (): React.ReactElement => {

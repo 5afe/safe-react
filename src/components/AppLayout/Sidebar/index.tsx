@@ -13,6 +13,7 @@ import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 //import { loadFromCookie } from 'src/logic/cookies/utils'
 //import { COOKIES_KEY, BannerCookiesType, COOKIE_IDS } from 'src/logic/cookies/model/cookie'
 import { background } from 'src/theme/variables'
+import { retry } from 'src/utils/retry'
 
 const StyledDivider = styled(Divider)`
   margin: 16px -8px 0;
@@ -68,7 +69,7 @@ type Props = {
 // This doesn't play well if exported to its own file
 const lazyLoad = (path: string): React.ReactElement => {
   // import(path) does not work unless it is a template literal
-  const Component = lazy(() => import(`${path}`))
+  const Component = lazy(() => retry(() => import(`${path}`)))
   return wrapInSuspense(<Component />)
 }
 

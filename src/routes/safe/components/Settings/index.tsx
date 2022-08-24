@@ -16,14 +16,15 @@ import { generatePrefixedAddressRoutes, SAFE_ROUTES, SAFE_SUBSECTION_ROUTE } fro
 import { SETTINGS_EVENTS } from 'src/utils/events/settings'
 import Track from 'src/components/Track'
 import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
+import { retry } from 'src/utils/retry'
 
-const Advanced = lazy(() => import('./Advanced'))
-const SpendingLimitSettings = lazy(() => import('./SpendingLimit'))
-const ManageOwners = lazy(() => import('./ManageOwners'))
-const RemoveSafeModal = lazy(() => import('./RemoveSafeModal'))
-const SafeDetails = lazy(() => import('./SafeDetails'))
-const ThresholdSettings = lazy(() => import('./ThresholdSettings'))
-const Appearance = lazy(() => import('./Appearance'))
+const Advanced = lazy(() => retry(() => import('./Advanced')))
+const SpendingLimitSettings = lazy(() => retry(() => import('./SpendingLimit')))
+const ManageOwners = lazy(() => retry(() => import('./ManageOwners')))
+const RemoveSafeModal = lazy(() => retry(() => import('./RemoveSafeModal')))
+const SafeDetails = lazy(() => retry(() => import('./SafeDetails')))
+const ThresholdSettings = lazy(() => retry(() => import('./ThresholdSettings')))
+const Appearance = lazy(() => retry(() => import('./Appearance')))
 
 export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
 
