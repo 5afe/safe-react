@@ -1,7 +1,7 @@
 import { ReactElement, useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 import { Grid } from '@material-ui/core'
-import { Text, Link } from '@gnosis.pm/safe-react-components'
+import { Text, Link, Icon } from '@gnosis.pm/safe-react-components'
 
 import Block from 'src/components/layout/Block'
 import { grey400, lg } from 'src/theme/variables'
@@ -21,9 +21,14 @@ const SafeAppsPermissions = (): ReactElement => {
   const {
     permissions: safePermissions,
     updatePermission: updateSafePermission,
+    removePermissions: removeSafePermissions,
     isUserRestricted,
   } = useSafePermissions()
-  const { permissions: browserPermissions, updatePermission: updateBrowserPermission } = useBrowserPermissions()
+  const {
+    permissions: browserPermissions,
+    updatePermission: updateBrowserPermission,
+    removePermissions: removeBrowserPermissions,
+  } = useBrowserPermissions()
   const domains = useMemo(() => {
     const mergedPermissionsSet = new Set(Object.keys(browserPermissions).concat(Object.keys(safePermissions)))
 
@@ -67,6 +72,15 @@ const SafeAppsPermissions = (): ReactElement => {
       updateAllPermissions(origin, false)
     },
     [updateAllPermissions],
+  )
+
+  const handleRemoveApp = useCallback(
+    (event: React.MouseEvent, origin: string) => {
+      event.preventDefault()
+      removeSafePermissions(origin)
+      removeBrowserPermissions(origin)
+    },
+    [removeBrowserPermissions, removeSafePermissions],
   )
 
   const appNames = useMemo(() => {
@@ -129,6 +143,9 @@ const SafeAppsPermissions = (): ReactElement => {
             </StyledLink>
             <StyledLink href="#" color="error" size="lg" onClick={(event) => handleClearAll(event, domain)}>
               Clear all
+            </StyledLink>
+            <StyledLink href="#" color="error" size="lg" onClick={(event) => handleRemoveApp(event, domain)}>
+              <Icon size="sm" type="delete" color="error" tooltip="Remove app permissions" />
             </StyledLink>
           </StyledPermissionsCardFooter>
         </StyledPermissionsCard>
