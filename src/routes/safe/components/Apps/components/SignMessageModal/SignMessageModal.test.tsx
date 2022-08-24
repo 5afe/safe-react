@@ -188,7 +188,7 @@ describe('SignMessageModal Component', () => {
     ).toBeVisible()
   })
 
-  test('If message is invalid typed data, modal should be closed', () => {
+  test('If message is invalid JSON data, modal should be closed', () => {
     const onCloseFn = jest.fn()
     const typedMessageStr = `{
         Person: [
@@ -220,6 +220,28 @@ describe('SignMessageModal Component', () => {
         contents: 'Hello, Bob!',
       },
     }`
+
+    render(
+      <SignMessageModal
+        isOpen
+        safeAddress="0x1948fC557ed7219D33138bD2cD52Da7F2047B2bb"
+        message={typedMessageStr}
+        safeName="test safe"
+        ethBalance="100000000000000000"
+        onClose={onCloseFn}
+        onUserConfirm={jest.fn()}
+        onTxReject={jest.fn()}
+        requestId="1"
+        method={Methods.signTypedMessage}
+        app={getEmptySafeApp()}
+      />,
+    )
+    expect(onCloseFn).toHaveBeenCalled()
+  })
+
+  test('If message is invalid typed data, modal should be closed', () => {
+    const onCloseFn = jest.fn()
+    const typedMessageStr = `{"test": "test"}`
 
     render(
       <SignMessageModal

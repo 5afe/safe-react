@@ -53,6 +53,19 @@ export const SignMessageModal = ({ message, isOpen, method, ...rest }: SignMessa
       .encodeABI()
     readableData = convertToHumanReadableMessage(message)
   } else if (method == Methods.signTypedMessage) {
+    // check if the message is a valid typed data
+    try {
+      const typedData = JSON.parse(message)
+      if (!('domain' in typedData && 'types' in typedData && 'message' in typedData)) {
+        throw new Error('Invalid typed data')
+      }
+      readableData = JSON.stringify(typedData, undefined, 4)
+    } catch (e) {
+      // As the signing method is SignTypedMessage, the message should be a valid JSON.
+      // When it is not, we will reject the tx and close the modal.
+      rest.onTxReject(rest.requestId)
+      rest.onClose()
+    }
     // Here we firstly convert the typed message to safe typed message which contains the safe address and the current chainId,
     // then we hash it using ethers.utils._TypedDataEncoder.
     txData = getSignMessageLibContractInstance(web3, networkId)
@@ -64,14 +77,6 @@ export const SignMessageModal = ({ message, isOpen, method, ...rest }: SignMessa
         ),
       )
       .encodeABI()
-    try {
-      readableData = JSON.stringify(JSON.parse(message), undefined, 4)
-    } catch (e) {
-      // As the signing method is SignTypedMessage, the message should be a valid JSON.
-      // When it is not, we will reject the tx and close the modal.
-      rest.onTxReject(rest.requestId)
-      rest.onClose()
-    }
   } else {
     // Unsupported method
     rest.onTxReject(rest.requestId)
