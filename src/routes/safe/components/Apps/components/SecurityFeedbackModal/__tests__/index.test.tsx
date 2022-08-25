@@ -1,5 +1,6 @@
 import { render, fireEvent, screen, act } from 'src/utils/test-utils'
 import SecurityFeedbackModal from '../index'
+import { AllowedFeatures } from 'src/routes/safe/components/Apps/types'
 
 const pauseForSeconds = async (ms: number) => await new Promise((_) => setTimeout(_, ms))
 
@@ -8,10 +9,12 @@ describe('<SecurityFeedbackModal />', () => {
     onConfirm: jest.fn(),
     onCancel: jest.fn(),
     appUrl: 'https://safe-app.test.eth',
+    features: [],
     isExtendedListReviewed: false,
     isFirstTimeAccessingApp: false,
     isSafeAppInDefaultList: true,
     isConsentAccepted: true,
+    isPermissionsReviewCompleted: true,
   }
 
   it('should show the Legal Disclaimer if not previously accepted', () => {
@@ -93,5 +96,14 @@ describe('<SecurityFeedbackModal />', () => {
     fireEvent.click(screen.getByText(/cancel/i))
 
     expect(baseProps.onCancel).toHaveBeenCalledTimes(1)
+  })
+
+  it('should prompt the user for permissions', async () => {
+    const features: AllowedFeatures[] = [AllowedFeatures.camera, AllowedFeatures.microphone]
+
+    render(<SecurityFeedbackModal {...baseProps} isPermissionsReviewCompleted={false} features={features} />)
+
+    expect(await screen.findByText(AllowedFeatures.camera.toString())).toBeInTheDocument()
+    expect(await screen.findByText(AllowedFeatures.microphone.toString())).toBeInTheDocument()
   })
 })

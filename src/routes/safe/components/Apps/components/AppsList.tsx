@@ -245,7 +245,7 @@ const AppsList = ({ onRemoveApp }: AppListProps): React.ReactElement => {
                   const url = appToRemove.url
 
                   onRemoveApp(url)
-                  removeApp(appToRemove.id)
+                  removeApp(appToRemove.id, url)
                   setAppToRemove(null)
                 },
                 text: 'Remove',

@@ -39,6 +39,7 @@ describe('<SafeAppLandingPage>', () => {
             type: safeAppsGatewaySDK.SafeAppAccessPolicyTypes.NoRestrictions,
           },
           tags: [],
+          safeAppsPermissions: [],
         },
       ]),
     )
@@ -59,6 +60,7 @@ describe('<SafeAppLandingPage>', () => {
           type: safeAppsGatewaySDK.SafeAppAccessPolicyTypes.NoRestrictions,
         },
         tags: [],
+        safeAppsPermissions: [],
       }),
     )
 

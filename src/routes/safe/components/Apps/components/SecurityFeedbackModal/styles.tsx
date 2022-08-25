@@ -11,5 +11,5 @@ export const StyledTitle = styled(Title)<{ color?: string; bold?: boolean; cente
 export const StyledSecurityTitle = styled(Text)`
   text-align: center;
   color: #b2bbc0;
-  margin: 0 80px;
+  margin: 0 75px;
 `

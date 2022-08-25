@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
-import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
-import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
+import { BrowserPermission } from './permissions/useBrowserPermissions'
+import { AllowedFeatures, PermissionStatus, SafeApp } from '../types'
 
 const APPS_SECURITY_FEEDBACK_MODAL = 'APPS_SECURITY_FEEDBACK_MODAL'
 
@@ -12,20 +12,31 @@ type SecurityFeedbackModalStorage = {
   consentAccepted: boolean
 }
 
-const useSecurityFeedbackModal = (): {
+type useSecurityFeedbackModal = {
+  url: string
+  safeApp?: SafeApp
+  safeAppManifest?: SafeApp
+  addPermissions: (origin: string, permissions: BrowserPermission[]) => void
+  getPermissions: (origin: string) => BrowserPermission[]
+}
+
+const useSecurityFeedbackModal = ({
+  url,
+  safeApp,
+  safeAppManifest,
+  addPermissions,
+  getPermissions,
+}: useSecurityFeedbackModal): {
   isModalVisible: boolean
   isSafeAppInDefaultList: boolean
   isFirstTimeAccessingApp: boolean
   isConsentAccepted: boolean
   isExtendedListReviewed: boolean
-  onComplete: (shouldHide: boolean) => void
+  isPermissionsReviewCompleted: boolean
+  onComplete: (shouldHide: boolean, permissions: BrowserPermission[]) => void
   onRemoveCustomApp: (appUrl: string) => void
 } => {
   const didMount = useRef(false)
-
-  const { isLoading, getSafeApp } = useAppList()
-  const { getAppUrl } = useSafeAppUrl()
-  const url = getAppUrl()
 
   const [appsReviewed, setAppsReviewed] = useState<string[]>([])
   const [extendedListReviewed, setExtendedListReviewed] = useState(false)
@@ -72,32 +83,58 @@ const useSecurityFeedbackModal = (): {
   const isSafeAppInDefaultList = useMemo(() => {
     if (!url) return false
 
-    return !!getSafeApp(url)
-  }, [getSafeApp, url])
+    return !!safeApp
+  }, [safeApp, url])
 
   const isFirstTimeAccessingApp = useMemo(() => {
     if (!url) return true
 
-    const safeAppId = getSafeApp(url)?.id
+    const safeAppId = safeApp?.id
 
     return safeAppId ? !appsReviewed?.includes(safeAppId) : !customAppsReviewed?.includes(url)
-  }, [appsReviewed, customAppsReviewed, getSafeApp, url])
+  }, [appsReviewed, customAppsReviewed, safeApp, url])
+
+  const isPermissionsReviewCompleted = useMemo(() => {
+    if (!url) return false
+
+    const safeAppRequiredFeatures = safeAppManifest?.safeAppsPermissions || []
+    const featureHasBeenGrantedOrDenied = (feature: AllowedFeatures) =>
+      getPermissions(url).some((permission: BrowserPermission) => {
+        return permission.feature === feature && permission.status !== PermissionStatus.PROMPT
+      })
+
+    // If the app add a new feature in the manifest we need to detect it and show the modal again
+    return !!safeAppRequiredFeatures.every(featureHasBeenGrantedOrDenied)
+  }, [getPermissions, safeAppManifest, url])
 
   const isModalVisible = useMemo(() => {
-    const isComponentReady = !isLoading && didMount.current
+    const isComponentReady = didMount.current
     const shouldShowLegalDisclaimer = !consentAccepted
+    const shouldShowAllowedFeatures = !isPermissionsReviewCompleted
     const shouldShowSecurityPractices = isSafeAppInDefaultList && isFirstTimeAccessingApp
     const shouldShowUnknownAppWarning =
       !isSafeAppInDefaultList && isFirstTimeAccessingApp && !isDisclaimerReadingCompleted
 
-    return isComponentReady && (shouldShowLegalDisclaimer || shouldShowSecurityPractices || shouldShowUnknownAppWarning)
-  }, [consentAccepted, isDisclaimerReadingCompleted, isFirstTimeAccessingApp, isLoading, isSafeAppInDefaultList])
+    return (
+      isComponentReady &&
+      (shouldShowLegalDisclaimer ||
+        shouldShowSecurityPractices ||
+        shouldShowUnknownAppWarning ||
+        shouldShowAllowedFeatures)
+    )
+  }, [
+    consentAccepted,
+    isPermissionsReviewCompleted,
+    isSafeAppInDefaultList,
+    isFirstTimeAccessingApp,
+    isDisclaimerReadingCompleted,
+  ])
 
   const onComplete = useCallback(
-    (shouldHide: boolean) => {
+    (shouldHide: boolean, browserPermissions: BrowserPermission[]) => {
       setConsentAccepted(true)
 
-      const safeAppId = getSafeApp(url)?.id
+      const safeAppId = safeApp?.id
 
       if (safeAppId && !appsReviewed.includes(safeAppId)) {
         const reviewedApps = [...appsReviewed, safeAppId]
@@ -115,9 +152,21 @@ const useSecurityFeedbackModal = (): {
         setExtendedListReviewed(true)
       }
 
+      if (!isPermissionsReviewCompleted) {
+        addPermissions(url, browserPermissions)
+      }
+
       setIsDisclaimerReadingCompleted(true)
     },
-    [appsReviewed, customAppsReviewed, extendedListReviewed, getSafeApp, url],
+    [
+      addPermissions,
+      appsReviewed,
+      customAppsReviewed,
+      extendedListReviewed,
+      isPermissionsReviewCompleted,
+      safeApp,
+      url,
+    ],
   )
 
   const onRemoveCustomApp = useCallback(
@@ -132,6 +181,7 @@ const useSecurityFeedbackModal = (): {
     isModalVisible,
     isSafeAppInDefaultList,
     isFirstTimeAccessingApp,
+    isPermissionsReviewCompleted,
     isConsentAccepted: consentAccepted,
     isExtendedListReviewed: extendedListReviewed,
     onComplete,

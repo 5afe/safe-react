@@ -84,6 +84,7 @@ const SafeAppLandingPage = (): ReactElement => {
                 name={safeAppDetails.name}
                 description={safeAppDetails?.description}
                 availableChains={availableChains}
+                isInDefaultList={!!safeAppDetailsFromConfigService}
               />
             )}
 
