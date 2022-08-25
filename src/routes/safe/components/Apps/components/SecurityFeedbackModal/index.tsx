@@ -9,29 +9,48 @@ import SecurityFeedbackList from './SecurityFeedbackList'
 import UnknownAppWarning from './UnknownAppWarning'
 import { SECURITY_PRACTICES } from './constants'
 import SecurityFeedbackContent from './SecurityFeedbackContent'
-import { SecurityFeedbackPractice } from '../../types'
+import {
+  AllowedFeatures,
+  AllowedFeatureSelection,
+  PermissionStatus,
+  SecurityFeedbackPractice,
+} from 'src/routes/safe/components/Apps/types'
 import SecurityFeedbackDomain from './SecurityFeedbackDomain'
+import SecurityFeedbackAllowedFeatures from './SecurityFeedbackAllowedFeatures'
+import { BrowserPermission } from '../../hooks/permissions/useBrowserPermissions'
 
 interface SecurityFeedbackModalProps {
   onCancel: () => void
-  onConfirm: (hideWarning: boolean) => void
+  onConfirm: (hideWarning: boolean, browserPermisisons: BrowserPermission[]) => void
   appUrl: string
+  features: AllowedFeatures[]
   isConsentAccepted?: boolean
   isSafeAppInDefaultList: boolean
   isFirstTimeAccessingApp: boolean
   isExtendedListReviewed: boolean
+  isPermissionsReviewCompleted: boolean
 }
 
 const SecurityFeedbackModal = ({
   onCancel,
   onConfirm,
   appUrl,
+  features,
   isConsentAccepted,
   isSafeAppInDefaultList,
   isFirstTimeAccessingApp,
   isExtendedListReviewed,
+  isPermissionsReviewCompleted,
 }: SecurityFeedbackModalProps): JSX.Element => {
   const [hideWarning, setHideWarning] = useState(false)
+  const [selectedFeatures, setSelectedFeatures] = useState<AllowedFeatureSelection[]>(
+    features.map((feature) => {
+      return {
+        feature,
+        checked: true,
+      }
+    }),
+  )
   const [currentSlide, setCurrentSlide] = useState(0)
 
   const totalSlides = useMemo(() => {
@@ -53,8 +72,18 @@ const SecurityFeedbackModal = ({
       totalSlides += 1
     }
 
+    if (!isPermissionsReviewCompleted) {
+      totalSlides += 1
+    }
+
     return totalSlides
-  }, [isConsentAccepted, isExtendedListReviewed, isFirstTimeAccessingApp, isSafeAppInDefaultList])
+  }, [
+    isConsentAccepted,
+    isExtendedListReviewed,
+    isFirstTimeAccessingApp,
+    isSafeAppInDefaultList,
+    isPermissionsReviewCompleted,
+  ])
 
   const handleSlideChange = (newStep: number) => {
     const isFirstStep = newStep === -1
@@ -65,7 +94,15 @@ const SecurityFeedbackModal = ({
     }
 
     if (isLastStep) {
-      onConfirm(hideWarning)
+      onConfirm(
+        hideWarning,
+        selectedFeatures.map(({ feature, checked }) => {
+          return {
+            feature,
+            status: checked ? PermissionStatus.GRANTED : PermissionStatus.DENIED,
+          }
+        }),
+      )
     }
 
     setCurrentSlide(newStep)
@@ -83,6 +120,20 @@ const SecurityFeedbackModal = ({
     () => !isSafeAppInDefaultList && isFirstTimeAccessingApp,
     [isFirstTimeAccessingApp, isSafeAppInDefaultList],
   )
+
+  const handleFeatureSelectionChange = (feature: AllowedFeatures, checked: boolean) => {
+    setSelectedFeatures(
+      selectedFeatures.map((feat) => {
+        if (feat.feature === feature) {
+          return {
+            feature,
+            checked,
+          }
+        }
+        return feat
+      }),
+    )
+  }
 
   return (
     <StyledContainer>
@@ -109,6 +160,12 @@ const SecurityFeedbackModal = ({
                   </SecurityFeedbackContent>
                 )
               })}
+            {!isPermissionsReviewCompleted && (
+              <SecurityFeedbackAllowedFeatures
+                features={selectedFeatures}
+                onFeatureSelectionChange={handleFeatureSelectionChange}
+              />
+            )}
             {shouldShowUnknownAppWarning && <UnknownAppWarning url={appUrl} onHideWarning={setHideWarning} />}
           </Slider>
         </StyledGrid>

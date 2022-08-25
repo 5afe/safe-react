@@ -1,12 +1,13 @@
 import axios from 'axios'
 import memoize from 'lodash/memoize'
-
+// https://stackoverflow.com/questions/51269431/jest-mock-inner-function
+import * as utils from './utils'
 import { getContentFromENS } from 'src/logic/wallets/getWeb3'
 import appsIconSvg from 'src/assets/icons/apps.svg'
 import { FETCH_STATUS } from 'src/utils/requests'
 import { SafeAppAccessPolicyTypes } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import { SafeApp } from './types'
+import { AllowedFeatures, SafeApp } from './types'
 
 type AppManifestIcon = {
   src: string
@@ -21,6 +22,7 @@ export interface AppManifest {
   description: string
   icons?: AppManifestIcon[]
   providedBy: string
+  safe_apps_permissions?: AllowedFeatures[]
 }
 
 export const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
@@ -46,13 +48,31 @@ export const getAppInfoFromOrigin = (origin: string): { url: string; name: strin
   }
 }
 
+const validateRequestedPermissions = (permissions?: AllowedFeatures[]): boolean => {
+  if (!permissions) {
+    return true
+  }
+
+  if (!Array.isArray(permissions)) {
+    return false
+  }
+
+  const features = Object.values(AllowedFeatures)
+
+  return permissions.every((permission) => {
+    return features.includes(permission)
+  })
+}
+
 export const isAppManifestValid = (appInfo: AppManifest): boolean =>
   // `appInfo` exists and `name` exists
   !!appInfo?.name &&
   // if `name` exists is not 'unknown'
   appInfo.name !== EMPTY_SAFE_APP &&
   // `description` exists
-  !!appInfo.description
+  !!appInfo.description &&
+  // `safe_apps_permissions` are valid if we have been listed on the AllowFeatures enum
+  validateRequestedPermissions(appInfo.safe_apps_permissions)
 
 export const getEmptySafeApp = (url = ''): SafeApp => {
   return {
@@ -67,6 +87,7 @@ export const getEmptySafeApp = (url = ''): SafeApp => {
       type: SafeAppAccessPolicyTypes.NoRestrictions,
     },
     tags: [],
+    safeAppsPermissions: [],
   }
 }
 
@@ -111,6 +132,7 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string, validateManifest
     iconPath: appInfo.icons?.length ? getAppIcon(appInfo.icons) : appInfo.iconPath,
     description: appInfo.description,
     providedBy: appInfo.providedBy,
+    safeAppsPermissions: appInfo.safe_apps_permissions || [],
   }
 
   res = {
@@ -122,7 +144,7 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string, validateManifest
   }
 
   const concatenatedImgPath = `${noTrailingSlashUrl}/${appInfoData.iconPath}`
-  if (await canLoadAppImage(concatenatedImgPath)) {
+  if (await utils.canLoadAppImage(concatenatedImgPath)) {
     res.iconUrl = concatenatedImgPath
   }
 
@@ -175,7 +197,7 @@ export const uniqueApp =
     return exists ? 'This app is already registered.' : undefined
   }
 
-const canLoadAppImage = (path: string, timeout = 10000) =>
+export const canLoadAppImage = (path: string, timeout = 10000) =>
   new Promise(function (resolve) {
     try {
       const image = new Image()

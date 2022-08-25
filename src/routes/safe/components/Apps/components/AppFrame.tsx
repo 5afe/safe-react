@@ -12,6 +12,7 @@ import {
 } from '@gnosis.pm/safe-apps-sdk'
 import { useSelector } from 'react-redux'
 import { INTERFACE_MESSAGES, Transaction, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk-v1'
+import { PermissionRequest } from '@gnosis.pm/safe-apps-sdk/dist/src/types/permissions'
 import Web3 from 'web3'
 
 import { currentSafe } from 'src/logic/safe/store/selectors'
@@ -22,11 +23,10 @@ import { SAFE_POLLING_INTERVAL } from 'src/utils/constants'
 import { ConfirmTxModal } from './ConfirmTxModal'
 import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
 import { LegacyMethods, useAppCommunicator } from '../communicator'
-import { SafeApp } from '../types'
-import { EMPTY_SAFE_APP, getAppInfoFromUrl, getEmptySafeApp, getLegacyChainName } from '../utils'
+import { PermissionStatus, SafeApp } from '../types'
+import { EMPTY_SAFE_APP, getLegacyChainName } from '../utils'
 import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
-import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
 import { useSignMessageModal } from '../hooks/useSignMessageModal'
 import { SignMessageModal } from './SignMessageModal'
@@ -34,11 +34,15 @@ import { web3HttpProviderOptions } from 'src/logic/wallets/getWeb3'
 import { useThirdPartyCookies } from '../hooks/useThirdPartyCookies'
 import { ThirdPartyCookiesWarning } from './ThirdPartyCookiesWarning'
 import { grantedSelector } from 'src/routes/safe/container/selector'
+import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { useRemoteSafeApps } from 'src/routes/safe/components/Apps/hooks/appList/useRemoteSafeApps'
 import { trackSafeAppOpenCount } from 'src/routes/safe/components/Apps/trackAppUsageCount'
+import PermissionsPrompt from 'src/routes/safe/components/Apps/components/PermissionsPrompt'
+import { useSafeAppFromManifest } from 'src/routes/safe/components/Apps/hooks/useSafeAppFromManifest'
+import { useSafePermissions } from 'src/routes/safe/components/Apps/hooks/permissions'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -74,6 +78,7 @@ type ConfirmTransactionModalState = {
 
 type Props = {
   appUrl: string
+  allowedFeaturesList: string
 }
 
 const APP_LOAD_ERROR_TIMEOUT = 30000
@@ -88,16 +93,16 @@ const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
 const URL_NOT_PROVIDED_ERROR = 'App url No provided or it is invalid.'
 const APP_LOAD_ERROR = 'There was an error loading the Safe App. There might be a problem with the App provider.'
 
-const AppFrame = ({ appUrl }: Props): ReactElement => {
+const AppFrame = ({ appUrl, allowedFeaturesList }: Props): ReactElement => {
   const { address: safeAddress, ethBalance, owners, threshold } = useSelector(currentSafe)
   const { nativeCurrency, chainId, chainName, shortName, blockExplorerUriTemplate } = getChainInfo()
   const safeName = useSelector((state) => addressBookEntryName(state, { address: safeAddress }))
   const granted = useSelector(grantedSelector)
+  const addressBook = useSelector(currentNetworkAddressBook)
   const iframeRef = useRef<HTMLIFrameElement>(null)
   const [confirmTransactionModal, setConfirmTransactionModal] =
     useState<ConfirmTransactionModalState>(INITIAL_CONFIRM_TX_MODAL_STATE)
   const [appIsLoading, setAppIsLoading] = useState<boolean>(true)
-  const [safeApp, setSafeApp] = useState<SafeApp>(() => getEmptySafeApp(appUrl))
   const [signMessageModalState, openSignMessageModal, closeSignMessageModal] = useSignMessageModal()
   const timer = useRef<number>()
   const [isLoadingSlow, setIsLoadingSlow] = useState<boolean>(false)
@@ -106,12 +111,14 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const { thirdPartyCookiesDisabled, setThirdPartyCookiesDisabled } = useThirdPartyCookies()
   const { remoteSafeApps } = useRemoteSafeApps()
   const currentApp = remoteSafeApps.filter((app) => app.url === appUrl)[0]
-
+  const { confirmPermissionRequest, permissionsRequest, setPermissionsRequest, getPermissions, hasPermission } =
+    useSafePermissions()
   const safeAppsRpc = getSafeAppsRpcServiceUrl()
   const safeAppWeb3Provider = useMemo(
     () => new Web3.providers.HttpProvider(safeAppsRpc, web3HttpProviderOptions),
     [safeAppsRpc],
   )
+  const { safeApp } = useSafeAppFromManifest(appUrl)
 
   useEffect(() => {
     const clearTimeouts = () => {
@@ -225,6 +232,26 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       return balances
     })
 
+    communicator?.on(Methods.wallet_getPermissions, (msg) => {
+      return getPermissions(msg.origin)
+    })
+
+    communicator?.on(Methods.wallet_requestPermissions, async (msg) => {
+      setPermissionsRequest({
+        origin: msg.origin,
+        request: msg.data.params as PermissionRequest[],
+        requestId: msg.data.id,
+      })
+    })
+
+    communicator?.on(Methods.requestAddressBook, async (msg) => {
+      if (hasPermission(msg.origin, Methods.requestAddressBook)) {
+        return addressBook
+      }
+
+      return []
+    })
+
     communicator?.on(Methods.rpcCall, async (msg) => {
       const params = msg.data.params as RPCPayload
 
@@ -292,6 +319,10 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     safeAppWeb3Provider,
     granted,
     blockExplorerUriTemplate,
+    addressBook,
+    getPermissions,
+    setPermissionsRequest,
+    hasPermission,
   ])
 
   const onUserTxConfirm = (safeTxHash: string, requestId: RequestId) => {
@@ -320,21 +351,24 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     trackEvent({ ...SAFE_APPS_EVENTS.TRANSACTION_REJECTED, label: safeApp.name })
   }
 
+  const onAcceptPermissionRequest = (origin: string, requestId: RequestId) => {
+    const permissions = confirmPermissionRequest(PermissionStatus.GRANTED)
+    communicator?.send(permissions, requestId as string)
+  }
+
+  const onRejectPermissionRequest = (requestId: RequestId) => {
+    if (requestId) {
+      confirmPermissionRequest(PermissionStatus.DENIED)
+      communicator?.send('Permissions were rejected', requestId as string, true)
+    } else {
+      setPermissionsRequest(undefined)
+    }
+  }
+
   useEffect(() => {
     if (!appUrl) {
       throw Error(URL_NOT_PROVIDED_ERROR)
     }
-
-    const loadApp = async () => {
-      try {
-        const app = await getAppInfoFromUrl(appUrl, false)
-        setSafeApp(app)
-      } catch (err) {
-        logError(Errors._900, `${appUrl}, ${err.message}`)
-      }
-    }
-
-    loadApp()
   }, [appUrl])
 
   useEffect(() => {
@@ -362,7 +396,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
           src={appUrl}
           title={safeApp.name}
           onLoad={onIframeLoad}
-          allow="camera"
+          allow={allowedFeaturesList}
         />
       </StyledCard>
 
@@ -393,6 +427,17 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
         onUserConfirm={onUserTxConfirm}
         onTxReject={onTxReject}
       />
+
+      {permissionsRequest && (
+        <PermissionsPrompt
+          isOpen
+          origin={permissionsRequest.origin}
+          requestId={permissionsRequest.requestId}
+          onAccept={onAcceptPermissionRequest}
+          onReject={onRejectPermissionRequest}
+          permissions={permissionsRequest.request}
+        />
+      )}
     </AppWrapper>
   )
 }

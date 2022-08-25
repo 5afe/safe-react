@@ -73,9 +73,18 @@ interface GnoModalProps {
   open: boolean
   paperClassName?: string
   title: string
+  style?: React.CSSProperties
 }
 
-const GnoModal = ({ children, description, handleClose, open, paperClassName, title }: GnoModalProps): ReactElement => {
+const GnoModal = ({
+  children,
+  description,
+  handleClose,
+  open,
+  paperClassName,
+  title,
+  style,
+}: GnoModalProps): ReactElement => {
   return (
     <ModalStyled
       BackdropProps={{ className: 'overlay' }}
@@ -83,6 +92,7 @@ const GnoModal = ({ children, description, handleClose, open, paperClassName, ti
       aria-labelledby={title}
       onClose={handleClose}
       open={open}
+      style={style}
     >
       <div className={cn('paper', paperClassName)}>{children}</div>
     </ModalStyled>
@@ -216,7 +226,7 @@ const Buttons = ({ cancelButtonProps = {}, confirmButtonProps = {} }: ButtonsPro
       <Button
         size="md"
         color="primary"
-        variant="outlined"
+        variant={cancelButtonProps.variant || 'outlined'}
         type={cancelOnClick ? 'button' : 'submit'}
         disabled={cancelDisabled || [ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(cancelStatus)}
         data-testid={cancelTestId}
@@ -278,6 +288,7 @@ interface ModalProps {
   handleClose: () => void
   open?: boolean
   title?: string
+  style?: React.CSSProperties
 }
 
 export const Modal = ({ children, description = '', open = true, title = '', ...props }: ModalProps): ReactElement => {

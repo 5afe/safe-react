@@ -8,6 +8,7 @@ import { FETCH_STATUS } from 'src/utils/requests'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
 import { isSameUrl } from '../../utils'
+import { useBrowserPermissions, useSafePermissions } from '../permissions'
 
 type UseAppListReturnType = {
   allApps: SafeApp[]
@@ -15,7 +16,7 @@ type UseAppListReturnType = {
   customApps: SafeApp[]
   pinnedSafeApps: SafeApp[]
   togglePin: (app: SafeApp) => void
-  removeApp: (appId: string) => void
+  removeApp: (appId: string, url: string) => void
   addCustomApp: (app: SafeApp) => void
   isLoading: boolean
   getSafeApp: (url: string) => SafeApp | undefined
@@ -26,6 +27,8 @@ const useAppList = (): UseAppListReturnType => {
   const { customSafeApps, updateCustomSafeApps } = useCustomSafeApps()
   const { pinnedSafeAppIds, updatePinnedSafeApps } = usePinnedSafeApps(remoteSafeApps, remoteAppsFetchStatus)
   const remoteIsLoading = remoteAppsFetchStatus === FETCH_STATUS.LOADING
+  const { removePermissions: removeSafePermissions } = useSafePermissions()
+  const { removePermissions: removeBrowserPermissions } = useBrowserPermissions()
 
   const allApps = useMemo(() => {
     const allApps = [...remoteSafeApps, ...customSafeApps]
@@ -59,11 +62,13 @@ const useAppList = (): UseAppListReturnType => {
   )
 
   const removeApp = useCallback(
-    (appId: string): void => {
+    (appId: string, url: string): void => {
       const newPersistedList = customSafeApps.filter(({ id }) => id !== appId)
+      removeSafePermissions(url)
+      removeBrowserPermissions(url)
       updateCustomSafeApps(newPersistedList)
     },
-    [updateCustomSafeApps, customSafeApps],
+    [customSafeApps, removeSafePermissions, removeBrowserPermissions, updateCustomSafeApps],
   )
 
   const togglePin = useCallback(
@@ -87,6 +92,8 @@ const useAppList = (): UseAppListReturnType => {
 
   const getSafeApp = useCallback(
     (url: string): SafeApp | undefined => {
+      if (!url) return
+
       const urlInstance = new URL(url)
       const safeAppUrl = `${urlInstance.hostname}/${urlInstance.pathname}`
 
