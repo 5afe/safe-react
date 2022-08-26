@@ -165,7 +165,7 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
           )}
           {!csvLoaded && importError === '' && (
             <Text color="text" as="p" size="xl">
-              Only CSV files exported from Gnosis Safe are allowed. <br />
+              Only CSV files exported from the Safe are allowed. <br />
               <HelpInfo />
             </Text>
           )}

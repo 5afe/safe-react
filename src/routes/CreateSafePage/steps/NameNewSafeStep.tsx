@@ -88,9 +88,9 @@ function NameNewSafeStep(): ReactElement {
     <BlockWithPadding data-testid={'create-safe-name-step'}>
       <Block margin="md">
         <Paragraph color="primary" noMargin size="lg">
-          You are about to create a new Gnosis Safe wallet with one or more owners. First, let&apos;s give your new
-          wallet a name. This name is only stored locally and will never be shared with Gnosis or any third parties. The
-          new Safe will ONLY be available on <NetworkLabel />
+          You are about to create a new Safe wallet with one or more owners. First, let&apos;s give your new wallet a
+          name. This name is only stored locally and will never be shared with us or any third parties. The new Safe
+          will ONLY be available on <NetworkLabel />
         </Paragraph>
       </Block>
       <label htmlFor={FIELD_CREATE_CUSTOM_SAFE_NAME}>Name of the new Safe</label>

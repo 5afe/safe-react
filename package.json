@@ -12,8 +12,8 @@
   },
   "license": "MIT",
   "author": {
-    "name": "Gnosis Team",
-    "email": "safe@gnosis.io"
+    "name": "Safe Team",
+    "email": "support@safe.global"
   },
   "homepage": "/app",
   "scripts": {
