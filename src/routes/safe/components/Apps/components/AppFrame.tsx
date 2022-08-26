@@ -293,7 +293,13 @@ const AppFrame = ({ appUrl, allowedFeaturesList }: Props): ReactElement => {
     communicator?.on(Methods.signMessage, async (msg) => {
       const { message } = msg.data.params as SignMessageParams
 
-      openSignMessageModal(message, msg.data.id)
+      openSignMessageModal(message, msg.data.id, Methods.signMessage)
+    })
+
+    communicator?.on(Methods.signTypedMessage, async (msg) => {
+      const { message } = msg.data.params as SignMessageParams
+
+      openSignMessageModal(message, msg.data.id, Methods.signTypedMessage)
     })
 
     communicator?.on(Methods.getChainInfo, async () => {
@@ -424,6 +430,7 @@ const AppFrame = ({ appUrl, allowedFeaturesList }: Props): ReactElement => {
         onClose={closeSignMessageModal}
         requestId={signMessageModalState.requestId}
         message={signMessageModalState.message}
+        method={signMessageModalState.method}
         onUserConfirm={onUserTxConfirm}
         onTxReject={onTxReject}
       />
