@@ -8,8 +8,6 @@ WORKDIR /app
 
 COPY package.json yarn.lock .
 
-COPY  src/logic/contracts/artifacts ./src/logic/contracts/artifacts
-
 RUN yarn install
 
 COPY . .
