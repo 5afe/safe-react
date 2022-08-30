@@ -20,7 +20,7 @@ const AnimatedLogo = (): ReactElement => {
   const RESTART_DELAY = 2 * 60e3 // 2 minutes
   const restartKey = useInterval(RESTART_DELAY)
 
-  return <Img alt="Safe" src={SafeLogo} id="safe-logo" height={36} key={String(restartKey)} />
+  return <Img alt="Safe" src={`${SafeLogo}?${restartKey}`} id="safe-logo" height={36} />
 }
 
 export default AnimatedLogo
