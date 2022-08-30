@@ -1,7 +1,7 @@
 const balanceRowTestId = '[data-testid=balance-row]'
 
-const TEST_SAFE = 'rin:0x11Df0fa87b30080d59eba632570f620e37f2a8f7'
-const ASSETS_LENGTH = 7
+const TEST_SAFE = 'tcro:0xbB91e283d2ab0E110620b47A9139cAD202210A05'
+const ASSETS_LENGTH = 1
 const ASSET_NAME_COLUMN = 0
 const TOKEN_AMOUNT_COLUMN = 1
 const FIAT_AMOUNT_COLUMN = 2
@@ -23,7 +23,7 @@ describe('Assets > Coins', () => {
       cy.get(balanceRowTestId).should('have.length', ASSETS_LENGTH)
     })
 
-    it('should have Dai', () => {
+    it('should have tCRO', () => {
       // Row should have an image with alt text "Dai"
       cy.contains('Dai')
         .parents('tr')
@@ -32,7 +32,7 @@ describe('Assets > Coins', () => {
         })
 
       // Asset name column contains link to block explorer
-      cy.contains('Dai')
+      cy.contains('tCRO')
         .parents('tr')
         .find('td')
         .eq(ASSET_NAME_COLUMN)
@@ -41,46 +41,6 @@ describe('Assets > Coins', () => {
 
       // Balance should contain DAI
       cy.contains('Dai').parents('tr').find('td').eq(TOKEN_AMOUNT_COLUMN).contains('DAI')
-    })
-
-    it('should have Wrapped Ether', () => {
-      // Row should have an image with alt text "Wrapped Ether"
-      cy.contains('Wrapped Ether')
-        .parents('tr')
-        .within(() => {
-          cy.get('img[alt="Wrapped Ether"]').should('be.visible')
-        })
-
-      // Asset name column contains link to block explorer
-      cy.contains('Wrapped Ether')
-        .parents('tr')
-        .find('td')
-        .eq(ASSET_NAME_COLUMN)
-        .get('a[aria-label="Show details on Etherscan"]')
-        .should('be.visible')
-
-      // Balance should contain WETH
-      cy.contains('Wrapped Ether').parents('tr').find('td').eq(TOKEN_AMOUNT_COLUMN).contains('WETH')
-    })
-
-    it('should have USD Coin', () => {
-      // Row should have an image with alt text "USD Coin"
-      cy.contains('USD Coin')
-        .parents('tr')
-        .within(() => {
-          cy.get('img[alt="USD Coin"]').should('be.visible')
-        })
-
-      // Asset name column contains link to block explorer
-      cy.contains('USD Coin')
-        .parents('tr')
-        .find('td')
-        .eq(ASSET_NAME_COLUMN)
-        .get('a[aria-label="Show details on Etherscan"]')
-        .should('be.visible')
-
-      // Balance should contain USDC
-      cy.contains('USD Coin').parents('tr').find('td').eq(TOKEN_AMOUNT_COLUMN).contains('USDC')
     })
   })
 
@@ -130,34 +90,6 @@ describe('Assets > Coins', () => {
       cy.get(balanceRowTestId).first().find('td').eq(FIAT_AMOUNT_COLUMN).should('not.contain', 'USD')
       // First row Fiat balance should contain EUR
       cy.get(balanceRowTestId).first().find('td').eq(FIAT_AMOUNT_COLUMN).contains('EUR')
-    })
-  })
-
-  describe('pagination should work', () => {
-    it('should should allow 5 rows per page and navigate to next and previous page', () => {
-      // Click on the pagination select dropdown
-      cy.get('[aria-haspopup="listbox"]').contains('100').click()
-
-      // Select 5 rows per page
-      cy.get('[aria-haspopup="listbox"]').get('li[role="option"]').contains('5').click()
-
-      // Table should have 5 rows
-      cy.contains('1-5 of 7')
-      cy.get(balanceRowTestId).should('have.length', 5)
-
-      // Click on the next page button
-      cy.get('button[aria-label="Next Page"]').click()
-
-      // Table should have 2 rows
-      cy.contains('6-7 of 7')
-      cy.get(balanceRowTestId).should('have.length', 2)
-
-      // Click on the previous page button
-      cy.get('button[aria-label="Previous Page"]').click()
-
-      // Table should have 5 rows
-      cy.contains('1-5 of 7')
-      cy.get(balanceRowTestId).should('have.length', 5)
     })
   })
 

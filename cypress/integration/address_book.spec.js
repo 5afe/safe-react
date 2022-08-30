@@ -4,17 +4,17 @@ import { format } from 'date-fns'
 
 const NAME = 'Owner1'
 const EDITED_NAME = 'Edited Owner1'
-const ADDRESS = '0x61a0c717d18232711bC788F19C9Cd56a43cc8872'
-const ENS_NAME = 'francotest.eth'
-const RINKEBY_TEST_SAFE = 'rin:0xFfDC1BcdeC18b1196e7FA04246295DE3A17972Ac'
-const GNO_TEST_SAFE = 'gno:0xB8d760a90a5ed54D3c2b3EFC231277e99188642A'
+const ADDRESS = '0x20cc148211CcddB9904e64895B59a6B313CC9fC3'
+const ENS_NAME = ''
+const RINKEBY_TEST_SAFE = 'cro:0x5ED44E414AE18AF0793cb842Bb8f1C1b6295777B'
+const GNO_TEST_SAFE = 'tcro:0xbB91e283d2ab0E110620b47A9139cAD202210A05'
 const RINKEBY_CSV_ENTRY = {
-  name: 'rinkeby user 1',
-  address: '0x730F87dA2A3C6721e2196DFB990759e9bdfc5083',
+  name: 'cronos user 1',
+  address: '0x20cc148211CcddB9904e64895B59a6B313CC9fC3',
 }
 const GNO_CSV_ENTRY = {
-  name: 'gno user 1',
-  address: '0x61a0c717d18232711bC788F19C9Cd56a43cc8872',
+  name: 'cronos-testnet user 1',
+  address: '0x20cc148211CcddB9904e64895B59a6B313CC9fC3',
 }
 
 describe('Address book', () => {
@@ -86,7 +86,7 @@ describe('Address book', () => {
 
     it('should find Gnosis Chain imported address', () => {
       // Go to a Safe on Gnosis Chain
-      cy.get('nav').findByText('Rinkeby').click()
+      cy.get('nav').findByText('Cronos').click()
       cy.findByText('Gnosis Chain').click()
 
       // Navigate to the Address Book page

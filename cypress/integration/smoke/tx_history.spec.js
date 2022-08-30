@@ -1,14 +1,14 @@
 const SAFE = 'rin:0x87a57cBf742CC1Fc702D0E9BF595b1E056693e2f'
 
 // Logo pathnames
-const CONTRACT_INTERACTION = '/app/static/media/custom' // partial filename as build compiles to 'custom.123XYZ.svg'
+const CONTRACT_INTERACTION = '/static/media/custom' // partial filename as build compiles to 'custom.123XYZ.svg'
 const WRAPPED_ETH = '/tokens/logos/0xc778417E063141139Fce010982780140Aa0cD5Ab.png'
 const MULTI_SEND_CONTRACT = '/contracts/logos/0x40A2aCCbd92BCA938b02010E17A5b8929b49130D.png'
-const OUTGOING = '/app/static/media/outgoing' // partial filename as build compiles to 'outgoing.123XYZ.svg'
+const OUTGOING = '/static/media/outgoing' // partial filename as build compiles to 'outgoing.123XYZ.svg'
 const ETH = '/chains/4/currency_logo.png'
-const INCOMING = '/app/static/media/incoming' // partial filename as build compiles to 'incoming.123XYZ.svg'
+const INCOMING = '/static/media/incoming' // partial filename as build compiles to 'incoming.123XYZ.svg'
 const NFT = '/tokens/logos/0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b.png'
-const USDC = '/app/static/media/tokens/logos/0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b.png'
+const USDC = '/static/media/tokens/logos/0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b.png'
 
 describe('Dashboard', () => {
   before(() => {
@@ -29,7 +29,7 @@ describe('Dashboard', () => {
     rows.should('have.length', 1)
 
     rows
-      // testBool contract interaction w/ rin:0x49d4450977E2c95362C13D3a31a09311E0Ea26A6
+      // testBool contract interaction w/ rin:0xB141918e300b105C24f5eF1EF0855E8bDD9F275a
       .first(($tx) => {
         // Nonce
         cy.wrap($tx).contains('p', '6').should('exist')
@@ -185,11 +185,11 @@ describe('Dashboard', () => {
       // Receive 1 ZORB NFT
       .next(($tx) => {
         // Type
-        cy.wrap($tx).find('img').should('have.attr', 'src').should('include', '/app/static/media/incoming.1bf5be26.svg')
+        cy.wrap($tx).find('img').should('have.attr', 'src').should('include', '/static/media/incoming.1bf5be26.svg')
         cy.wrap($tx).contains('p', 'Received').should('exist')
 
         // Info
-        cy.wrap($tx).find('img').should('have.attr', 'src').should('include', '/app/static/media/nft_icon.85f106fa.png')
+        cy.wrap($tx).find('img').should('have.attr', 'src').should('include', '/static/media/nft_icon.85f106fa.png')
         cy.wrap($tx).contains('span', '+1 ZORB (#3)').should('exist')
 
         // Time

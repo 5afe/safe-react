@@ -1,6 +1,6 @@
-const TEST_SAFE = 'rin:0x11Df0fa87b30080d59eba632570f620e37f2a8f7'
+const TEST_SAFE = 'tcro:0xbB91e283d2ab0E110620b47A9139cAD202210A05'
 const RECIPIENT_ENS = 'diogo.eth'
-const RECIPIENT_ADDRESS = '0x6a5602335a878ADDCa4BF63a050E34946B56B5bC'
+const RECIPIENT_ADDRESS = '0xCEfC11AC067E291db144Fda1330717d67C1b745A'
 const SAFE_NONCE = '6'
 
 describe('Tx Modal', () => {
@@ -29,7 +29,7 @@ describe('Tx Modal', () => {
           .should('be.visible')
           .next()
           // Current network is same as Safe
-          .contains('Rinkeby')
+          .contains('Cronos')
           .should('be.visible')
 
         // It contains the form elements
@@ -135,7 +135,7 @@ describe('Tx Modal', () => {
         cy.contains('Recipient').parent().next().contains(RECIPIENT_ADDRESS)
 
         // Token value
-        cy.contains('0.000004 GNO')
+        cy.contains('0.000004 tCRO')
       })
 
       it('should contain a correctly estimated gas limit value', () => {

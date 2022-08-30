@@ -1,4 +1,4 @@
-const RINKEBY_TEST_SAFE = 'rin:0xFfDC1BcdeC18b1196e7FA04246295DE3A17972Ac'
+const RINKEBY_TEST_SAFE = 'cro:0x5ED44E414AE18AF0793cb842Bb8f1C1b6295777B'
 const intercomIframe = 'iframe[id="intercom-frame"]'
 const intercomButton = '[aria-label="Open Intercom Messenger"]'
 const fakeIntercomButton = 'img[alt="Open Intercom"]'

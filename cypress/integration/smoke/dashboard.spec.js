@@ -14,14 +14,14 @@ describe('Dashboard', () => {
   it('should display the overview widget', () => {
     cy.contains('main p', SAFE).should('exist')
     cy.contains('main', '1/1')
-    cy.get(`main a[href="/app/${SAFE}/balances"] button`).contains('View Assets')
-    cy.get(`main a[href="/app/${SAFE}/balances"]`).contains('Tokens3')
-    cy.contains(`main a[href="/app/${SAFE}/balances/nfts"]`, 'NFTs0')
+    cy.get(`main a[href="/${SAFE}/balances"] button`).contains('View Assets')
+    cy.get(`main a[href="/${SAFE}/balances"]`).contains('Tokens3')
+    cy.contains(`main a[href="/${SAFE}/balances/nfts"]`, 'NFTs0')
   })
 
   it('should display the mobile banner', () => {
     const appStoreLink =
-      'https://apps.apple.com/app/apple-store/id1515759131?pt=119497694&ct=Web%20App%20Dashboard&mt=8'
+      'https://apps.apple.com/apple-store/id1515759131?pt=119497694&ct=Web%20App%20Dashboard&mt=8'
     cy.get(`a[href="${appStoreLink}"]`).should('exist')
 
     cy.get('button[aria-label="Close mobile banner"]').click()
@@ -35,11 +35,11 @@ describe('Dashboard', () => {
     cy.contains('main', 'This Safe has no queued transactions').should('not.exist')
 
     // Queued txns
-    cy.contains(`main a[href="/app/${SAFE}/transactions/queue"]`, '0' + 'addOwnerWithThreshold' + '1/1').should('exist')
+    cy.contains(`main a[href="/${SAFE}/transactions/queue"]`, '0' + 'addOwnerWithThreshold' + '1/1').should('exist')
 
-    cy.contains(`main a[href="/app/${SAFE}/transactions/queue"]`, '2' + 'Send' + '-0.001 USDC' + '1/1').should('exist')
+    cy.contains(`main a[href="/${SAFE}/transactions/queue"]`, '2' + 'Send' + '-0.001 USDC' + '1/1').should('exist')
 
-    cy.contains(`a[href="/app/${SAFE}/transactions/queue"]`, 'View All')
+    cy.contains(`a[href="/${SAFE}/transactions/queue"]`, 'View All')
   })
 
   it('should display the featured Safe Apps', () => {
@@ -54,14 +54,14 @@ describe('Dashboard', () => {
     cy.get(`a[href*='/wallet-connect']`).should('exist')
 
     // Featured apps have a Safe-specific link
-    cy.get(`main section#featured-safe-apps a[href^="/app/${SAFE}/apps?appUrl=http"]`).should('have.length', 2)
+    cy.get(`main section#featured-safe-apps a[href^="/${SAFE}/apps?appUrl=http"]`).should('have.length', 2)
   })
 
   it('should show the Safe Apps widget', () => {
     cy.contains('main section#safe-apps h2', 'Safe Apps')
-    cy.contains('main section#safe-apps a[href="/app/apps"] button', 'Explore Safe Apps')
+    cy.contains('main section#safe-apps a[href="/apps"] button', 'Explore Safe Apps')
 
     // Regular safe apps
-    cy.get(`main section#safe-apps a[href^="/app/${SAFE}/apps?appUrl=http"]`).should('have.length', 5)
+    cy.get(`main section#safe-apps a[href^="/${SAFE}/apps?appUrl=http"]`).should('have.length', 5)
   })
 })

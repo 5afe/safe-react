@@ -5,7 +5,7 @@ describe('Create Safe', () => {
     cy.visit('/')
 
     cy.contains('a', 'Accept all').click()
-    cy.get('p').contains('Rinkeby').click()
+    cy.get('p').contains('Cronos').click()
     cy.get('[data-testid=connected-wallet]').should('contain', 'E2E Wallet')
     cy.contains('Create new Safe').click()
     cy.contains('Continue').click()

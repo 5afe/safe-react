@@ -1,13 +1,10 @@
 import 'cypress-file-upload'
-const path = require('path')
 
-const SAFE_ENS_NAME = 'safe.test'
-const SAFE_ENS_NAME_TRANSLATED = '0x83eC7B0506556a7749306D69681aDbDbd08f0769'
 const SAFE_QR_CODE_ADDRESS = '0x9913B9180C20C6b0F21B6480c84422F6ebc4B808'
-const NON_CONTRACT_ADDRESS = '0x61a0c717d18232711bC788F19C9Cd56a43cc8872'
+const NON_CONTRACT_ADDRESS = '0x20cc148211CcddB9904e64895B59a6B313CC9fC3'
 const INVALID_INPUT_ERROR_MSG = 'Must be a valid address, ENS or Unstoppable domain'
 const INVALID_ADDRESS_ERROR_MSG = 'Address given is not a valid Safe address'
-const OWNER_ENS_DEFAULT_NAME = 'francoledger.eth'
+const OWNER_ENS_DEFAULT_NAME = ''
 const OWNER_ADDRESS = '0x6f965E48347AF3Df65c14CCc176A9CbeCEa0eDb5'
 
 describe('Load Safe', () => {
@@ -22,11 +19,11 @@ describe('Load Safe', () => {
     // Network selection
     cy.findByTestId('select-network-step').find('button').click()
     cy.get('[aria-labelledby="select-network"]').should('exist')
-    cy.get('[aria-labelledby="select-network"]').findByText('Ethereum').click()
-    cy.get('nav').findByText('Ethereum').should('exist')
-    cy.findByTestId('select-network-step').findByText('Ethereum').should('exist')
+    cy.get('[aria-labelledby="select-network"]').findByText('Cronos').click()
+    cy.get('nav').findByText('Cronos').should('exist')
+    cy.findByTestId('select-network-step').findByText('Cronos').should('exist')
     cy.findByTestId('select-network-step').find('button').click()
-    cy.findByText('Rinkeby').click()
+    cy.get('[role="button"]').findByText('Cronos').click()
     cy.get('[data-track="load-safe: Continue"]').click()
 
     // Name
@@ -37,10 +34,6 @@ describe('Load Safe', () => {
     cy.findByText(INVALID_INPUT_ERROR_MSG).should('exist')
     cy.findByTestId('load-safe-address-field').clear().type(NON_CONTRACT_ADDRESS)
     cy.findByText(INVALID_ADDRESS_ERROR_MSG).should('exist')
-    cy.findByTestId('load-safe-address-field')
-      .clear()
-      .type(SAFE_ENS_NAME)
-      .should('have.value', SAFE_ENS_NAME_TRANSLATED)
     cy.findByTestId('qr-icon').click()
     cy.get('[class="paper"]').find('button').contains('Upload an image').click()
     cy.get('[type="file"]').attachFile('../fixtures/rinkeby_safe_QR.png')
