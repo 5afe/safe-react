@@ -8,11 +8,9 @@ import Provider from './Provider'
 import NetworkSelector from './NetworkSelector'
 import Spacer from 'src/components/Spacer'
 import Col from 'src/components/layout/Col'
-import Img from 'src/components/layout/Img'
 import Row from 'src/components/layout/Row'
 import { headerHeight, md, screenSm, sm } from 'src/theme/variables'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
-import SafeLogo from '../assets/transition-logo.gif'
 import { ROOT_ROUTE } from 'src/routes/routes'
 import WalletSwitch from 'src/components/WalletSwitch'
 import Divider from 'src/components/layout/Divider'
@@ -21,6 +19,7 @@ import { useSelector } from 'react-redux'
 import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 import Track from 'src/components/Track'
 import Notifications from 'src/components/AppLayout/Header/components/Notifications'
+import AnimatedLogo from 'src/components/AppLayout/Header/components/AnimatedLogo'
 
 const styles = () => ({
   root: {
@@ -100,7 +99,7 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
       <Col className={classes.logo} middle="xs" start="xs">
         <Track {...OVERVIEW_EVENTS.HOME}>
           <Link to={ROOT_ROUTE}>
-            <Img alt="Safe" src={SafeLogo} id="safe-logo" height={36} />
+            <AnimatedLogo />
           </Link>
         </Track>
       </Col>
