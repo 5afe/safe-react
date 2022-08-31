@@ -7,12 +7,17 @@ import { loadFromCookie } from 'src/logic/cookies/utils'
 import styled from 'styled-components'
 import { WidgetContainer, WidgetTitle } from '../styled'
 
+// Banner + hide anything inside, incl. the Beamer icon
 const StyledContainer = styled.div`
   width: 474px;
   height: 227px;
   background: url('./rebranding-banner.png') no-repeat 0 0;
   background-size: contain;
   cursor: pointer;
+
+  & * {
+    display: none;
+  }
 `
 
 const RebrandingBanner = (): ReactElement => {
