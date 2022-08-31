@@ -1,4 +1,4 @@
-import { RequestId, Methods } from '@gnosis.pm/safe-apps-sdk'
+import { RequestId, Methods, SignTypedMessageParams as TypedMessage } from '@gnosis.pm/safe-apps-sdk'
 import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 import { hexToUtf8, isHexStrict } from 'web3-utils'
@@ -42,7 +42,11 @@ const convertToHumanReadableMessage = (message: string): string => {
   return humanReadableMessage
 }
 
-export const SignMessageModal = ({ message, isOpen, method, ...rest }: SignMessageModalProps): ReactElement => {
+const isObjectEIP712Message = (obj?: unknown): obj is TypedMessage => {
+  return typeof obj === 'object' && obj != null && 'domain' in obj && 'types' in obj && 'message' in obj
+}
+
+export const SignMessageModal = ({ message, isOpen, method, ...rest }: SignMessageModalProps): ReactElement | null => {
   const web3 = getWeb3ReadOnly()
   const networkId = useSelector(currentChainId)
   const txRecipient = getSignMessageLibAddress(networkId) || ZERO_ADDRESS
@@ -53,10 +57,11 @@ export const SignMessageModal = ({ message, isOpen, method, ...rest }: SignMessa
       .encodeABI()
     readableData = convertToHumanReadableMessage(message)
   } else if (method == Methods.signTypedMessage) {
-    // check if the message is a valid typed data
+    // check if the message is a validly typed data
+    let typedData: TypedMessage | undefined
     try {
-      const typedData = JSON.parse(message)
-      if (!('domain' in typedData && 'types' in typedData && 'message' in typedData)) {
+      typedData = JSON.parse(message)
+      if (!isObjectEIP712Message(typedData)) {
         throw new Error('Invalid typed data')
       }
       readableData = JSON.stringify(typedData, undefined, 4)
@@ -65,17 +70,11 @@ export const SignMessageModal = ({ message, isOpen, method, ...rest }: SignMessa
       // When it is not, we will reject the tx and close the modal.
       rest.onTxReject(rest.requestId)
       rest.onClose()
+      return null
     }
-    // Here we firstly convert the typed message to safe typed message which contains the safe address and the current chainId,
-    // then we hash it using ethers.utils._TypedDataEncoder.
+
     txData = getSignMessageLibContractInstance(web3, networkId)
-      .methods.signMessage(
-        _TypedDataEncoder.hash(
-          { verifyingContract: rest.safeAddress, chainId: parseInt(networkId) },
-          { SafeMessage: [{ type: 'string', name: 'message' }] },
-          { message: message },
-        ),
-      )
+      .methods.signMessage(_TypedDataEncoder.hash(typedData.domain, typedData.types, typedData.message))
       .encodeABI()
   } else {
     // Unsupported method
