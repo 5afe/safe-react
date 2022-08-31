@@ -1,4 +1,4 @@
-import { RequestId, Methods, SignTypedMessageParams as TypedMessage } from '@gnosis.pm/safe-apps-sdk'
+import { RequestId, Methods, EIP712TypedData, isObjectEIP712TypedData } from '@gnosis.pm/safe-apps-sdk'
 import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 import { hexToUtf8, isHexStrict } from 'web3-utils'
@@ -16,7 +16,7 @@ import { _TypedDataEncoder } from '@ethersproject/hash'
 export type SignMessageModalProps = {
   isOpen: boolean
   app: SafeApp
-  message: string
+  message: string | EIP712TypedData
   safeAddress: string
   safeName: string
   requestId: RequestId
@@ -42,29 +42,22 @@ const convertToHumanReadableMessage = (message: string): string => {
   return humanReadableMessage
 }
 
-const isObjectEIP712Message = (obj?: unknown): obj is TypedMessage => {
-  return typeof obj === 'object' && obj != null && 'domain' in obj && 'types' in obj && 'message' in obj
-}
-
 export const SignMessageModal = ({ message, isOpen, method, ...rest }: SignMessageModalProps): ReactElement | null => {
   const web3 = getWeb3ReadOnly()
   const networkId = useSelector(currentChainId)
   const txRecipient = getSignMessageLibAddress(networkId) || ZERO_ADDRESS
   let txData, readableData
-  if (method == Methods.signMessage) {
+  if (method == Methods.signMessage && typeof message === 'string') {
     txData = getSignMessageLibContractInstance(web3, networkId)
       .methods.signMessage(web3.eth.accounts.hashMessage(message))
       .encodeABI()
     readableData = convertToHumanReadableMessage(message)
   } else if (method == Methods.signTypedMessage) {
-    // check if the message is a validly typed data
-    let typedData: TypedMessage | undefined
     try {
-      typedData = JSON.parse(message)
-      if (!isObjectEIP712Message(typedData)) {
+      if (!isObjectEIP712TypedData(message)) {
         throw new Error('Invalid typed data')
       }
-      readableData = JSON.stringify(typedData, undefined, 4)
+      readableData = JSON.stringify(message, undefined, 4)
     } catch (e) {
       // As the signing method is SignTypedMessage, the message should be a valid JSON.
       // When it is not, we will reject the tx and close the modal.
@@ -74,7 +67,7 @@ export const SignMessageModal = ({ message, isOpen, method, ...rest }: SignMessa
     }
 
     txData = getSignMessageLibContractInstance(web3, networkId)
-      .methods.signMessage(_TypedDataEncoder.hash(typedData.domain, typedData.types, typedData.message))
+      .methods.signMessage(_TypedDataEncoder.hash(message.domain, message.types, message.message))
       .encodeABI()
   } else {
     // Unsupported method
