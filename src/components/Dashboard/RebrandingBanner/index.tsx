@@ -5,10 +5,10 @@ import { BannerCookiesType, COOKIES_KEY, COOKIE_IDS } from 'src/logic/cookies/mo
 import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
 import { loadFromCookie } from 'src/logic/cookies/utils'
 import styled from 'styled-components'
-import { WidgetBody, WidgetContainer, WidgetTitle } from '../styled'
+import { WidgetContainer, WidgetTitle } from '../styled'
 
 const StyledContainer = styled.div`
-  width: 100%;
+  width: 474px;
   height: 227px;
   background: url('./rebranding-banner.png') no-repeat 0 0;
   background-size: contain;
@@ -38,11 +38,9 @@ const RebrandingBanner = (): ReactElement => {
     <WidgetContainer>
       <WidgetTitle>&nbsp;</WidgetTitle>
 
-      <WidgetBody>
-        <Track category="rebranding" action="banner-click">
-          <StyledContainer onClick={onClick} className="beamer-trigger" />
-        </Track>
-      </WidgetBody>
+      <Track category="rebranding" action="banner-click">
+        <StyledContainer onClick={onClick} className="beamer-trigger" />
+      </Track>
     </WidgetContainer>
   )
 }
