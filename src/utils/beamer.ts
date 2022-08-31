@@ -27,7 +27,7 @@ export const loadBeamer = async (): Promise<void> => {
 
   window.beamer_config = {
     product_id: BEAMER_ID,
-    selector: 'whats-new-button',
+    selector: '.beamer-trigger',
     display: 'left',
     button: false,
     bounce: false,

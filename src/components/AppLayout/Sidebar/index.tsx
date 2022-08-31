@@ -131,7 +131,7 @@ const Sidebar = ({
         <HelpList>
           {!isDesktop && BEAMER_ID && (
             <Track {...OVERVIEW_EVENTS.WHATS_NEW}>
-              <StyledListItem id="whats-new-button" button onClick={handleClick}>
+              <StyledListItem className="beamer-trigger" button onClick={handleClick}>
                 <ListIcon type="gift" color="secondary" size="sm" />
                 <StyledListItemText>What&apos;s new</StyledListItemText>
               </StyledListItem>
