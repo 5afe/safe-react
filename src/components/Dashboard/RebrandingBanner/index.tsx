@@ -16,7 +16,7 @@ const StyledContainer = styled.div`
   cursor: pointer;
 
   & * {
-    display: none;
+    display: none !important;
   }
 `
 
