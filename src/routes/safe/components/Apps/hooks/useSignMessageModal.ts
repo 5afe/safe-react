@@ -1,7 +1,12 @@
 import { useState, useCallback } from 'react'
-import { Methods } from '@gnosis.pm/safe-apps-sdk'
+import { EIP712TypedData, Methods } from '@gnosis.pm/safe-apps-sdk'
 
-type StateType = { isOpen: boolean; message: string; requestId: string; method: Methods }
+type StateType = {
+  isOpen: boolean
+  requestId: string
+  message: string | EIP712TypedData
+  method: Methods.signMessage | Methods.signTypedMessage
+}
 
 const INITIAL_MODAL_STATE: StateType = {
   isOpen: false,
@@ -10,20 +15,27 @@ const INITIAL_MODAL_STATE: StateType = {
   method: Methods.signMessage,
 }
 
-type ReturnType = [StateType, (message: string, requestId: string, method: Methods) => void, () => void]
+type ReturnType = [
+  StateType,
+  (message: string | EIP712TypedData, requestId: string, method: Methods) => void,
+  () => void,
+]
 
 export const useSignMessageModal = (): ReturnType => {
   const [signMessageModalState, setSignMessageModalState] = useState<StateType>(INITIAL_MODAL_STATE)
 
-  const openSignMessageModal = useCallback((message: string, requestId: string, method: Methods) => {
-    setSignMessageModalState({
-      ...INITIAL_MODAL_STATE,
-      isOpen: true,
-      message,
-      requestId,
-      method,
-    })
-  }, [])
+  const openSignMessageModal = useCallback(
+    (message: string | EIP712TypedData, requestId: string, method: Methods.signTypedMessage | Methods.signMessage) => {
+      setSignMessageModalState({
+        ...INITIAL_MODAL_STATE,
+        isOpen: true,
+        message,
+        requestId,
+        method,
+      })
+    },
+    [],
+  )
 
   const closeSignMessageModal = useCallback(() => {
     setSignMessageModalState(INITIAL_MODAL_STATE)

@@ -9,6 +9,7 @@ import {
   Methods,
   SignMessageParams,
   RequestId,
+  SignTypedMessageParams,
 } from '@gnosis.pm/safe-apps-sdk'
 import { useSelector } from 'react-redux'
 import { INTERFACE_MESSAGES, Transaction, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk-v1'
@@ -297,9 +298,9 @@ const AppFrame = ({ appUrl, allowedFeaturesList }: Props): ReactElement => {
     })
 
     communicator?.on(Methods.signTypedMessage, async (msg) => {
-      const { message } = msg.data.params as SignMessageParams
+      const { typedData } = msg.data.params as SignTypedMessageParams
 
-      openSignMessageModal(message, msg.data.id, Methods.signTypedMessage)
+      openSignMessageModal(typedData, msg.data.id, Methods.signTypedMessage)
     })
 
     communicator?.on(Methods.getChainInfo, async () => {
