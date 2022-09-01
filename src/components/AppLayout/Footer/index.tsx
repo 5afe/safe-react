@@ -57,7 +57,7 @@ const Footer = (): React.ReactElement => {
 
   return (
     <footer className={classes.footer}>
-      <span className={classes.item}>©{date.getFullYear()} Safe Ecosystem Foundation</span>
+      <span className={classes.item}>©{date.getFullYear()} Klaytn Foundation</span>
       <span className={classes.sep}>|</span>
       <Link className={cn(classes.item, classes.link)} target="_blank" to="https://gnosis-safe.io/terms">
         Terms
@@ -71,18 +71,6 @@ const Footer = (): React.ReactElement => {
         Licenses
       </Link>
       <span className={classes.sep}>|</span>
-      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://gnosis-safe.io/imprint">
-        Imprint
-      </Link>
-      <span className={classes.sep}>|</span>
-      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://gnosis-safe.io/cookie">
-        Cookie Policy
-      </Link>
-      <span className={classes.sep}>-</span>
-      <GnoButtonLink className={cn(classes.item, classes.link, classes.buttonLink)} onClick={openCookiesHandler}>
-        Preferences
-      </GnoButtonLink>
-      <span className={classes.sep}>|</span>
       <Link
         className={cn(classes.item, classes.link)}
         target="_blank"
@@ -90,8 +78,6 @@ const Footer = (): React.ReactElement => {
       >
         {appVersion}
       </Link>
-      <span className={classes.sep}>|</span>
-      <AppstoreButton light placement="footer" />
     </footer>
   )
 }

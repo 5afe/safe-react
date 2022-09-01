@@ -144,29 +144,7 @@ const MobileAppBanner = (): ReactElement | null => {
   }, [setClosed])
 
   return closed ? null : (
-    <Grid item xs={12} lg={6}>
-      <WidgetTitle>&nbsp;</WidgetTitle>
-
-      <StyledContainer>
-        {closing ? (
-          <UserSurvey onDone={onDone} />
-        ) : (
-          <>
-            <StyledBanner $count={count} onClick={onClick} />
-
-            <StyledCloseButton onClick={onClose} aria-label="Close mobile banner" />
-
-            <StyledBackButton onClick={onBack} aria-label="Previous mobile banner slide" />
-
-            {count === 1 && (
-              <StyledAppstoreButton>
-                <AppstoreButton placement="dashboard" />
-              </StyledAppstoreButton>
-            )}
-          </>
-        )}
-      </StyledContainer>
-    </Grid>
+    <Grid item xs={12} lg={6}></Grid>
   )
 }
 

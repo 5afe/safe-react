@@ -6,7 +6,7 @@ describe('<Welcome>', () => {
   it('Should render Welcome container', () => {
     render(<Welcome />)
 
-    expect(screen.getByText('Welcome to the Safe.')).toBeInTheDocument()
+    expect(screen.getByText('Welcome to the Klaytn Safe.')).toBeInTheDocument()
   })
 
   it('Create new Safe button should redirect to /open if a wallet is already selected', () => {

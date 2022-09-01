@@ -19,64 +19,7 @@ const wallets = (chainId: ChainId): Wallet[] => {
   const rpcUrl = getRpcServiceUrl(rpcUri)
 
   return [
-    { walletName: WALLETS.METAMASK, preferred: true, desktop: false },
-    { walletName: WALLETS.TALLYHO, preferred: false, desktop: false },
-    {
-      walletName: WALLETS.WALLET_CONNECT,
-      rpc: getChains().reduce((map, { chainId, rpcUri }) => {
-        return {
-          ...map,
-          [chainId]: getRpcServiceUrl(rpcUri),
-        }
-      }, {}),
-      bridge: WC_BRIDGE,
-      preferred: true,
-      desktop: true,
-    },
-    {
-      walletName: WALLETS.TREZOR,
-      appUrl: 'gnosis-safe.io',
-      preferred: true,
-      email: 'support@safe.global',
-      desktop: true,
-      rpcUrl,
-    },
-    {
-      walletName: WALLETS.LEDGER,
-      desktop: true,
-      preferred: true,
-      rpcUrl,
-      LedgerTransport: (window as any).TransportNodeHid,
-    },
-    {
-      walletName: WALLETS.KEYSTONE,
-      desktop: false,
-      rpcUrl,
-      appName: 'Safe',
-    },
-    { walletName: WALLETS.TRUST, preferred: true, desktop: false },
-    {
-      walletName: WALLETS.LATTICE,
-      rpcUrl,
-      appName: 'Safe',
-      desktop: false,
-    },
-    {
-      walletName: WALLETS.FORTMATIC,
-      apiKey: FORTMATIC_KEY,
-      desktop: true,
-    },
-    {
-      walletName: WALLETS.PORTIS,
-      apiKey: PORTIS_ID,
-      desktop: true,
-    },
-    { walletName: WALLETS.AUTHEREUM, desktop: false },
-    { walletName: WALLETS.TORUS, desktop: true },
-    { walletName: WALLETS.COINBASE, desktop: false },
-    { walletName: WALLETS.WALLET_LINK, rpcUrl, desktop: false },
-    { walletName: WALLETS.OPERA, desktop: false },
-    { walletName: WALLETS.OPERA_TOUCH, desktop: false },
+    { walletName: WALLETS.METAMASK, preferred: true, desktop: false }
   ]
 }
 

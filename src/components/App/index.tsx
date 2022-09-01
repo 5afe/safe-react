@@ -75,7 +75,7 @@ const App: React.FC = ({ children }) => {
           <ReceiveModal onClose={onReceiveHide} safeAddress={safeAddress} safeName={safeName} />
         </Modal>
       )}
-      <CookiesBanner />
+      {/* <CookiesBanner /> */}
     </Frame>
   )
 }

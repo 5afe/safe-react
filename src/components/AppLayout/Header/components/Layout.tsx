@@ -8,6 +8,7 @@ import Provider from './Provider'
 import NetworkSelector from './NetworkSelector'
 import Spacer from 'src/components/Spacer'
 import Col from 'src/components/layout/Col'
+import Img from 'src/components/layout/Img'
 import Row from 'src/components/layout/Row'
 import { headerHeight, md, screenSm, sm } from 'src/theme/variables'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
@@ -19,7 +20,7 @@ import { useSelector } from 'react-redux'
 import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 import Track from 'src/components/Track'
 import Notifications from 'src/components/AppLayout/Header/components/Notifications'
-import AnimatedLogo from 'src/components/AppLayout/Header/components/AnimatedLogo'
+import SafeLogo from '../assets/klaytn-safe-multisig-logo.png'
 
 const styles = () => ({
   root: {
@@ -65,6 +66,28 @@ const styles = () => ({
     minWidth: '180px',
     padding: '0',
   },
+  bannerLogo: {
+    display: 'flex',
+    flexDirection: 'row',
+    textDecoration: 'none'
+  },
+  bannerLogoTitle: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: "200px",
+    paddingLeft: '5px'
+  },
+  bannerLogoTitleContent: {
+    color: '#000',
+    fontSize: '16px',
+    fontWeight: 600
+  },
+  bannerLogoSubTitleContent: {
+    color: '#958B8B'
+  },
+  bannerLink: {
+    textDecoration: 'none'
+  }
 })
 
 const WalletPopup = ({ anchorEl, providerDetails, classes, open, onClose }) => {
@@ -99,7 +122,17 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
       <Col className={classes.logo} middle="xs" start="xs">
         <Track {...OVERVIEW_EVENTS.HOME}>
           <Link to={ROOT_ROUTE}>
-            <AnimatedLogo />
+            <div className={classes.bannerLogo}>
+              <Img alt="Klaytn Safe" height={36} src={SafeLogo} testId="heading-gnosis-logo" id="safe-logo" />
+              <div className={classes.bannerLogoTitle}>
+                <div className={classes.bannerLogoTitleContent}>
+                  Klaytn Safe
+                </div>
+                <div className={classes.bannerLogoSubTitleContent}>
+                  (based on Gnosis Safe)
+                </div>
+              </div>
+            </div>
           </Link>
         </Track>
       </Col>

@@ -6,6 +6,7 @@ import IconButton from '@material-ui/core/IconButton'
 import { Link } from '@gnosis.pm/safe-react-components'
 import QRCode from 'qrcode.react'
 
+import SafeLogo from 'src/assets/logo.png'
 import Paragraph from 'src/components/layout/Paragraph'
 import { getPairingUri, initPairing, isPairingModule } from 'src/logic/wallets/pairing/utils'
 import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
@@ -80,7 +81,7 @@ const PairingDetails = ({ vertical = false }: PairingDetailsProps): ReactElement
         <QRCode
           value={uri}
           includeMargin
-          imageSettings={{ src: './resources/logo-white-bg.png', width: 30, height: 30 }}
+          imageSettings={{ src: SafeLogo, width: 30, height: 30 }}
         />
       ) : isPairingLoaded ? (
         <Skeleton variant="rect" width={QR_DIMENSION} height={QR_DIMENSION} />
@@ -110,24 +111,7 @@ const PairingDetails = ({ vertical = false }: PairingDetailsProps): ReactElement
   )
 
   return (
-    <StyledContainer $vertical={vertical}>
-      {vertical ? (
-        <>
-          <StyledDivider />
-          {title}
-          {qr}
-          {content}
-        </>
-      ) : (
-        <>
-          {qr}
-          <div>
-            {title}
-            {content}
-          </div>
-        </>
-      )}
-    </StyledContainer>
+    <></>
   )
 }
 

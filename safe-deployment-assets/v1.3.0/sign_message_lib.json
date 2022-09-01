@@ -1,0 +1,123 @@
+{
+  "defaultAddress": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+  "contractName": "SignMessageLib",
+  "version": "1.3.0",
+  "released": true,
+  "networkAddresses": {
+    "1": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "3": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "4": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "5": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "10": "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+    "11": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "12": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "25": "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+    "28": "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+    "42": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "56": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "69": "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+    "82": "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+    "83": "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+    "100": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "106": "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+    "111": "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+    "122": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "123": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "137": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "246": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "288": "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+    "300": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "336": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "338": "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+    "588": "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+    "592": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "595": "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+    "686": "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+    "787": "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+    "1001": "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+    "1008": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "1088": "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+    "1284": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "1285": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "1287": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "1984": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "2001": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "2008": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "4002": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "4918": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "4919": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "7341": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "8217": "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+    "9000": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "9001": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "10000": "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+    "10001": "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+    "11437": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "12357": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "42161": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "42170": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "42220": "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+    "43114": "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+    "47805": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "71401": "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+    "73799": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "80001": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "200101": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "200202": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "421611": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "421613": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "1313161554": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "1313161555": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "1666600000": "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+    "1666700000": "0x98FFBBF51bb33A056B08ddf711f289936AafF717",
+    "11297108099": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2",
+    "11297108109": "0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2"
+  },
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "msgHash",
+          "type": "bytes32"
+        }
+      ],
+      "name": "SignMsg",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "message",
+          "type": "bytes"
+        }
+      ],
+      "name": "getMessageHash",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "_data",
+          "type": "bytes"
+        }
+      ],
+      "name": "signMessage",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ]
+}

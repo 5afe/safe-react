@@ -31,7 +31,7 @@ describe('<SafeAppLandingPage>', () => {
           id: 36,
           url: SAFE_APP_URL_FROM_CONFIG_SERVICE,
           name: 'Test App safe from config service',
-          iconUrl: 'icon/logo.svg',
+          iconUrl: 'icon/logo.png',
           description: 'Test Safe App description from config service',
           chainIds: [CHAIN_ID.RINKEBY, CHAIN_ID.ETHEREUM], // available chains Ethereum & Rinkeby
           provider: undefined,
@@ -50,7 +50,7 @@ describe('<SafeAppLandingPage>', () => {
         id: '36',
         url: SAFE_APP_URL_FROM_MANIFEST,
         name: 'Test App safe from manifest',
-        iconUrl: 'icon/logo.svg',
+        iconUrl: 'icon/logo.png',
         error: false,
         description: 'Test Safe App description from manifest',
         chainIds: [],

@@ -73,7 +73,7 @@ const getOnboard = (chainId: ChainId): API => {
         : undefined,
     },
     walletSelect: {
-      description: 'Please select a wallet to connect to the Safe',
+      description: 'Please select a wallet to connect to the Klaytn Safe',
       wallets: getSupportedWallets(chainId),
     },
     walletCheck: [

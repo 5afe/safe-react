@@ -15,10 +15,10 @@ function Welcome(): ReactElement {
     <Page align="center">
       <Block>
         <Title size="md" strong>
-          Welcome to the Safe.
+          Welcome to Klaytn Safe.
         </Title>
         <Title size="xs">
-          Safe is the most trusted platform to manage digital assets. <br /> Here is how to get started:
+          Klaytn Safe is the most trusted platform to manage digital assets. <br /> Here is how to get started:
         </Title>
         <CardsContainer>
           <StyledCard>

@@ -1,5 +1,6 @@
 MIT License
 
+Copyright (c) 2022 Klaytn Foundation
 Copyright (c) 2018-2022 Safe Ecosystem Foundation
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
