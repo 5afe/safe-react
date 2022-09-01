@@ -2155,6 +2155,14 @@
     "@gnosis.pm/safe-react-gateway-sdk" "^2.5.6"
     ethers "^5.4.7"
 
+"@gnosis.pm/safe-apps-sdk@7.8.0":
+  version "7.8.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-sdk/-/safe-apps-sdk-7.8.0.tgz#295ab9d563b94208e3042495cdba787fa035c71e"
+  integrity sha512-kO8fJi1ebiKN9qH1NdDToVBuDQQ0U9NkL467U+84LtNTx5PzUJIu6O7tb4nZD24e/OItinf5W8GDWhhfZeiqOA==
+  dependencies:
+    "@gnosis.pm/safe-react-gateway-sdk" "^3.1.3"
+    ethers "^5.6.8"
+
 "@gnosis.pm/safe-apps-sdk@^6.2.0":
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-sdk/-/safe-apps-sdk-6.3.0.tgz#19f8bff136bdfdf9003745e4202e1cb85322e493"
@@ -2162,19 +2170,6 @@
   dependencies:
     "@gnosis.pm/safe-react-gateway-sdk" "^2.8.5"
     ethers "^5.4.7"
-
-"@gnosis.pm/safe-apps-sdk@file:.yalc/@gnosis.pm/safe-apps-sdk":
-  version "7.7.0"
-  dependencies:
-    "@gnosis.pm/safe-react-gateway-sdk" "^3.1.3"
-    ethers "^5.6.8"
-
-"@gnosis.pm/safe-apps-sdk@https://gitpkg.now.sh/safe-global/safe-apps-sdk/packages/safe-apps-sdk?fix/eip712-signing":
-  version "7.7.0"
-  resolved "https://gitpkg.now.sh/safe-global/safe-apps-sdk/packages/safe-apps-sdk?fix/eip712-signing#5752014774d848556a3dca32afabc2adf5e04207"
-  dependencies:
-    "@gnosis.pm/safe-react-gateway-sdk" "^3.1.3"
-    ethers "^5.6.8"
 
 "@gnosis.pm/safe-core-sdk-types@1.0.0", "@gnosis.pm/safe-core-sdk-types@^1.0.0":
   version "1.0.0"
