@@ -19,16 +19,8 @@ describe('Dashboard', () => {
     cy.contains(`main a[href="/app/${SAFE}/balances/nfts"]`, 'NFTs0')
   })
 
-  it('should display the mobile banner', () => {
-    const appStoreLink =
-      'https://apps.apple.com/app/apple-store/id1515759131?pt=119497694&ct=Web%20App%20Dashboard&mt=8'
-    cy.get(`a[href="${appStoreLink}"]`).should('exist')
-
-    cy.get('button[aria-label="Close mobile banner"]').click()
-    cy.contains('button', 'Already use it!')
-    cy.contains('button', 'Not interested').click()
-
-    cy.get(`a[href="${appStoreLink}"]`).should('not.exist')
+  it('should display the rebranding banner', () => {
+    cy.get('main .beamer-trigger').should('exist')
   })
 
   it('should display the tx queue widget', () => {

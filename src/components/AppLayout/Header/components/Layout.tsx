@@ -45,6 +45,14 @@ const styles = () => ({
       paddingLeft: md,
       paddingRight: md,
     },
+    [`@media (max-width: ${screenSm}px)`]: {
+      maxWidth: '95px',
+      overflow: 'hidden',
+      '& img': {
+        width: '72px',
+        height: 'auto',
+      },
+    },
     '& a': {
       display: 'flex',
       flexDirection: 'column',
