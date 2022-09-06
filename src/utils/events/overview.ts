@@ -68,7 +68,7 @@ const OVERVIEW = {
   },
   SAFE_TOKEN_WIDGET: {
     event: GTM_EVENT.CLICK,
-    action: 'Open safe claiming app from widget',
+    action: 'Open Safe Claiming App from widget',
   },
 }
 
