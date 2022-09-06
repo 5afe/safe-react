@@ -57,3 +57,9 @@ const isProdGateway = () => {
 export const GATEWAY_URL =
   process.env.REACT_APP_GATEWAY_URL ||
   (IS_PRODUCTION || isProdGateway() ? 'https://safe-client.gnosis.io' : 'https://safe-client.staging.gnosisdev.com')
+
+// Safe Token
+export const SAFE_TOKEN_ADDRESSES: { [chainId: string]: string } = {
+  '1': '0x5aFE3855358E112B5647B952709E6165e1c1eEEe',
+  '4': '0xCFf1b0FdE85C102552D1D96084AF148f478F964A',
+}

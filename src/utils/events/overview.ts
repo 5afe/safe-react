@@ -66,6 +66,10 @@ const OVERVIEW = {
     event: GTM_EVENT.CLICK,
     action: 'Interact with notification',
   },
+  SAFE_TOKEN_WIDGET: {
+    event: GTM_EVENT.CLICK,
+    action: 'Open Safe Claiming App from widget',
+  },
 }
 
 export const OVERVIEW_CATEGORY = 'overview'
