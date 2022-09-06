@@ -1,5 +1,5 @@
 import { Box, ButtonBase } from '@material-ui/core'
-import { Text } from '@gnosis.pm/safe-react-components'
+import { Text, Tooltip } from '@gnosis.pm/safe-react-components'
 import { useSelector } from 'react-redux'
 import Img from 'src/components/layout/Img'
 import { getShortName, _getChainId } from 'src/config'
@@ -10,12 +10,35 @@ import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { background } from 'src/theme/variables'
 import { SAFE_TOKEN_ADDRESSES } from 'src/utils/constants'
 import SafeTokenIcon from './safe_token.svg'
+import styled from 'styled-components'
 
 // TODO: once listed on safe apps list, get the url from there?
 const CLAIMING_APP_URL = 'https://safe-claiming-app.pages.dev/'
 
 export const getSafeTokenAddress = (chainId: string): string => {
   return SAFE_TOKEN_ADDRESSES[chainId]
+}
+
+const StyledWrapper = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
+  justify-content: center;
+`
+
+const buttonStyle = {
+  alignSelf: 'stretch',
+  display: 'flex',
+  borderRadius: '8px',
+  padding: '0px 8px 0px 8px',
+  backgroundColor: background,
+  margin: '8px 16px',
+  height: '30px',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '8px',
 }
 
 const SafeTokenWidget = (): JSX.Element | null => {
@@ -48,38 +71,16 @@ const SafeTokenWidget = (): JSX.Element | null => {
   const flooredSafeBalance = formatAmount(safeBalanceDecimals.toFixed(2))
 
   return (
-    <Box
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '8px',
-        height: '100%',
-        justifyContent: 'center',
-      }}
-    >
-      <ButtonBase
-        href={url}
-        aria-describedby={'safe-token-widget'}
-        style={{
-          alignSelf: 'stretch',
-          display: 'flex',
-          borderRadius: '8px',
-          padding: '0px 8px 0px 8px',
-          backgroundColor: background,
-          margin: '8px 16px',
-          height: '30px',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '8px',
-        }}
-      >
-        <Img alt="Safe token" src={SafeTokenIcon} />
-        <Text size="xl" strong>
-          {flooredSafeBalance}
-        </Text>
-      </ButtonBase>
-    </Box>
+    <StyledWrapper>
+      <Tooltip title="Open $SAFE Claiming App">
+        <ButtonBase href={url} aria-describedby={'safe-token-widget'} style={buttonStyle}>
+          <Img alt="Safe token" src={SafeTokenIcon} />
+          <Text size="xl" strong>
+            {flooredSafeBalance}
+          </Text>
+        </ButtonBase>
+      </Tooltip>
+    </StyledWrapper>
   )
 }
 

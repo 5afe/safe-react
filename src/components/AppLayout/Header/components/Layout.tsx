@@ -20,8 +20,7 @@ import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 import Track from 'src/components/Track'
 import Notifications from 'src/components/AppLayout/Header/components/Notifications'
 import AnimatedLogo from 'src/components/AppLayout/Header/components/AnimatedLogo'
-import SafeTokenWidget from './SafeTokenWidget'
-import { SAFE_TOKEN_ADDRESSES } from 'src/utils/constants'
+import SafeTokenWidget, { getSafeTokenAddress } from './SafeTokenWidget'
 import { _getChainId } from 'src/config'
 
 const styles = () => ({
@@ -105,7 +104,7 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
   const { clickAway: clickAwayNetworks, open: openNetworks, toggle: toggleNetworks } = useStateHandler()
   const isWrongChain = useSelector(shouldSwitchWalletChain)
   const chainId = _getChainId()
-  const chainHasSafeToken = Boolean(SAFE_TOKEN_ADDRESSES[chainId])
+  const chainHasSafeToken = Boolean(getSafeTokenAddress(chainId))
 
   return (
     <Row className={classes.summary}>
