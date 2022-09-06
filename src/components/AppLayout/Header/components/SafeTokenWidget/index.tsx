@@ -11,6 +11,8 @@ import { background } from 'src/theme/variables'
 import { SAFE_TOKEN_ADDRESSES } from 'src/utils/constants'
 import SafeTokenIcon from './safe_token.svg'
 import styled from 'styled-components'
+import Track from 'src/components/Track'
+import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 
 // TODO: once listed on safe apps list, get the url from there?
 const CLAIMING_APP_URL = 'https://safe-claiming-app.pages.dev/'
@@ -73,12 +75,14 @@ const SafeTokenWidget = (): JSX.Element | null => {
   return (
     <StyledWrapper>
       <Tooltip title="Open $SAFE Claiming App">
-        <ButtonBase href={url} aria-describedby={'safe-token-widget'} style={buttonStyle}>
-          <Img alt="Safe token" src={SafeTokenIcon} />
-          <Text size="xl" strong>
-            {flooredSafeBalance}
-          </Text>
-        </ButtonBase>
+        <Track {...OVERVIEW_EVENTS.SAFE_TOKEN_WIDGET}>
+          <ButtonBase href={url} aria-describedby={'safe-token-widget'} style={buttonStyle}>
+            <Img alt="Safe token" src={SafeTokenIcon} />
+            <Text size="xl" strong>
+              {flooredSafeBalance}
+            </Text>
+          </ButtonBase>
+        </Track>
       </Tooltip>
     </StyledWrapper>
   )
