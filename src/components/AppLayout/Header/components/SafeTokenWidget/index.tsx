@@ -15,7 +15,7 @@ import Track from 'src/components/Track'
 import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 
 // TODO: once listed on safe apps list, get the url from there?
-const CLAIMING_APP_URL = 'https://safe-claiming-app.pages.dev/'
+const CLAIMING_APP_URL = 'https://safe-apps.dev.gnosisdev.com/safe-claiming-app/'
 
 export const getSafeTokenAddress = (chainId: string): string => {
   return SAFE_TOKEN_ADDRESSES[chainId]
