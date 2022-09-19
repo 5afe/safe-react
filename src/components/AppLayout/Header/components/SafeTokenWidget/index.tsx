@@ -8,14 +8,15 @@ import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { background } from 'src/theme/variables'
-import { SAFE_TOKEN_ADDRESSES } from 'src/utils/constants'
+import { isProdGateway, IS_PRODUCTION, SAFE_TOKEN_ADDRESSES } from 'src/utils/constants'
 import SafeTokenIcon from './safe_token.svg'
 import styled from 'styled-components'
 import Track from 'src/components/Track'
 import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
+import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
 
-// TODO: once listed on safe apps list, get the url from there?
-const CLAIMING_APP_URL = 'https://safe-claiming-app.pages.dev/'
+const isStaging = !IS_PRODUCTION && !isProdGateway()
+const CLAIMING_APP_ID = isStaging ? '61' : '95'
 
 export const getSafeTokenAddress = (chainId: string): string => {
   return SAFE_TOKEN_ADDRESSES[chainId]
@@ -46,6 +47,9 @@ const buttonStyle = {
 const SafeTokenWidget = (): JSX.Element | null => {
   const safeTokens = useSelector(extendedSafeTokensSelector)
 
+  const { allApps } = useAppList()
+  const claimingApp = allApps.find((app) => app.id === CLAIMING_APP_ID)
+
   const chainId = _getChainId()
 
   const { safeAddress } = useSafeAddress()
@@ -59,11 +63,11 @@ const SafeTokenWidget = (): JSX.Element | null => {
   })
 
   const tokenAddress = getSafeTokenAddress(chainId)
-  if (!tokenAddress) {
+  if (!tokenAddress || !claimingApp) {
     return null
   }
 
-  const url = `${appsPath}?appUrl=${encodeURI(CLAIMING_APP_URL)}`
+  const url = `${appsPath}?appUrl=${encodeURI(claimingApp.url)}`
 
   const safeBalance = safeTokens.find((balanceItem) => {
     return balanceItem.address === tokenAddress
@@ -74,9 +78,9 @@ const SafeTokenWidget = (): JSX.Element | null => {
 
   return (
     <StyledWrapper>
-      <Tooltip title="Open $SAFE Claiming App">
+      <Tooltip title={`Open ${claimingApp.name}`}>
         <Track {...OVERVIEW_EVENTS.SAFE_TOKEN_WIDGET}>
-          <ButtonBase href={url} aria-describedby={'safe-token-widget'} style={buttonStyle}>
+          <ButtonBase href={url || '#'} aria-describedby={'safe-token-widget'} style={buttonStyle}>
             <Img alt="Safe token" src={SafeTokenIcon} />
             <Text size="xl" strong>
               {flooredSafeBalance}
