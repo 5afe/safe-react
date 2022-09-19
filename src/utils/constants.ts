@@ -46,7 +46,7 @@ export const LS_SEPARATOR = '__'
 export const LS_USE_PROD_CGW = 'useProdGateway'
 
 // For debugging on dev
-const isProdGateway = () => {
+export const isProdGateway = () => {
   try {
     return localStorage.getItem(`${LS_NAMESPACE}${LS_SEPARATOR}${LS_USE_PROD_CGW}`) === 'true'
   } catch (e) {
