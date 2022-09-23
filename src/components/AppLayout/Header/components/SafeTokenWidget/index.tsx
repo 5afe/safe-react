@@ -16,7 +16,7 @@ import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
 
 const isStaging = !IS_PRODUCTION && !isProdGateway()
-const CLAIMING_APP_ID = isStaging ? '61' : '95'
+export const CLAIMING_APP_ID = isStaging ? '61' : '95'
 
 export const getSafeTokenAddress = (chainId: string): string => {
   return SAFE_TOKEN_ADDRESSES[chainId]

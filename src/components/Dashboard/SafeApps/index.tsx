@@ -18,6 +18,7 @@ import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import { getAppsUsageData, rankSafeApps } from 'src/routes/safe/components/Apps/trackAppUsageCount'
 import { FEATURED_APPS_TAG } from 'src/components/Dashboard/FeaturedApps/FeaturedApps'
 import { WidgetTitle, WidgetBody, WidgetContainer, Card } from 'src/components/Dashboard/styled'
+import { CLAIMING_APP_ID } from 'src/components/AppLayout/Header/components/SafeTokenWidget'
 
 export const CARD_PADDING = 24
 
@@ -82,10 +83,15 @@ const useRankedApps = (allApps: SafeApp[], pinnedSafeApps: SafeApp[], size: numb
     // Get random apps that are not ranked and not featured
     const randomApps = sampleSize(nonRankedApps, size - 1 - topRankedSafeApps.length)
 
-    const resultApps = uniqBy(topRankedSafeApps.concat(pinnedSafeApps, randomApps), 'id')
+    const resultApps = topRankedSafeApps.concat(pinnedSafeApps, randomApps)
+
+    // Display the safe-claiming-app at the first position
+    const claimingApp = allApps.find((app) => app.id === CLAIMING_APP_ID)
+    const claimingAppArray = claimingApp ? [claimingApp] : []
+    const results = uniqBy([...claimingAppArray, ...resultApps], 'id')
 
     // Display size - 1 in order to always display the "Explore Safe Apps" card
-    return resultApps.slice(0, size - 1)
+    return results.slice(0, size - 1)
   }, [allApps, pinnedSafeApps, size])
 }
 
