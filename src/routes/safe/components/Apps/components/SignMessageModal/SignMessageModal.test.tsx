@@ -188,6 +188,72 @@ describe('SignMessageModal Component', () => {
     ).toBeVisible()
   })
 
+  test('If message is typed data with EIP712Domain type, displays the message correctly', () => {
+    const typedMessage = {
+      types: {
+        Person: [
+          { name: 'name', type: 'string' },
+          { name: 'wallet', type: 'address' },
+        ],
+        Mail: [
+          { name: 'from', type: 'Person' },
+          { name: 'to', type: 'Person' },
+          { name: 'contents', type: 'string' },
+        ],
+        EIP712Domain: [
+          { name: 'name', type: 'string' },
+          { name: 'version', type: 'string' },
+        ],
+      },
+      primaryType: 'Mail',
+      domain: {
+        name: 'Ether Mail',
+        version: '1',
+        chainId: 1,
+        verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
+      },
+      message: {
+        from: {
+          name: 'Cow',
+          wallet: '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826',
+        },
+        to: {
+          name: 'Bob',
+          wallet: '0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB',
+        },
+        contents: 'Hello, Bob!',
+      },
+    }
+
+    render(
+      <SignMessageModal
+        isOpen
+        safeAddress="0x1948fC557ed7219D33138bD2cD52Da7F2047B2bb"
+        message={typedMessage}
+        safeName="test safe"
+        ethBalance="100000000000000000"
+        onClose={jest.fn()}
+        onUserConfirm={jest.fn()}
+        onTxReject={jest.fn()}
+        requestId="1"
+        method={Methods.signTypedMessage}
+        app={getEmptySafeApp()}
+      />,
+    )
+    expect(screen.getByText('signTypedMessage')).toBeVisible()
+    expect(
+      screen.getByText(JSON.stringify(typedMessage), {
+        normalizer: (str) => {
+          try {
+            return JSON.stringify(JSON.parse(str))
+          } catch (e) {
+            return str
+          }
+        },
+      }),
+    ).toBeVisible()
+  })
+
   test('If message is invalid typed data, modal should be closed', () => {
     const onCloseFn = jest.fn()
     const typedMessageStr = { test: 'test' }
