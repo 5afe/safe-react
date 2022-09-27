@@ -228,7 +228,10 @@ const SendFunds = ({
             closeQrModal()
           }
 
-          const shouldDisableSubmitButton = !isValidAddress || isSafeTokenSelected || !selectedEntry?.address
+          let shouldDisableSubmitButton = !isValidAddress || isSafeTokenSelected
+          if (selectedEntry) {
+            shouldDisableSubmitButton = !selectedEntry.address || isSafeTokenSelected
+          }
 
           const setMaxAllowedAmount = () => {
             const isSpendingLimitTx = tokenSpendingLimit && isSpendingLimit(txType)
