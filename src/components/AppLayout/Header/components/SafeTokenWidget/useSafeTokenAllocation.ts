@@ -37,7 +37,7 @@ const fetchAllocation = async (chainId: string, safeAddress: string) => {
   }
 }
 
-const useSafeTokenAllocation = () => {
+const useSafeTokenAllocation = (): string => {
   const [allocation, setAllocation] = useState<string>('0')
   const chainId = useSelector(currentChainId)
   const { safeAddress } = useSafeAddress()
