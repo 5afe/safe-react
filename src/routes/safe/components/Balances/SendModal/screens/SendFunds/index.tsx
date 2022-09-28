@@ -4,7 +4,7 @@ import { BigNumber } from 'bignumber.js'
 import { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { getExplorerInfo, getNativeCurrency } from 'src/config'
+import { _getChainId, getExplorerInfo, getNativeCurrency } from 'src/config'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
@@ -47,6 +47,9 @@ import { Modal } from 'src/components/Modal'
 import { ModalHeader } from '../ModalHeader'
 import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
+import { getSafeTokenAddress } from 'src/components/AppLayout/Header/components/SafeTokenWidget'
+import InfoIcon from 'src/assets/icons/info_red.svg'
+import Img from 'src/components/layout/Img'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -199,6 +202,10 @@ const SendFunds = ({
             tokenAddress: selectedToken?.address,
           })
 
+          const chainId = _getChainId()
+          const safeTokenAddress = getSafeTokenAddress(chainId)
+          const isSafeTokenSelected = sameAddress(safeTokenAddress, selectedToken?.address)
+
           const handleScan = (value, closeQrModal) => {
             let scannedAddress = value
 
@@ -221,9 +228,9 @@ const SendFunds = ({
             closeQrModal()
           }
 
-          let shouldDisableSubmitButton = !isValidAddress
+          let shouldDisableSubmitButton = !isValidAddress || isSafeTokenSelected
           if (selectedEntry) {
-            shouldDisableSubmitButton = !selectedEntry.address
+            shouldDisableSubmitButton = !selectedEntry.address || isSafeTokenSelected
           }
 
           const setMaxAllowedAmount = () => {
@@ -302,6 +309,14 @@ const SendFunds = ({
                     />
                   </Col>
                 </Row>
+                {isSafeTokenSelected && (
+                  <Row align="center" margin="md">
+                    <Paragraph color="error" noMargin className={classes.warningRow}>
+                      <Img height={16} src={InfoIcon} className={classes.warningIcon} />
+                      SAFE is currently non-transferable.
+                    </Paragraph>
+                  </Row>
+                )}
                 {tokenSpendingLimit && selectedToken && (
                   <SpendingLimitRow selectedToken={selectedToken} tokenSpendingLimit={tokenSpendingLimit} />
                 )}
