@@ -2,7 +2,7 @@ import { Box, ButtonBase } from '@material-ui/core'
 import { Text, Tooltip } from '@gnosis.pm/safe-react-components'
 import { useSelector } from 'react-redux'
 import Img from 'src/components/layout/Img'
-import { getShortName, _getChainId } from 'src/config'
+import { getShortName } from 'src/config'
 import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { generateSafeRoute, SAFE_ROUTES } from 'src/routes/routes'
@@ -16,6 +16,7 @@ import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 import { useAppList } from 'src/routes/safe/components/Apps/hooks/appList/useAppList'
 import useSafeTokenAllocation from 'src/components/AppLayout/Header/components/SafeTokenWidget/useSafeTokenAllocation'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import { currentChainId } from 'src/logic/config/store/selectors'
 
 const isStaging = !IS_PRODUCTION && !isProdGateway()
 export const CLAIMING_APP_ID = isStaging ? '61' : '95'
@@ -53,7 +54,7 @@ const SafeTokenWidget = (): JSX.Element | null => {
   const { allApps } = useAppList()
   const claimingApp = allApps.find((app) => app.id === CLAIMING_APP_ID)
 
-  const chainId = _getChainId()
+  const chainId = useSelector(currentChainId)
 
   const { safeAddress } = useSafeAddress()
   if (!safeAddress) {
