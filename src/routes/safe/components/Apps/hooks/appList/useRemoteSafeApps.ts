@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { SafeAppData } from '@gnosis.pm/safe-react-gateway-sdk'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { showNotification } from 'src/logic/notifications/store/notifications'
@@ -7,6 +7,7 @@ import { NOTIFICATIONS } from 'src/logic/notifications'
 import { FETCH_STATUS } from 'src/utils/requests'
 import { SafeApp } from '../../types'
 import { fetchSafeAppsList } from 'src/logic/safe/api/fetchSafeApps'
+import { currentChainId } from 'src/logic/config/store/selectors'
 
 type ReturnType = {
   remoteSafeApps: SafeApp[]
@@ -16,9 +17,9 @@ type ReturnType = {
 // Memoize the fetch request so that simulteneous calls
 // to this function return the same promise
 let fetchPromise: Promise<SafeAppData[]> | null = null
-const memoizedFetchSafeApps = (): Promise<SafeAppData[]> => {
+const memoizedFetchSafeApps = (chainId: string): Promise<SafeAppData[]> => {
   if (!fetchPromise) {
-    fetchPromise = fetchSafeAppsList()
+    fetchPromise = fetchSafeAppsList(chainId)
   }
   fetchPromise.finally(() => (fetchPromise = null))
   return fetchPromise
@@ -28,12 +29,13 @@ const useRemoteSafeApps = (): ReturnType => {
   const [remoteSafeApps, setRemoteSafeApps] = useState<SafeApp[]>([])
   const [status, setStatus] = useState<FETCH_STATUS>(FETCH_STATUS.NOT_ASKED)
   const dispatch = useDispatch()
+  const chainId = useSelector(currentChainId)
 
   useEffect(() => {
     const loadAppsList = async () => {
       setStatus(FETCH_STATUS.LOADING)
       try {
-        const result = await memoizedFetchSafeApps()
+        const result = await memoizedFetchSafeApps(chainId)
 
         if (result?.length) {
           setRemoteSafeApps(result.map((app) => ({ ...app, fetchStatus: FETCH_STATUS.SUCCESS, id: String(app.id) })))
@@ -49,7 +51,7 @@ const useRemoteSafeApps = (): ReturnType => {
     }
 
     loadAppsList()
-  }, [dispatch])
+  }, [dispatch, chainId])
 
   return { remoteSafeApps, status }
 }
