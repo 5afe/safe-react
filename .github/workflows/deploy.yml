@@ -120,7 +120,7 @@ jobs:
         with:
           message: |
             ## Deployment links
-            :white_circle: [Mainnet](${{ env.REVIEW_FEATURE_URL }}/eth) &nbsp;&nbsp;&nbsp; :purple_circle: [Polygon](${{ env.REVIEW_FEATURE_URL }}/matic) &nbsp;&nbsp;&nbsp; :orange_circle: [Rinkeby](${{ env.REVIEW_FEATURE_URL }}/rin)
+            :white_circle: [Mainnet](${{ env.REVIEW_FEATURE_URL }}/eth) &nbsp;&nbsp;&nbsp; :purple_circle: [Polygon](${{ env.REVIEW_FEATURE_URL }}/matic) &nbsp;&nbsp;&nbsp; :yellow_circle: [Goerli](${{ env.REVIEW_FEATURE_URL }}/gor)
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repo-token-user-login: 'github-actions[bot]'
         if: success() && github.event.number
