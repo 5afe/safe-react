@@ -2,8 +2,6 @@ name: Deploy
 
 # Run on pushes to main or PRs
 on:
-  # Pull request hook without any config. Launches for every pull request
-  pull_request:
   # Launches for pushes to main or dev
   push:
     branches:
@@ -67,11 +65,6 @@ jobs:
           rm -rf .yarncache
           yarn cache clean
 
-      # Set dev flag (for PR deployments)
-      - name: Set PR flag
-        run: echo "REACT_APP_ENV=dev" >> $GITHUB_ENV
-        if: github.ref != 'refs/heads/main'
-
       # Set production flag on staging
       - name: Set production flag for staging
         run: echo "REACT_APP_ENV=dev" >> $GITHUB_ENV
@@ -105,27 +98,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-
-      # Script to deploy Pull Requests
-      - run: bash ./scripts/github/deploy_pull_request.sh
-        if: success() && github.event.number
-        env:
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          PR_NUMBER: ${{ github.event.number }}
-          REVIEW_BUCKET_NAME: ${{ secrets.AWS_REVIEW_BUCKET_NAME }}
-
-      - name: 'PRaul: Comment PR with app URLs'
-        uses: mshick/add-pr-comment@v1
-        with:
-          message: |
-            ## Deployment links
-            :white_circle: [Mainnet](${{ env.REVIEW_FEATURE_URL }}/eth) &nbsp;&nbsp;&nbsp; :purple_circle: [Polygon](${{ env.REVIEW_FEATURE_URL }}/matic) &nbsp;&nbsp;&nbsp; :orange_circle: [Rinkeby](${{ env.REVIEW_FEATURE_URL }}/rin)
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          repo-token-user-login: 'github-actions[bot]'
-        if: success() && github.event.number
-        env:
-          REVIEW_FEATURE_URL: https://pr${{ github.event.number }}--safereact.review-safe.gnosisdev.com/app
 
       # Script to deploy to the dev environment
       - name: 'Deploy to S3: Dev'
@@ -165,19 +137,3 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-  e2e:
-    runs-on: ubuntu-20.04
-    name: E2E on Chrome
-    if: github.event.number
-    needs: deploy
-    steps:
-      - uses: actions/checkout@v2
-      - uses: cypress-io/github-action@v2
-        with:
-          spec: cypress/integration/smoke/*.spec.js
-          browser: chrome
-          record: false
-          config: baseUrl=https://pr${{ github.event.number }}--safereact.review-safe.gnosisdev.com/app/
-        env:
-          CYPRESS_ENV: ${{ env.REACT_APP_ENV}}
-          CYPRESS_MNEMONIC: ${{secrets.CYPRESS_MNEMONIC}}
