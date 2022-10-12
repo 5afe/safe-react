@@ -1,18 +1,22 @@
+import { useEffect, useRef } from 'react'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useSelector } from 'react-redux'
 import Close from '@material-ui/icons/Close'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { hasFeature } from 'src/logic/safe/utils/safeVersion'
 import useCachedState from 'src/utils/storage/useCachedState'
-import { useEffect, useState } from 'react'
-import { loadFromCookie } from 'src/logic/cookies/utils'
-import { COOKIES_KEY, BannerCookiesType } from 'src/logic/cookies/model/cookie'
 
 const BANNERS = {
   '4': <>🚨 Rinkeby is being deprecated. Please migrate to Goerli. 🚨</>,
   '5': (
     <>
       🚨 On <b>13.10.2022 @ 9am CEST</b> we will be undertaking indexer maintenance on Goerli, during which the
+      functionality of this application might be restricted Please expect downtime of 2-3 hours. 🚨
+    </>
+  ),
+  '73799': (
+    <>
+      🚨 On <b>13.10.2022 @ 9am CEST</b> we will be undertaking indexer maintenance on Volta, during which the
       functionality of this application might be restricted Please expect downtime of 2-3 hours. 🚨
     </>
   ),
@@ -75,29 +79,26 @@ const BANNERS = {
 const WARNING_BANNER = 'WARNING_BANNER'
 
 const PsaBanner = () => {
+  const bannerRef = useRef<HTMLDivElement>(null)
   const chainId = useSelector(currentChainId)
   const banner = BANNERS[chainId]
   const isEnabled = hasFeature(WARNING_BANNER as FEATURES)
   const [closed = false, setClosed] = useCachedState<boolean>(`${WARNING_BANNER}_${chainId}_closed`)
-  const [hasIntercom, setHasIntercom] = useState(false)
+
+  const showBanner = isEnabled && banner && !closed
 
   const onClose = () => {
     setClosed(true)
   }
 
   useEffect(() => {
-    const cookiesState = loadFromCookie<BannerCookiesType>(COOKIES_KEY)
-    if (!cookiesState) return
-    const { acceptedSupportAndUpdates } = cookiesState
-    setHasIntercom(!!acceptedSupportAndUpdates)
-  }, [])
+    document.body.style.paddingTop = bannerRef.current ? bannerRef.current.clientHeight + 'px' : ''
+  }, [bannerRef])
 
   return (
-    isEnabled &&
-    banner &&
-    !hasIntercom &&
-    !closed && (
+    showBanner && (
       <div
+        ref={bannerRef}
         style={{
           position: 'fixed',
           zIndex: 10000,
@@ -113,7 +114,10 @@ const PsaBanner = () => {
         <div style={{ position: 'relative' }}>
           <div style={{ maxWidth: '960px', margin: '0 auto', textAlign: 'center', padding: '10px' }}>{banner}</div>
 
-          <Close style={{ position: 'absolute', right: '10px', top: '10px', cursor: 'pointer', zIndex: 2 }} onClick={onClose} />
+          <Close
+            style={{ position: 'absolute', right: '10px', top: '10px', cursor: 'pointer', zIndex: 2 }}
+            onClick={onClose}
+          />
         </div>
       </div>
     )
