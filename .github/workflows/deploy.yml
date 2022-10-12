@@ -91,6 +91,7 @@ jobs:
           REACT_APP_TENDERLY_SIMULATE_ENDPOINT_URL: ${{ secrets.REACT_APP_TENDERLY_SIMULATE_ENDPOINT_URL }}
           REACT_APP_TENDERLY_PROJECT_NAME: ${{ secrets.REACT_APP_TENDERLY_PROJECT_NAME  }}
           REACT_APP_TENDERLY_ORG_NAME: ${{ secrets.REACT_APP_TENDERLY_ORG_NAME }}
+          REACT_APP_WC_BRIDGE: ${{ secrets.REACT_APP_WC_BRIDGE }}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
