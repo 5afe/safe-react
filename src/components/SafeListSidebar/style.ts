@@ -7,7 +7,6 @@ const sidebarMarginLeft = '0px'
 const sidebarMarginTop = '0px'
 const sidebarMarginBottom = '0px'
 const sidebarBorderRadius = '0px'
-const bannerHeight = '90px'
 
 const useSidebarStyles = makeStyles({
   sidebar: {
@@ -28,10 +27,6 @@ const useSidebarStyles = makeStyles({
     [`@media (min-width: ${screenSm}px)`]: {
       maxWidth: 'none',
     },
-  },
-  openBanner: {
-    maxHeight: `calc(100vh - ${headerHeight} - ${bannerHeight} - ${sidebarMarginTop} - ${sidebarMarginBottom})`,
-    top: `calc(${headerHeight} + ${bannerHeight} + ${sidebarMarginTop})`,
   },
   topComponents: {
     alignItems: 'center',
