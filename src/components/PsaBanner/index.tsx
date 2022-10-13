@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { ReactElement, useEffect, useRef } from 'react'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useSelector } from 'react-redux'
 import Close from '@material-ui/icons/Close'
@@ -78,7 +78,7 @@ const BANNERS = {
 
 const WARNING_BANNER = 'WARNING_BANNER'
 
-const PsaBanner = () => {
+const PsaBanner = (): ReactElement => {
   const bannerRef = useRef<HTMLDivElement>(null)
   const chainId = useSelector(currentChainId)
   const banner = BANNERS[chainId]
