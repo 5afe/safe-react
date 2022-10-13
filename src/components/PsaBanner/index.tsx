@@ -92,8 +92,8 @@ const PsaBanner = (): ReactElement => {
   }
 
   useEffect(() => {
-    document.body.style.paddingTop = bannerRef.current ? bannerRef.current.clientHeight + 'px' : ''
-  }, [bannerRef])
+    document.body.classList.toggle('bannerOpen', !closed)
+  }, [closed])
 
   return (
     showBanner && (
@@ -116,7 +116,7 @@ const PsaBanner = (): ReactElement => {
           <div style={{ maxWidth: '960px', margin: '0 auto', textAlign: 'center', padding: '10px' }}>{banner}</div>
 
           <Close
-            style={{ display: 'none', position: 'absolute', right: '10px', top: '10px', cursor: 'pointer', zIndex: 2 }}
+            style={{ position: 'absolute', right: '10px', top: '10px', cursor: 'pointer', zIndex: 2 }}
             onClick={onClose}
           />
         </div>

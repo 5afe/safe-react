@@ -13,6 +13,7 @@ import useDarkMode from 'src/logic/hooks/useDarkMode'
 import { screenSm } from 'src/theme/variables'
 import TransactionQueueBar from '../TransactionQueueBar/TransactionQueueBar'
 import { InvalidMasterCopyError } from 'src/components/AppLayout/InvalidMasterCopyError'
+import { GlobalStyles } from './globalStyles'
 
 const Container = styled.div`
   height: 100vh;
@@ -150,6 +151,7 @@ const Layout: React.FC<Props> = ({
 
   return (
     <Container onClick={() => setExpanded(false)}>
+      <GlobalStyles />
       <HeaderWrapper>
         <Header />
       </HeaderWrapper>

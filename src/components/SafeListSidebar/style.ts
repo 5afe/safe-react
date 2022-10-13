@@ -7,7 +7,6 @@ const sidebarMarginLeft = '0px'
 const sidebarMarginTop = '0px'
 const sidebarMarginBottom = '0px'
 const sidebarBorderRadius = '0px'
-const bannerHeight = '90px'
 
 const useSidebarStyles = makeStyles({
   sidebar: {
@@ -21,7 +20,7 @@ const useSidebarStyles = makeStyles({
     borderRadius: sidebarBorderRadius,
     marginLeft: sidebarMarginLeft,
     maxHeight: `calc(100vh - ${headerHeight} - ${sidebarMarginTop} - ${sidebarMarginBottom})`,
-    top: `calc(${headerHeight} + ${bannerHeight} + ${sidebarMarginTop})`,
+    top: `calc(${headerHeight} + ${sidebarMarginTop})`,
     width: sidebarWidth,
     maxWidth: `calc(100% - ${sidebarMarginLeft} - ${sidebarMarginLeft})`,
 
