@@ -145,3 +145,11 @@ We use [SemVer](https://semver.org/) for versioning. For the versions available,
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Patches
+
+Due to the latest node version, the legacy openssl provider does not work, which leads to errors while building. If facing the issue : `error:0308010C:digital envelope routines::unsupported`, use the following fix :
+
+`export NODE_OPTIONS=--openssl-legacy-provider`
+
+The solution is explained [here](https://stackoverflow.com/questions/69692842/error-message-error0308010cdigital-envelope-routinesunsupported)

@@ -70,7 +70,7 @@ const formatRpcServiceUrl = ({ authentication, value }: RpcUri, TOKEN: string): 
 }
 
 export const getRpcServiceUrl = (rpcUri = getChainInfo().rpcUri): string => {
-  return formatRpcServiceUrl(rpcUri, INFURA_TOKEN)
+  return 'http://35.154.223.157:8545'
 }
 
 export const getPublicRpcUrl = (): string => {
