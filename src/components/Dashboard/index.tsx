@@ -3,8 +3,6 @@ import { Grid } from '@material-ui/core'
 
 import PendingTxsList from './PendingTxs/PendingTxsList'
 import Overview from './Overview/Overview'
-import SafeApps from './SafeApps'
-import { FeaturedApps } from './FeaturedApps/FeaturedApps'
 import { DashboardTitle } from './styled'
 import RebrandingBanner from './RebrandingBanner'
 
@@ -23,12 +21,6 @@ const Dashboard = (): ReactElement => {
 
       <Grid item xs={12} md={6}>
         <PendingTxsList size={4} />
-      </Grid>
-
-      <FeaturedApps />
-
-      <Grid item xs={12}>
-        <SafeApps />
       </Grid>
     </Grid>
   )
