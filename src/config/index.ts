@@ -105,8 +105,9 @@ export const getTxServiceUrl = (): ChainInfo['transactionService'] => {
   return `${transactionService}/api/v${TX_SERVICE_VERSION}`
 }
 
+// Safe Mobile will always be disabled
 export const getDisabledWallets = (): ChainInfo['disabledWallets'] => {
-  return getChainInfo().disabledWallets
+  return [...getChainInfo().disabledWallets, 'safeMobile']
 }
 
 const getExplorerUriTemplate = (): ChainInfo['blockExplorerUriTemplate'] => {

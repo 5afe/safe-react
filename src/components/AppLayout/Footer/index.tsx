@@ -2,7 +2,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import * as React from 'react'
 import { useDispatch } from 'react-redux'
-import AppstoreButton from 'src/components/AppstoreButton'
 
 import GnoButtonLink from 'src/components/layout/ButtonLink'
 import Link from 'src/components/layout/Link'
@@ -90,8 +89,6 @@ const Footer = (): React.ReactElement => {
       >
         {appVersion}
       </Link>
-      <span className={classes.sep}>|</span>
-      <AppstoreButton light placement="footer" />
     </footer>
   )
 }
