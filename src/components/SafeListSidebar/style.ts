@@ -21,13 +21,17 @@ const useSidebarStyles = makeStyles({
     borderRadius: sidebarBorderRadius,
     marginLeft: sidebarMarginLeft,
     maxHeight: `calc(100vh - ${headerHeight} - ${sidebarMarginTop} - ${sidebarMarginBottom})`,
-    top: `calc(${headerHeight} + ${bannerHeight} + ${sidebarMarginTop})`,
+    top: `calc(${headerHeight} + ${sidebarMarginTop})`,
     width: sidebarWidth,
     maxWidth: `calc(100% - ${sidebarMarginLeft} - ${sidebarMarginLeft})`,
 
     [`@media (min-width: ${screenSm}px)`]: {
       maxWidth: 'none',
     },
+  },
+  openBanner: {
+    maxHeight: `calc(100vh - ${headerHeight} - ${bannerHeight} - ${sidebarMarginTop} - ${sidebarMarginBottom})`,
+    top: `calc(${headerHeight} + ${bannerHeight} + ${sidebarMarginTop})`,
   },
   topComponents: {
     alignItems: 'center',
