@@ -109,13 +109,14 @@ const PsaBanner = (): ReactElement => {
           color: '#fff',
           padding: '5px 20px',
           fontSize: '16px',
+          height: '80px',
         }}
       >
         <div style={{ position: 'relative' }}>
           <div style={{ maxWidth: '960px', margin: '0 auto', textAlign: 'center', padding: '10px' }}>{banner}</div>
 
           <Close
-            style={{ position: 'absolute', right: '10px', top: '10px', cursor: 'pointer', zIndex: 2 }}
+            style={{ display: 'none', position: 'absolute', right: '10px', top: '10px', cursor: 'pointer', zIndex: 2 }}
             onClick={onClose}
           />
         </div>
