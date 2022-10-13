@@ -109,6 +109,7 @@ const PsaBanner = (): ReactElement => {
           color: '#fff',
           padding: '5px 20px',
           fontSize: '16px',
+          height: '80px',
         }}
       >
         <div style={{ position: 'relative' }}>
