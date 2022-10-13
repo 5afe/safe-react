@@ -36,7 +36,7 @@ export const SafeListSidebar = ({ children }: Props): ReactElement => {
   return (
     <SafeListSidebarContext.Provider value={{ isOpen, toggleSidebar }}>
       <Drawer
-        classes={{ paper: classes.sidebarPaper }}
+        classes={{ paper: `${classes.sidebarPaper} safe-list-sidebar` }}
         className={classes.sidebar}
         ModalProps={{ onClose: toggleSidebar }}
         onKeyDown={handleEsc}
