@@ -4,7 +4,6 @@ import { Grid } from '@material-ui/core'
 import PendingTxsList from './PendingTxs/PendingTxsList'
 import Overview from './Overview/Overview'
 import { DashboardTitle } from './styled'
-import RebrandingBanner from './RebrandingBanner'
 
 const Dashboard = (): ReactElement => {
   return (
@@ -13,10 +12,6 @@ const Dashboard = (): ReactElement => {
 
       <Grid item xs={12} md={12} lg={6}>
         <Overview />
-      </Grid>
-
-      <Grid item xs={12} md={12} lg={6}>
-        <RebrandingBanner />
       </Grid>
 
       <Grid item xs={12} md={6}>
