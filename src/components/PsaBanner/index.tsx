@@ -126,13 +126,13 @@ const BANNERS = {
 
 const WARNING_BANNER = 'WARNING_BANNER'
 
-const PsaBanner = (): ReactElement => {
+const PsaBanner = (): ReactElement | null => {
   const chainId = useSelector(currentChainId)
   const banner = BANNERS[chainId]
   const isEnabled = hasFeature(WARNING_BANNER as FEATURES)
   const [closed = false, setClosed] = useCachedState<boolean>(`${WARNING_BANNER}_${chainId}_closed`, true)
 
-  const showBanner = isEnabled && banner && !closed
+  const showBanner = Boolean(isEnabled && banner && !closed)
 
   const onClose = () => {
     setClosed(true)
@@ -142,17 +142,15 @@ const PsaBanner = (): ReactElement => {
     document.body.setAttribute('data-with-banner', showBanner.toString())
   }, [showBanner])
 
-  return (
-    showBanner && (
-      <div className={styles.banner}>
-        <div className={styles.wrapper}>
-          <div className={styles.content}>{banner}</div>
+  return showBanner ? (
+    <div className={styles.banner}>
+      <div className={styles.wrapper}>
+        <div className={styles.content}>{banner}</div>
 
-          <Close className={styles.close} onClick={onClose} />
-        </div>
+        <Close className={styles.close} onClick={onClose} />
       </div>
-    )
-  )
+    </div>
+  ) : null
 }
 
 export default PsaBanner
