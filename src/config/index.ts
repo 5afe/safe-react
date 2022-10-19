@@ -13,6 +13,7 @@ import {
   INFURA_TOKEN,
   SAFE_APPS_RPC_TOKEN,
   TX_SERVICE_VERSION,
+  DISABLED_WALLETS,
 } from 'src/utils/constants'
 import { ChainId, ChainName, ShortName } from './chain.d'
 import { emptyChainInfo, getChains } from './cache/chains'
@@ -107,7 +108,7 @@ export const getTxServiceUrl = (): ChainInfo['transactionService'] => {
 
 // Safe Mobile will always be disabled
 export const getDisabledWallets = (): ChainInfo['disabledWallets'] => {
-  return [...getChainInfo().disabledWallets, 'safeMobile']
+  return [...getChainInfo().disabledWallets, ...DISABLED_WALLETS]
 }
 
 const getExplorerUriTemplate = (): ChainInfo['blockExplorerUriTemplate'] => {

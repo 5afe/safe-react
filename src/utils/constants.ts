@@ -46,6 +46,22 @@ export const LS_NAMESPACE = 'SAFE'
 export const LS_SEPARATOR = '__'
 export const LS_USE_PROD_CGW = 'useProdGateway'
 
+export const DISABLED_WALLETS = [
+  'tally',
+  'trezor',
+  'ledger',
+  'trust',
+  'fortmatic',
+  'portis',
+  'authereum',
+  'torus',
+  'coinbase',
+  'walletLink',
+  'operaTouch',
+  'keystone',
+  'safeMobile',
+]
+
 // For debugging on dev
 export const isProdGateway = (): boolean => {
   try {

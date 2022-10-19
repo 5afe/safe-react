@@ -36,7 +36,6 @@ const wallets = (chainId: ChainId): Wallet[] => {
     {
       walletName: WALLETS.TREZOR,
       appUrl: 'gnosis-safe.io',
-      preferred: true,
       email: 'support@safe.global',
       desktop: true,
       rpcUrl,
@@ -44,7 +43,6 @@ const wallets = (chainId: ChainId): Wallet[] => {
     {
       walletName: WALLETS.LEDGER,
       desktop: true,
-      preferred: true,
       rpcUrl,
       LedgerTransport: (window as any).TransportNodeHid,
     },
@@ -59,6 +57,7 @@ const wallets = (chainId: ChainId): Wallet[] => {
       walletName: WALLETS.LATTICE,
       rpcUrl,
       appName: 'Safe',
+      preferred: true,
       desktop: false,
     },
     {
@@ -75,7 +74,7 @@ const wallets = (chainId: ChainId): Wallet[] => {
     { walletName: WALLETS.TORUS, desktop: true },
     { walletName: WALLETS.COINBASE, desktop: false },
     { walletName: WALLETS.WALLET_LINK, rpcUrl, desktop: false },
-    { walletName: WALLETS.OPERA, desktop: false },
+    { walletName: WALLETS.OPERA, preferred: true, desktop: false },
     { walletName: WALLETS.OPERA_TOUCH, desktop: false },
   ]
 }
