@@ -19,8 +19,8 @@ const Container = styled.div`
   width: 100vw;
   display: flex;
   flex-direction: column;
-
   background-color: ${({ theme }) => theme.colors.background};
+  /* background-color: #000; */
 `
 
 const HeaderWrapper = styled.nav`
@@ -30,6 +30,7 @@ const HeaderWrapper = styled.nav`
   z-index: 1299;
 
   background-color: white;
+  background-color: red;
   box-shadow: 0 2px 4px 0 rgba(40, 54, 61, 0.18);
 `
 
@@ -37,6 +38,7 @@ const BodyWrapper = styled.div`
   height: calc(100% - 52px);
   width: 100%;
   display: flex;
+  background-color: black;
   flex-direction: row;
 `
 
@@ -58,9 +60,9 @@ const SidebarWrapper = styled.aside`
   flex-shrink: 0;
   z-index: 1;
   overflow: hidden;
-
   padding: 8px 8px 0 8px;
-  background-color: ${({ theme }) => theme.colors.white};
+  /* background-color: ${({ theme }) => theme.colors.white}; */
+  background-color: #000;
   border-right: 1px solid #f0efee;
   box-shadow: 1px 2px 12px rgba(40, 54, 61, 0.08);
 

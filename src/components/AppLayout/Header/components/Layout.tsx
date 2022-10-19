@@ -25,7 +25,7 @@ import { _getChainId } from 'src/config'
 
 const styles = () => ({
   root: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: sm,
     boxShadow: 'rgb(40 54 61 / 18%) 1px 2px 10px 0px',
     marginTop: '11px',
@@ -34,7 +34,7 @@ const styles = () => ({
   },
   summary: {
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#000',
     flexWrap: 'nowrap',
     height: headerHeight,
     position: 'fixed',
@@ -121,21 +121,16 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
       {isWrongChain && (
         <div className={classes.wallet}>
           <WalletSwitch />
-          <Divider />
         </div>
       )}
 
       {chainHasSafeToken && (
         <>
-          <Divider />
           <SafeTokenWidget />
         </>
       )}
-
-      <Divider />
       <Notifications open={openNotifications} toggle={toggleNotifications} clickAway={clickAwayNotifications} />
 
-      <Divider />
       <Provider
         info={providerInfo}
         open={openWallet}
@@ -153,7 +148,6 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
         }
       />
 
-      <Divider />
       <NetworkSelector open={openNetworks} toggle={toggleNetworks} clickAway={clickAwayNetworks} />
     </Row>
   )
