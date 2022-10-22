@@ -61,15 +61,15 @@ const SidebarWrapper = styled.aside`
   z-index: 1;
   overflow: hidden;
   padding: 8px 8px 0 8px;
-  /* background-color: ${({ theme }) => theme.colors.white}; */
   background-color: #000;
-  border-right: 1px solid #f0efee;
-  box-shadow: 1px 2px 12px rgba(40, 54, 61, 0.08);
+  /* border-right: 1px solid #12c376; */
+  /* box-shadow: 5px 2px 12px rgba(18, 195, 118, 0.5); */
 
   @media (max-width: ${screenSm}px) {
     position: fixed;
     z-index: 1000;
-    left: 0;
+    left: 10px; /* temp value */
+    /* left: -30px; need to modify this */
     transition: transform 200ms ease-out;
     transform: translateX(${({ $expanded }: { $expanded: boolean }) => ($expanded ? '0' : '-95%')});
     animation: ${slideIn} 300ms ease-in;

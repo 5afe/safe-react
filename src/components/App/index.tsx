@@ -45,7 +45,7 @@ const App: React.FC = ({ children }) => {
 
   return (
     <Frame>
-      <PsaBanner />
+      {/* <PsaBanner /> */}
 
       <AppLayout
         sidebarItems={sidebarItems}

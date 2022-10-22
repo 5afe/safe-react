@@ -5,7 +5,6 @@ import { ThemeColors, ThemeIconSize } from '@gnosis.pm/safe-react-components/dis
 const StyledIcon = styled(Icon)`
   margin-right: 14px;
 `
-
 type Props = {
   type: IconTypes
   size?: ThemeIconSize
@@ -13,7 +12,7 @@ type Props = {
 }
 
 const ListItemIcon = ({ type, size, color }: Props): React.ReactElement => (
-  <StyledIcon type={type} color={color || 'placeHolder'} size={size || 'md'} />
+<StyledIcon type={type} size={size || 'md'} color={color} />
 )
 
 export default ListItemIcon

@@ -62,7 +62,7 @@ const StyledIcon = styled(Icon)`
     transform: rotateZ(-90deg);
 
     .icon-color {
-      fill: ${black400};
+      fill: #12c376;
     }
 
     path:nth-child(2) {
@@ -172,8 +172,8 @@ const StyledText = styled(Title)`
 const ToggleSafeListButton = styled.button`
   cursor: pointer;
   border: 0;
-  background-color: ${secondaryBackground};
-  border-radius: 50%;
+  background-color: black;
+  /* background-color: ${secondaryBackground}; */
   width: 42px;
   height: 42px;
   position: absolute;
@@ -184,10 +184,6 @@ const ToggleSafeListButton = styled.button`
 
   & span {
     margin-left: -15px;
-  }
-
-  &:hover {
-    background-color: ${primaryLite};
   }
 `
 
@@ -200,6 +196,12 @@ type Props = {
   onReceiveClick: () => void
   onNewTransactionClick: () => void
 }
+
+const SidebarText = styled.h2`
+    color: #12c376;
+    font-size: 1rem;
+
+`
 
 const SafeHeader = ({
   address,
@@ -226,7 +228,8 @@ const SafeHeader = ({
       <Container>
         <IdenticonContainer>
           <FlexSpacer />
-          <FixedIcon type="notConnected" />
+          {/* <FixedIcon type="notConnected" /> */}
+          <SidebarText>Not connected</SidebarText>
           <ToggleSafeListButton onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
             <StyledIcon size="md" type="circleDropdown" />
           </ToggleSafeListButton>

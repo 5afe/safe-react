@@ -108,12 +108,12 @@ const StyledListSubItem = styled(ListItem)<ListItemProps>`
 
 export const StyledListItemText = styled(ListItemText)`
   span {
-    font-family: ${({ theme }) => theme.fonts.fontFamily};
+    font-family: "IBM Plex Mono", monospace;
     font-size: 14px;
     font-weight: 600;
     line-height: 1.5;
     letter-spacing: 0.5px;
-    color: ${black500} !important;
+    color: #12c376 !important;
   }
 `
 

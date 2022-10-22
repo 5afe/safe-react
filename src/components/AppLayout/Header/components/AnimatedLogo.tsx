@@ -1,5 +1,5 @@
 import { useEffect, useState, ReactElement } from 'react'
-import SafeLogo from '../assets/transition-logo.gif'
+import CantoLogo from '../assets/transition-logo.gif'
 
 const useInterval = (delay: number): number => {
   const [count, setCount] = useState<number>(0)
@@ -19,7 +19,7 @@ const AnimatedLogo = (): ReactElement => {
   const RESTART_DELAY = 2 * 60e3 // 2 minutes
   const restartKey = useInterval(RESTART_DELAY)
 
-  return <img alt="Safe" src={`${SafeLogo}?${restartKey}`} id="safe-logo" height={36} />
+  return <img alt="Safe" src={`${CantoLogo}?${restartKey}`} id="safe-logo" height={36} />
 }
 
 export default AnimatedLogo

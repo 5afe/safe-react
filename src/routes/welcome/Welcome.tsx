@@ -1,7 +1,5 @@
 import { ReactElement } from 'react'
 import { Button } from '@gnosis.pm/safe-react-components'
-// import { Button, Card, Title, Text } from '@gnosis.pm/safe-react-components'
-// import { Button as MButton } from '@material-ui/core'
 import Divider from '@material-ui/core/Divider'
 import styled from 'styled-components'
 
@@ -54,15 +52,12 @@ function Welcome(): ReactElement {
                 
                 <Button
                   variant="bordered"
-                  iconType="safe"
-                  iconSize="sm"
                   size="lg"
                   component={Link}
                   to={LOAD_SAFE_ROUTE}
                   style={{
                     outline: "0",
                     border: "2px solid #12c376"
-
                   }}
                 >
                   <StyledButtonLabel color="secondary">Add existing Safe</StyledButtonLabel>

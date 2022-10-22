@@ -126,13 +126,13 @@ const Sidebar = ({
       <HelpContainer>
         {debugToggle}
 
-        <StyledDivider />
 
         <HelpList>
+          {/* icons color needs to be changed */}
           {!isDesktop && BEAMER_ID && (
             <Track {...OVERVIEW_EVENTS.WHATS_NEW}>
               <StyledListItem className="beamer-trigger" button onClick={handleClick}>
-                <ListIcon type="gift" color="secondary" size="sm" />
+                <ListIcon type="gift" size="sm" color="primary" />
                 <StyledListItemText>What&apos;s new</StyledListItemText>
               </StyledListItem>
             </Track>
@@ -140,7 +140,7 @@ const Sidebar = ({
 
           <Track {...OVERVIEW_EVENTS.HELP_CENTER}>
             <HelpCenterLink href="https://help.gnosis-safe.io/en/" target="_blank" title="Help Center of Gnosis Safe">
-              <ListIcon type="question" color="secondary" size="sm" />
+              <ListIcon type="question" size="sm" color="primary" />
               <StyledListItemText>Help Center</StyledListItemText>
             </HelpCenterLink>
           </Track>
