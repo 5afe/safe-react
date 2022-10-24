@@ -16,7 +16,7 @@ function Welcome(): ReactElement {
     <Page align="center">
       <Block>
         <Title size="md" strong>
-          Welcome to the Oryy.
+          Welcome to Oryy.
         </Title>
         <Title size="xs">
           Oryy is a platform to manage digital assets based on Gnosis Safe. <br /> Here is how to get started:
