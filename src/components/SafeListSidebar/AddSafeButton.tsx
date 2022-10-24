@@ -41,7 +41,7 @@ const AddSafeButton = ({ onAdd }: Props): ReactElement => {
         <Fab color="secondary" size="small" aria-label="Add Safe">
           <AddIcon />
 
-          <Text color="primary" size="xl" strong>
+          <Text color="secondary" size="xl" strong>
             Add Safe
           </Text>
         </Fab>
