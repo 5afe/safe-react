@@ -22,9 +22,7 @@ addDecorator((storyFn) => (
   <ThemeProvider theme={theme}>
     <MemoryRouter>
       <GlobalStyles />
-      <Provider store={aNewStore()}>
-        {storyFn()}
-      </Provider>
+      <Provider store={aNewStore()}>{storyFn()}</Provider>
     </MemoryRouter>
   </ThemeProvider>
 ))

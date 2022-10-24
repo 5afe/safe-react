@@ -15,10 +15,10 @@ function Welcome(): ReactElement {
     <Page align="center">
       <Block>
         <Title size="md" strong>
-          Welcome to the Safe.
+          Welcome to the Oryy.
         </Title>
         <Title size="xs">
-          Safe is the most trusted platform to manage digital assets. <br /> Here is how to get started:
+          Oryy is a platform to manage digital assets based on Gnosis Safe. <br /> Here is how to get started:
         </Title>
         <CardsContainer>
           <StyledCard>
