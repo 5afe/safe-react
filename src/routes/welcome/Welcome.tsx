@@ -1,7 +1,8 @@
 import { ReactElement } from 'react'
-import { Button, Card, Title, Text } from '@gnosis.pm/safe-react-components'
+import { Card, Title, Text } from '@gnosis.pm/safe-react-components'
 import Divider from '@material-ui/core/Divider'
 import styled from 'styled-components'
+import Button from 'src/components/layout/Button'
 
 import Page from 'src/components/layout/Page'
 import Block from 'src/components/layout/Block'
@@ -15,10 +16,10 @@ function Welcome(): ReactElement {
     <Page align="center">
       <Block>
         <Title size="md" strong>
-          Welcome to the Safe.
+          Welcome to Oryy.
         </Title>
         <Title size="xs">
-          Safe is the most trusted platform to manage digital assets. <br /> Here is how to get started:
+          Oryy is a platform to manage digital assets based on Gnosis Safe. <br /> Here is how to get started:
         </Title>
         <CardsContainer>
           <StyledCard>
@@ -32,7 +33,14 @@ function Welcome(): ReactElement {
                 <Text size="xl">You will be required to pay a network fee for creating your new Safe.</Text>
               </CardDescriptionContainer>
               <Track {...CREATE_SAFE_EVENTS.CREATE_BUTTON}>
-                <Button size="lg" color="primary" variant="contained" component={Link} to={OPEN_SAFE_ROUTE}>
+                <Button
+                  color="primary"
+                  type={'button'}
+                  size="lg"
+                  variant="contained"
+                  component={Link}
+                  to={OPEN_SAFE_ROUTE}
+                >
                   <Text size="xl" color="white">
                     + Create new Safe
                   </Text>

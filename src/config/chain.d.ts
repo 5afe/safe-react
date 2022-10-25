@@ -14,6 +14,8 @@ export const CHAIN_ID: Record<ChainName, ChainId> = {
   RINKEBY: '4',
   GOERLI: '5',
   VOLTA: '73799',
+  COSTON: '16',
+  SONGBIRD: '19',
 }
 
 // Values match that required of onboard and returned by CGW
