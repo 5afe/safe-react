@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel'
-import { Switch } from '@gnosis.pm/safe-react-components'
+import { Switch } from '@material-ui/core'
 import useCachedState from 'src/utils/storage/useCachedState'
 import { LS_USE_PROD_CGW } from 'src/utils/constants'
 
@@ -22,7 +22,7 @@ const DebugToggle = (): React.ReactElement => {
 
   return (
     <StyledContainer>
-      <FormControlLabel control={<Switch checked={enabled} onChange={onToggle} />} label="Use prod CGW" />
+      <FormControlLabel control={<Switch checked={enabled} onChange={() => onToggle()} />} label="Use prod CGW" />
     </StyledContainer>
   )
 }

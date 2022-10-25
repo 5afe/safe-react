@@ -6,11 +6,11 @@ import {
   Text,
   Title,
   Identicon,
-  Button,
   CopyToClipboardBtn,
   ExplorerButton,
 } from '@gnosis.pm/safe-react-components'
 import { useRouteMatch } from 'react-router-dom'
+import Button from 'src/components/layout/Button'
 
 import FlexSpacer from 'src/components/FlexSpacer'
 import Paragraph from 'src/components/layout/Paragraph'

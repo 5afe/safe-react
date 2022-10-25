@@ -1,13 +1,13 @@
 import {
   Breadcrumb,
   BreadcrumbElement,
-  Button,
   ButtonLink,
   FixedIcon,
   Icon,
   Menu,
   Text,
 } from '@gnosis.pm/safe-react-components'
+import Button from 'src/components/layout/Button'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
@@ -164,7 +164,12 @@ const AddressBookTable = (): ReactElement => {
       <Menu>
         <Col start="sm" sm={6} xs={12}>
           <Breadcrumb>
-            <BreadcrumbElement iconType="addressBook" text="Address Book" counter={addressBook?.length.toString()} />
+            <BreadcrumbElement
+              color="secondary"
+              iconType="addressBook"
+              text="Address Book"
+              counter={addressBook?.length.toString()}
+            />
           </Breadcrumb>
         </Col>
         <Col end="sm" sm={6} xs={12}>

@@ -30,7 +30,7 @@ const useSidebarItems = (): ListItemType[] => {
       label,
       badge,
       disabled,
-      icon: <ListIcon type={iconType} size="sm" color="text" />,
+      icon: <ListIcon type={iconType} size="sm" color="secondary" />,
       selected: href === matchSafeWithSidebarSection?.url,
       href,
       subItems,

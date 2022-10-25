@@ -1,6 +1,6 @@
 import { ReactElement, useMemo } from 'react'
 import styled from 'styled-components'
-import { Button } from '@gnosis.pm/safe-react-components'
+import Button from 'src/components/layout/Button'
 import { generatePath, Link } from 'react-router-dom'
 import Skeleton from '@material-ui/lab/Skeleton/Skeleton'
 import { Grid } from '@material-ui/core'

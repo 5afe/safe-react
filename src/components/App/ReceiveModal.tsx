@@ -1,4 +1,5 @@
-import { Button, Switch } from '@gnosis.pm/safe-react-components'
+import { Switch } from '@material-ui/core'
+import Button from 'src/components/layout/Button'
 import IconButton from '@material-ui/core/IconButton'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -118,7 +119,7 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
           <QRCode size={135} value={qrCodeString} />
         </Block>
         <FormControlLabel
-          control={<Switch checked={shouldEncodePrefix} onChange={setShouldEncodePrefix} />}
+          control={<Switch checked={shouldEncodePrefix} onChange={() => setShouldEncodePrefix(!shouldEncodePrefix)} />}
           label={
             <>
               QR code with chain prefix (<b>{shortName}:</b>)

@@ -1,13 +1,5 @@
-import {
-  Button,
-  Card,
-  IconText,
-  Loader,
-  Menu,
-  Text,
-  Breadcrumb,
-  BreadcrumbElement,
-} from '@gnosis.pm/safe-react-components'
+import { Card, IconText, Loader, Menu, Text, Breadcrumb, BreadcrumbElement } from '@gnosis.pm/safe-react-components'
+import Button from 'src/components/layout/Button'
 import { useState } from 'react'
 import styled, { css } from 'styled-components'
 import { motion, AnimatePresence } from 'framer-motion'

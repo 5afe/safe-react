@@ -1,5 +1,5 @@
 import { RadioButtons, Text } from '@gnosis.pm/safe-react-components'
-import { FormControlLabel, hexToRgb, Switch as SwitchMui } from '@material-ui/core'
+import { FormControlLabel, Switch as SwitchMui } from '@material-ui/core'
 import { ReactElement } from 'react'
 import { useField } from 'react-final-form'
 import styled from 'styled-components'
@@ -13,29 +13,6 @@ const SpendingLimitRadioButtons = styled(RadioButtons)`
     color: ${({ theme }) => theme.colors.primary};
   }
 `
-
-// TODO: add `name` and `value` to SRC Switch, as they're required for a better RFF integration
-const StyledSwitch = styled(({ ...rest }) => <SwitchMui {...rest} />)`
-  && {
-    .MuiIconButton-label,
-    .MuiSwitch-colorSecondary {
-      color: ${({ theme }) => theme.colors.icon};
-    }
-
-    .MuiSwitch-colorSecondary.Mui-checked .MuiIconButton-label {
-      color: ${({ theme }) => theme.colors.primary};
-    }
-
-    .MuiSwitch-colorSecondary.Mui-checked:hover {
-      background-color: ${({ theme }) => hexToRgb(`${theme.colors.primary}03`)};
-    }
-
-    .Mui-checked + .MuiSwitch-track {
-      background-color: ${({ theme }) => theme.colors.primaryLight};
-    }
-  }
-`
-
 interface RadioButtonOption {
   label: string
   value: string
@@ -63,7 +40,7 @@ const Switch = ({ label, name }: { label: string; name: string }): ReactElement 
         name={name}
         type="checkbox"
         render={({ input: { checked, onChange, name, value } }) => (
-          <StyledSwitch checked={checked} onChange={onChange} name={name} value={value} />
+          <SwitchMui checked={checked} onChange={() => onChange()} name={name} value={value} />
         )}
       />
     }

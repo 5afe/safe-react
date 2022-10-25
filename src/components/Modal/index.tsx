@@ -1,5 +1,6 @@
 import styled from 'styled-components'
-import { Button, Loader, theme, Title as TitleSRC } from '@gnosis.pm/safe-react-components'
+import { Loader, theme, Title as TitleSRC } from '@gnosis.pm/safe-react-components'
+import Button from 'src/components/layout/Button'
 import { ButtonProps as ButtonPropsMUI, Modal as ModalMUI } from '@material-ui/core'
 import cn from 'classnames'
 import { ReactElement, ReactNode } from 'react'
@@ -225,8 +226,8 @@ const Buttons = ({ cancelButtonProps = {}, confirmButtonProps = {} }: ButtonsPro
     <>
       <Button
         size="md"
-        color="primary"
         variant={cancelButtonProps.variant || 'outlined'}
+        color="primary"
         type={cancelOnClick ? 'button' : 'submit'}
         disabled={cancelDisabled || [ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(cancelStatus)}
         data-testid={cancelTestId}
@@ -248,8 +249,9 @@ const Buttons = ({ cancelButtonProps = {}, confirmButtonProps = {} }: ButtonsPro
       <Button
         size="md"
         type={confirmOnClick ? 'button' : 'submit'}
-        disabled={confirmDisabled || [ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(confirmStatus)}
         data-testid={confirmTestId}
+        color="primary"
+        variant="contained"
         onClick={(e) => {
           trackEvent(getModalEvent(confirmText))
           confirmOnClick?.(e)

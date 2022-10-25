@@ -2,7 +2,7 @@ import { ReactElement } from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
-import { xs, lg, black500, extraLargeFontSize, largeFontSize } from 'src/theme/variables'
+import { xs, lg, black500, extraLargeFontSize, largeFontSize, primary } from 'src/theme/variables'
 
 export const WidgetContainer = styled.section`
   display: flex;
@@ -46,7 +46,7 @@ export const Card = styled.div`
 
 const StyledLink = styled(Link)`
   text-decoration: none;
-  color: ${({ theme }) => theme.colors.primary};
+  color: ${primary};
   font-weight: bold;
   display: flex;
   align-items: center;

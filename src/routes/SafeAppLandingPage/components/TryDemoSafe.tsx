@@ -1,7 +1,8 @@
 import { MouseEvent, ReactElement } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import styled from 'styled-components'
-import { Title, Button } from '@gnosis.pm/safe-react-components'
+import { Title } from '@gnosis.pm/safe-react-components'
+import Button from 'src/components/layout/Button'
 
 import { demoSafeRoute } from 'src/routes/routes'
 import { secondary } from 'src/theme/variables'

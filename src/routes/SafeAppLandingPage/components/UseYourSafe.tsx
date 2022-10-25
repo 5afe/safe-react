@@ -1,6 +1,7 @@
 import { useEffect, useState, ReactElement } from 'react'
 import { Link } from 'react-router-dom'
-import { Text, Button } from '@gnosis.pm/safe-react-components'
+import { Text } from '@gnosis.pm/safe-react-components'
+import Button from 'src/components/layout/Button'
 import styled from 'styled-components'
 
 import SafeAddressSelector from 'src/components/SafeAddressSelector/SafeAddressSelector'

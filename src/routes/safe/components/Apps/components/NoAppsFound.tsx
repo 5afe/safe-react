@@ -1,4 +1,5 @@
-import { Text, Button } from '@gnosis.pm/safe-react-components'
+import { Text } from '@gnosis.pm/safe-react-components'
+import Button from 'src/components/layout/Button'
 import styled from 'styled-components'
 
 const NoAppsFoundTextContainer = styled.div`

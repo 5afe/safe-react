@@ -9,7 +9,8 @@ import TableRow from '@material-ui/core/TableRow'
 import { Skeleton } from '@material-ui/lab'
 
 import InfoIcon from 'src/assets/icons/info_red.svg'
-import { FixedIcon, Text, Button } from '@gnosis.pm/safe-react-components'
+import { FixedIcon, Text } from '@gnosis.pm/safe-react-components'
+import Button from 'src/components/layout/Button'
 
 import Img from 'src/components/layout/Img'
 import Table from 'src/components/Table'

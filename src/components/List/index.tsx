@@ -10,7 +10,7 @@ import ListMui from '@material-ui/core/List'
 import ListItem, { ListItemProps } from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import Collapse from '@material-ui/core/Collapse'
-import { background, secondary, primaryLite, black500, gray500 } from 'src/theme/variables'
+import { background, secondary, primaryLite, black500, gray500, primaryActive } from 'src/theme/variables'
 
 const ListItemWrapper = styled.div`
   padding: 0 12px;
@@ -43,16 +43,16 @@ export const StyledListItem = styled(ListItem)<ListItemProps>`
   &.MuiListItem-root.Mui-selected {
     background-color: ${primaryLite};
     border-radius: 8px;
-    color: ${({ theme }) => theme.colors.primary};
+    color: ${primaryActive};
     span {
-      color: ${({ theme }) => theme.colors.primary};
+      color: ${primaryActive};
 
       & svg {
-        fill: ${({ theme }) => theme.colors.primary};
+        fill: ${primaryActive};
       }
     }
     .icon-color {
-      fill: ${({ theme }) => theme.colors.primary};
+      fill: ${primaryActive};
     }
   }
 
