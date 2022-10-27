@@ -40,7 +40,7 @@ const styles = createStyles({
   ens: {
     // paddingBottom: md,
     // fontWeight: 'bold',
-    // color: "#12c375",
+    // color: "#06fc99",
   },
   details: {
     padding: `0 ${md}`,
@@ -72,7 +72,7 @@ const styles = createStyles({
   },
   disconnectButton: {
     marginBottom: `${md}`,
-    backgroundColor: '#12c375',
+    backgroundColor: '#06fc99',
     color: '#000',
     boxShadow: 'none',
   },

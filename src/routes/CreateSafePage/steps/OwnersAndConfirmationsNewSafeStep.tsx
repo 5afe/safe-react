@@ -103,11 +103,11 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
   return (
     <>
       <BlockWithPadding data-testid={'create-safe-owners-confirmation-step'}>
-        <ParagraphWithMargin color="#12c375" noMargin size="lg">
+        <ParagraphWithMargin color="#06fc99" noMargin size="lg">
           Your Safe will have one or more owners. We have prefilled the first owner with your connected wallet details,
           but you are free to change this to a different owner.
         </ParagraphWithMargin>
-        <Paragraph color="#12c375" size="lg">
+        <Paragraph color="#06fc99" size="lg">
           Add additional owners (e.g. wallets of your teammates) and specify how many of them have to confirm a
           transaction before it gets executed. In general, the more confirmations required, the more secure your Safe
           is.
@@ -216,7 +216,7 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
         </OwnerContainer>
         <BlockWithPadding>
           <Block>
-            <Paragraph color='#12c375'>Any transaction requires the confirmation of:</Paragraph>
+            <Paragraph color='#06fc99'>Any transaction requires the confirmation of:</Paragraph>
           </Block>
           <OwnerContainer align="center" grow>
             <Col xs={1}>
@@ -243,7 +243,7 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
               </Field>
             </Col>
             <Col xs={11}>
-              <StyledParagraph color='#12c375' noMargin>out of {owners.length} owner(s)</StyledParagraph>
+              <StyledParagraph color='#06fc99' noMargin>out of {owners.length} owner(s)</StyledParagraph>
             </Col>
           </OwnerContainer>
         </BlockWithPadding>
@@ -279,7 +279,7 @@ const RowHeader = styled(Row)`
 `
 
 const ColText = styled.p`
-  color: #12c375;
+  color: #06fc99;
   font-size: 1rem;
   margin-left: 10px;
   margin-top: -1rem;

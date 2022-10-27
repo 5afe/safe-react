@@ -152,7 +152,7 @@ const useStyles = makeStyles((theme) => ({
   },
   stepLabel: {
     cursor: ({ isStepLabelClickable }: any) => (isStepLabelClickable ? 'pointer' : 'inherit'),
-    color: "#12c375",
+    color: "#06fc99",
   },
 }))
 

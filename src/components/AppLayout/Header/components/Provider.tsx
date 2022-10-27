@@ -25,7 +25,7 @@ const styles = () => ({
     display: 'flex',
     flex: '1 1 auto',
     padding: sm,
-    color: '#12c375',
+    color: '#06fc99',
 
     [`@media (min-width: ${screenSm}px)`]: {
       paddingLeft: sm,
@@ -35,13 +35,13 @@ const styles = () => ({
   expand: {
     height: '30px',
     width: '30px',
-    color: '#12c375',
+    color: '#06fc99',
   },
 })
 
 const Container = styled.div`
   background-color: black;
-  border: #12c375 3px solid;
+  border: #06fc99 3px solid;
   padding: 0rem 1rem;
   margin-top: 0.5rem;
   margin-right: 1rem;

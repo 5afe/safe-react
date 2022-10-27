@@ -88,13 +88,13 @@ function NameNewSafeStep(): ReactElement {
   return (
     <BlockWithPadding data-testid={'create-safe-name-step'}>
       <Block margin="md">
-        <Paragraph color="#12c375" noMargin size="lg">
+        <Paragraph color="#06fc99" noMargin size="lg">
           You are about to create a new Safe wallet with one or more owners. First, let&apos;s give your new wallet a
           name. This name is only stored locally and will never be shared with us or any third parties. The new Safe
           will ONLY be available on <NetworkLabel />
         </Paragraph>
       </Block>
-      <label style={{color: '#12c375'}} htmlFor={FIELD_CREATE_CUSTOM_SAFE_NAME}>Name of the new Safe</label>
+      <label style={{color: '#06fc99'}} htmlFor={FIELD_CREATE_CUSTOM_SAFE_NAME}>Name of the new Safe</label>
       <FieldContainer margin="lg">
         <Col xs={11}>
           <Field
@@ -109,7 +109,7 @@ function NameNewSafeStep(): ReactElement {
         </Col>
       </FieldContainer>
       <Block margin="lg">
-        <Paragraph color="#12c375" noMargin size="lg">
+        <Paragraph color="#06fc99" noMargin size="lg">
           By continuing you consent to the{' '}
           <Link href="https://gnosis-safe.io/terms" rel="noopener noreferrer" target="_blank">
             terms of use

@@ -48,14 +48,14 @@ const styles = {
   expand: {
     height: '30px',
     width: '30px',
-    color: '#12c375',
+    color: '#06fc99',
   },
   popper: {
     zIndex: 1301,
   },
   network: {
     backgroundColor: 'black',
-    border: '2px solid #12c375',
+    border: '2px solid #06fc99',
     borderRadius: sm,
     marginTop: '11px',
     minWidth: '180px',

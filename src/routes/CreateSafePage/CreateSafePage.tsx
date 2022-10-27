@@ -123,7 +123,7 @@ function CreateSafePage(): ReactElement {
           <BackIcon disableRipple onClick={history.goBack}>
             <ChevronLeft />
           </BackIcon>
-          <MainHeading color="#12c375">Create new Safe</MainHeading>
+          <MainHeading color="#06fc99">Create new Safe</MainHeading>
         </Row>
         <StepperForm
           initialValues={initialFormValues}
@@ -232,7 +232,7 @@ const BackIcon = styled(IconButton)`
 `
 
 const MainHeading = styled.h2`
-  color: #12c375;
+  color: #06fc99;
 `
 
 // const NewStepFormElement = styled(StepFormElement)`

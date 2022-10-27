@@ -18,8 +18,8 @@ const StyledCol = styled(Col)`
 `
 const StyledParagraph = styled(Paragraph)`
   background-color: #000;
-  color: #12c375;
-  border: #12c375 2px solid;
+  color: #06fc99;
+  border: #06fc99 2px solid;
   border-radius: 5px;
   line-height: normal;
   text-transform: capitalize;

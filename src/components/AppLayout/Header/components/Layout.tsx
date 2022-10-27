@@ -27,7 +27,7 @@ const styles = () => ({
   root: {
     backgroundColor: "black",
     borderRadius: sm,
-    border: "2px solid #12c375",
+    border: "2px solid #06fc99",
     marginTop: '11px',
     minWidth: '280px',
     padding: 0,
@@ -66,7 +66,7 @@ const styles = () => ({
   },
   popper: {
     zIndex: 1301,
-    color: '#12c375',
+    color: '#06fc99',
   },
   network: {
     borderRadius: sm,
