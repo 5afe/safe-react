@@ -117,7 +117,7 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
                 borderRadius: 8,
               },
               dropAreaActive: {
-                borderColor: '#008C73',
+                borderColor: '#05de87',
               },
               dropFile: {
                 width: 200,
@@ -134,7 +134,7 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
                 top: '12px',
               },
               fileNameInfo: {
-                color: importError === '' ? '#008C73' : '#DB3A3D',
+                color: importError === '' ? '#05de87' : '#DB3A3D',
                 backgroundColor: '#fff',
                 fontSize: 14,
                 lineHeight: 1.4,
@@ -144,7 +144,7 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
                 overflow: 'hidden',
               },
               progressBar: {
-                backgroundColor: '#008C73',
+                backgroundColor: '#05de87',
               },
               removeButton: {
                 color: '#DB3A3D',

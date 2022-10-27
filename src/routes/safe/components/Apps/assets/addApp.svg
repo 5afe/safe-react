@@ -19,7 +19,7 @@
                     </mask>
                     <path fill="#B2B5B2" d="M.67 21.273l.007.006c.894.894 2.357.894 3.252 0L20.924 4.284c.894-.895.894-2.358 0-3.252l-.006-.006c-.894-.895-2.357-.895-3.252 0L.67 18.02c-.895.895-.895 2.357 0 3.252" mask="url(#i3d0m5zbyd)"/>
                 </g>
-                <path stroke="#008C73" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M12.031 15.984L36.031 15.984M24.031 27.984L24.031 3.984" transform="translate(-286 -140) translate(286 140)"/>
+                <path stroke="#05de87" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M12.031 15.984L36.031 15.984M24.031 27.984L24.031 3.984" transform="translate(-286 -140) translate(286 140)"/>
                 <path fill="#F6F7F8" d="M48.719 67.994c-3.136 0-5.687-2.552-5.687-5.687V25.68c0-3.135 2.55-5.687 5.687-5.687h44.625c3.136 0 5.688 2.552 5.688 5.687v36.626c0 3.135-2.552 5.687-5.688 5.687H48.719z" transform="translate(-286 -140) translate(286 140)"/>
                 <path fill="#B2B5B2" d="M93.344 17.994H48.719c-4.246 0-7.688 3.44-7.688 7.687v36.626c0 4.246 3.442 7.687 7.688 7.687h44.625c4.245 0 7.687-3.441 7.687-7.687V25.68c0-4.246-3.442-7.687-7.687-7.687m0 4c2.033 0 3.688 1.654 3.688 3.687v36.626c0 2.033-1.655 3.687-3.688 3.687H48.719c-2.034 0-3.688-1.654-3.688-3.687V25.68c0-2.033 1.654-3.687 3.688-3.687h44.625" transform="translate(-286 -140) translate(286 140)"/>
                 <path stroke="#B2B5B2" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M44.566 33.978L97.566 33.978" transform="translate(-286 -140) translate(286 140)"/>
