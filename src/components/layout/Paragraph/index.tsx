@@ -24,7 +24,9 @@ const Paragraph = (props: Props): ReactElement => {
   const { align, children, className, color, dot, noMargin, size, transform, weight, ...restProps } = props
   return (
     <p
-      className={cx(styles.paragraph, className, weight, { noMargin, dot }, size, color, transform, align)}
+      className={cx(styles.paragraph, className, weight, { noMargin, dot }, size, transform, align)}
+
+      style={{color: color}}
       {...restProps}
     >
       {children}

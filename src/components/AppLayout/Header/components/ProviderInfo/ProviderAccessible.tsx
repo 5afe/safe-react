@@ -3,6 +3,7 @@ import * as React from 'react'
 import { useSelector } from 'react-redux'
 import { Text } from '@gnosis.pm/safe-react-components'
 
+import styled from 'styled-components'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
@@ -62,6 +63,7 @@ interface ProviderInfoProps {
   // TODO: [xDai] Review. This may cause some issues with EthHashInfo.
   userAddress: string
 }
+
 
 const ProviderInfo = ({ connected, provider, userAddress }: ProviderInfoProps): React.ReactElement => {
   const classes = useStyles()

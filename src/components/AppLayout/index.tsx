@@ -40,6 +40,7 @@ const BodyWrapper = styled.div`
   display: flex;
   background-color: black;
   flex-direction: row;
+  margin-top: 1rem;
 `
 
 const slideIn = keyframes`
@@ -175,7 +176,7 @@ const Layout: React.FC<Props> = ({
         <ContentWrapper>
           <MainContentWrapper>{children}</MainContentWrapper>
           <TransactionQueueBar />
-          {hasFooter && <Footer />}
+          {/* {hasFooter && <Footer />} */}
         </ContentWrapper>
       </BodyWrapper>
 

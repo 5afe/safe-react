@@ -90,6 +90,10 @@ const CardsContainer = styled.div`
   display: flex;
   height: 300px;
   max-width: 850px;
+  margin-top: 2rem;
+  padding: 1rem 0;
+  border: 2px solid #12c376;
+  border-radius: 1rem;
 `
 
 const StyledCard = styled.div`

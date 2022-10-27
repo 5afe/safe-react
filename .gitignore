@@ -3,6 +3,7 @@
 .DS_Store
 yarn-error.log
 .env*
+.env
 .eslintcache
 /.idea
 dist

@@ -16,12 +16,11 @@ const StyledCol = styled(Col)`
     padding-right: ${md};
   }
 `
-const StyledParagraph = styled(Paragraph)<{
-  $theme: ChainInfo['theme']
-}>`
-  background-color: ${(props) => props?.$theme?.backgroundColor ?? border};
-  color: ${(props) => props?.$theme?.textColor ?? fontColor};
-  border-radius: 3px;
+const StyledParagraph = styled(Paragraph)`
+  background-color: #000;
+  color: #12c375;
+  border: #12c375 2px solid;
+  border-radius: 5px;
   line-height: normal;
   text-transform: capitalize;
   margin: 0;
@@ -41,7 +40,7 @@ const NetworkLabel = ({
 
   return (
     <StyledCol middle="xs" start="xs" onClick={onClick}>
-      <StyledParagraph size="xs" $theme={chain.theme} className="networkLabel">
+      <StyledParagraph size="xs" className="networkLabel">
         {chain.chainName}
       </StyledParagraph>
     </StyledCol>

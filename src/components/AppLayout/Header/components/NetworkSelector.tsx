@@ -48,14 +48,15 @@ const styles = {
   expand: {
     height: '30px',
     width: '30px',
+    color: '#12c375',
   },
   popper: {
     zIndex: 1301,
   },
   network: {
-    backgroundColor: 'white',
+    backgroundColor: 'black',
+    border: '2px solid #12c375',
     borderRadius: sm,
-    boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
     marginTop: '11px',
     minWidth: '180px',
     padding: '0',
@@ -70,13 +71,6 @@ const StyledLink = styled.a`
   display: flex;
   justify-content: space-between;
   padding: 14px 16px 14px 0;
-
-  :hover {
-    background-color: ${({ theme }) => theme.colors.background};
-  }
-`
-const StyledDivider = styled(Divider)`
-  margin: 0;
 `
 
 type NetworkSelectorProps = ReturnValue
@@ -131,7 +125,6 @@ const NetworkSelector = ({ open, toggle, clickAway }: NetworkSelectorProps): Rea
 
                       {chainId === network.chainId && <Icon type="check" size="md" color="primary" />}
                     </StyledLink>
-                    <StyledDivider />
                   </Fragment>
                 ))}
               </List>
