@@ -113,7 +113,7 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
             onRemoveFile={handleOnRemoveFile}
             style={{
               dropArea: {
-                borderColor: '#B2B5B2',
+                borderColor: '#05de87',
                 borderRadius: 8,
               },
               dropAreaActive: {
@@ -127,7 +127,7 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
                 borderRadius: 8,
               },
               fileSizeInfo: {
-                color: '#001428',
+                color: '#06fc99',
                 lineHeight: 1,
                 position: 'absolute',
                 left: '10px',

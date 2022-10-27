@@ -107,7 +107,7 @@ export const useDropdownStyles = makeStyles({
     transform: 'translateY(-50%)',
     width: '18px',
     '& path': {
-      fill: '#b2b5b2',
+      fill: '#05de87',
     },
   },
   inputRoot: {
