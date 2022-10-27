@@ -26,7 +26,7 @@ const DebugToggle = (): React.ReactElement => {
       <FormControlLabel
         control={<Switch checked={enabled} onChange={onToggle}/>}
         label="Use prod CGW"
-        style={{ color: '#12c376', }}
+        style={{ color: '#06fc99', }}
       />
     </StyledContainer>
   )

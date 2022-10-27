@@ -63,7 +63,7 @@ const SidebarWrapper = styled.aside`
   overflow: hidden;
   padding: 8px 8px 0 8px;
   background-color: #000;
-  /* border-right: 1px solid #12c376; */
+  /* border-right: 1px solid #06fc99; */
   /* box-shadow: 5px 2px 12px rgba(18, 195, 118, 0.5); */
 
   @media (max-width: ${screenSm}px) {

@@ -113,7 +113,7 @@ export const StyledListItemText = styled(ListItemText)`
     font-weight: 600;
     line-height: 1.5;
     letter-spacing: 0.5px;
-    color: #12c376 !important;
+    color: #06fc99 !important;
   }
 `
 

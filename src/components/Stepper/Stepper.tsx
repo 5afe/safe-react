@@ -128,7 +128,7 @@ export default function Stepper(props: StepperProps): ReactElement {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    border: "#12c376 2px solid",
+    border: "#06fc99 2px solid",
     backgroundColor: 'black',
     margin: '10px 0 10px 10px',
     maxWidth: '800px',
@@ -142,11 +142,11 @@ const useStyles = makeStyles((theme) => ({
     marginRight: sm,
     fontWeight: boldFont,
     // color: theme.palette.secondary.main,
-    color: "#12c376",
+    color: "#06fc99",
   },
   nextButton: {
     fontWeight: boldFont,
-    backgroundColor: '#12c376',
+    backgroundColor: '#06fc99',
     boxShadow: 'none',
     color: '#000',
   },

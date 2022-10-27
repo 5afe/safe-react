@@ -77,7 +77,7 @@ const styles = () => ({
 })
 
 const LogoText = styled.a`
-  color: #12c376;
+  color: #06fc99;
   font-size: 1.5rem;
   text-decoration: none;
   margin-left: 2rem;

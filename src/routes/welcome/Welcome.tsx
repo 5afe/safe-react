@@ -32,7 +32,7 @@ function Welcome(): ReactElement {
               <Track {...CREATE_SAFE_EVENTS.CREATE_BUTTON}>
                 <Button size="lg" color="primary" variant="contained" component={Link} to={OPEN_SAFE_ROUTE}
                 style={{
-                  background: "#12c376",
+                  background: "#06fc99",
                 }}>
                   <CreateNewLabel>+ Create new Safe</CreateNewLabel>
                 </Button>
@@ -57,7 +57,7 @@ function Welcome(): ReactElement {
                   to={LOAD_SAFE_ROUTE}
                   style={{
                     outline: "0",
-                    border: "2px solid #12c376"
+                    border: "2px solid #06fc99"
                   }}
                 >
                   <StyledButtonLabel color="secondary">Add existing Safe</StyledButtonLabel>
@@ -74,17 +74,17 @@ function Welcome(): ReactElement {
 export default Welcome
 
 const Title = styled.div`
-  color: #12c376;
+  color: #06fc99;
   font-size: 2rem;
 `
 
 const SubTitle = styled.div`
-  color: #12c376;
+  color: #06fc99;
   font-size: 1rem;
 `
 
 const Text = styled.p`
-  color: #12c376;
+  color: #06fc99;
 `
 const CardsContainer = styled.div`
   display: flex;
@@ -92,7 +92,7 @@ const CardsContainer = styled.div`
   max-width: 850px;
   margin-top: 2rem;
   padding: 1rem 0;
-  border: 2px solid #12c376;
+  border: 2px solid #06fc99;
   border-radius: 1rem;
 `
 
@@ -117,7 +117,7 @@ const CreateNewLabel = styled(Text)`
 `
 const StyledButtonLabel = styled(Text)`
   min-width: 130px;
-  color: #12c376;
+  color: #06fc99;
   font-family: 'IBM Plex Mono', monospace;
 
 `

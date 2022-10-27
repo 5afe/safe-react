@@ -28,7 +28,7 @@ const styles = () => ({
 })
 
 const NotConnectedText = styled.h2`
-  color: #12c376;
+  color: #06fc99;
   font-size: 1rem;
 `
 
@@ -38,7 +38,7 @@ const ConnectWalletText = styled.h2`
   `
 const ConnectWalletButton = styled.div`
   margin-top: -0.5rem;
-  background-color: #12c376;
+  background-color: #06fc99;
   padding: 0rem 1rem;
   border-radius: 0.3rem;
 `

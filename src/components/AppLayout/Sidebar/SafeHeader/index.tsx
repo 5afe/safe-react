@@ -62,7 +62,7 @@ const StyledIcon = styled(Icon)`
     transform: rotateZ(-90deg);
 
     .icon-color {
-      fill: #12c376;
+      fill: #06fc99;
     }
 
     path:nth-child(2) {
@@ -198,7 +198,7 @@ type Props = {
 }
 
 const SidebarText = styled.h2`
-    color: #12c376;
+    color: #06fc99;
     font-size: 1rem;
 
 `
