@@ -26,7 +26,7 @@ export const StyledListItem = styled(ListItem)<ListItemProps>`
   }
 
   &.MuiListItem-button:hover {
-    background-color: ${primaryLite};
+    /* background-color: #06fc99; */
     border-radius: 8px;
   }
 
@@ -38,21 +38,27 @@ export const StyledListItem = styled(ListItem)<ListItemProps>`
   &.MuiListItem-root {
     padding-top: 9px;
     padding-bottom: 9px;
+    span {
+      & svg {
+        fill: #06fc99;
+      }
+    }
   }
 
   &.MuiListItem-root.Mui-selected {
-    background-color: ${primaryLite};
+    border: 2px solid #06fc99;
+    color: #000;
     border-radius: 8px;
-    color: ${({ theme }) => theme.colors.primary};
+    color: #06fc99;
     span {
-      color: ${({ theme }) => theme.colors.primary};
+      color: #06fc99;
 
       & svg {
-        fill: ${({ theme }) => theme.colors.primary};
+        fill: #06fc99;
       }
     }
     .icon-color {
-      fill: ${({ theme }) => theme.colors.primary};
+      fill: #06fc99;
     }
   }
 
@@ -89,19 +95,19 @@ const StyledListSubItem = styled(ListItem)<ListItemProps>`
   }
 
   &.MuiListItem-button:hover {
-    background-color: ${background};
+    /* background-color: ${background}; */
     border-radius: 8px;
   }
 
   &.MuiButtonBase-root.MuiListItem-root.Mui-selected {
-    background-color: ${background};
+    /* background-color: ${background}; */
     border-radius: 8px;
-    color: ${({ theme }) => theme.colors.primary};
+    color: #06fc99;
     span {
-      color: ${({ theme }) => theme.colors.primary};
+      color: #06fc99;
     }
     .icon-color {
-      fill: ${({ theme }) => theme.colors.primary};
+      fill: #06fc99;
     }
   }
 `
@@ -120,6 +126,7 @@ export const StyledListItemText = styled(ListItemText)`
 const StyledListSubItemText = styled(ListItemText)`
   span {
     font-family: ${({ theme }) => theme.fonts.fontFamily};
+    border: 2px solid #06fc99;
     font-size: 14px;
     font-weight: 400;
     letter-spacing: 0;
@@ -143,7 +150,7 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       width: '100%',
       maxWidth: 200,
-      backgroundColor: theme.palette.background.paper,
+      // backgroundColor: theme.palette.background.paper,
       overflowX: 'auto',
       margin: '8px 0 -4px 0',
       '&::-webkit-scrollbar': {
@@ -171,7 +178,7 @@ const useStyles = makeStyles((theme: Theme) =>
         position: 'absolute',
         bottom: 0,
         left: '-1px',
-        background: 'white',
+        background: '#000',
       },
     },
     nested: {
@@ -232,7 +239,7 @@ const List = ({ items }: Props): React.ReactElement => {
         onClick={onClick}
         selected={item.selected || isSubItemSelected(item)}
       >
-        {item.icon && !isSubItem && item.icon}
+        {/* {item.icon && !isSubItem && item.icon} */}
 
         <TextAndBadgeWrapper>
           <StyledBadge badgeContent=" " color="error" invisible={!item.badge} variant="dot">

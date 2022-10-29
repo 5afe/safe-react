@@ -14,7 +14,7 @@ import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 // TODO: propose refactor in safe-react-components based on this requirements
 const SpendingLimitRadioButtons = styled(RadioButtons)`
   & .MuiRadio-colorPrimary.Mui-checked {
-    color: ${({ theme }) => theme.colors.primary};
+    color: #06fc99;
   }
 `
 

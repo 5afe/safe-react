@@ -55,6 +55,10 @@ const HelpCenterLink = styled.a`
     padding: 0 0 0 4px;
   }
 `
+
+const StyledList = styled(List)`
+  background-color: #000;
+`
 type Props = {
   safeAddress?: string
   safeName?: string
@@ -106,26 +110,26 @@ const Sidebar = ({
 
   return (
     <>
-      <SafeHeader
-        address={safeAddress}
-        safeName={safeName}
-        granted={granted}
-        balance={balance}
-        onToggleSafeList={onToggleSafeList}
-        onReceiveClick={onReceiveClick}
-        onNewTransactionClick={onNewTransactionClick}
-      />
+      <div style={{ marginTop: '2rem' }}>
+        <SafeHeader
+          address={safeAddress}
+          safeName={safeName}
+          granted={granted}
+          balance={balance}
+          onToggleSafeList={onToggleSafeList}
+          onReceiveClick={onReceiveClick}
+          onNewTransactionClick={onNewTransactionClick}
+        />
+      </div>
 
       {items.length ? (
         <>
-          <StyledDivider />
           <List items={items} />
         </>
       ) : null}
 
       <HelpContainer>
         {debugToggle}
-
 
         <HelpList>
           {/* icons color needs to be changed */}

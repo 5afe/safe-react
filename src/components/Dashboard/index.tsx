@@ -10,6 +10,8 @@ import RebrandingBanner from './RebrandingBanner'
 
 const Dashboard = (): ReactElement => {
   return (
+
+
     <Grid container spacing={3}>
       <DashboardTitle>Dashboard</DashboardTitle>
 
@@ -17,9 +19,9 @@ const Dashboard = (): ReactElement => {
         <Overview />
       </Grid>
 
-      <Grid item xs={12} md={12} lg={6}>
+      {/* <Grid item xs={12} md={12} lg={6}>
         <RebrandingBanner />
-      </Grid>
+      </Grid> */}
 
       <Grid item xs={12} md={6}>
         <PendingTxsList size={4} />
@@ -31,6 +33,7 @@ const Dashboard = (): ReactElement => {
         <SafeApps />
       </Grid>
     </Grid>
+
   )
 }
 

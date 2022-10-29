@@ -435,7 +435,7 @@ export const TxDetailsContainer = styled.div`
       }
 
       &.primary {
-        background-color: ${({ theme }) => theme.colors.primary};
+        background-color: #06fc99;
 
         &:hover {
           background-color: ${({ theme }) => theme.colors.secondary};

@@ -84,6 +84,7 @@ const StyledButton = styled(Button)`
     width: 100%;
     height: 38px;
     padding: 0 12px;
+    background-color: #60fc99;
   }
 `
 
@@ -155,11 +156,12 @@ const StyledTextSafeName = styled(Text)`
   width: 90%;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: #06fc99;
 `
 
 const StyledPrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
   p {
-    color: ${({ theme }) => theme.colors.placeHolder};
+    color: #06fc99;
     font-size: 14px;
     line-height: 20px;
   }
@@ -200,7 +202,9 @@ type Props = {
 const SidebarText = styled.h2`
     color: #06fc99;
     font-size: 1rem;
-
+`
+const NewStyledPrefixedEthHashInfo = styled(StyledPrefixedEthHashInfo)`
+  color: 'red';
 `
 
 const SafeHeader = ({
@@ -242,9 +246,9 @@ const SafeHeader = ({
   return (
     <>
       {/* Network */}
-      <StyledTextLabel size="sm" chainInfo={chainInfo}>
+      {/* <StyledTextLabel size="sm" chainInfo={chainInfo}>
         {chainInfo.chainName}
-      </StyledTextLabel>
+      </StyledTextLabel> */}
 
       <Container>
         {/* Identicon */}
@@ -284,11 +288,10 @@ const SafeHeader = ({
         <StyledButton
           size="md"
           disabled={!granted}
-          color="primary"
           variant="contained"
           onClick={handleNewTransactionClick}
         >
-          <Text size="xl" color="white">
+          <Text size="xl">
             {granted ? 'New Transaction' : 'Read Only'}
           </Text>
         </StyledButton>

@@ -27,9 +27,10 @@ const useStyles = makeStyles(
       boxSizing: 'border-box',
       maxWidth: '100%',
       padding: '52px 54px',
+      backgroundColor: '#000',
+      border: '4px solid #06fc99',
     },
     cardOuter: {
-      boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
     },
     gridRow: {
       boxSizing: 'border-box',
@@ -74,7 +75,7 @@ const useStyles = makeStyles(
       margin: '0',
     },
     titleFiller: {
-      backgroundColor: '#e8e7e6',
+      backgroundColor: '#000',
       flexGrow: 1,
       height: '2px',
       marginLeft: '40px',
@@ -82,6 +83,7 @@ const useStyles = makeStyles(
     noData: {
       fontSize: lg,
       textAlign: 'center',
+      color: '#06fc99'
     },
   }),
 )

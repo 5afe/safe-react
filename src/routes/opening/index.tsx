@@ -360,7 +360,7 @@ const Body = styled.div`
   grid-column: 2;
   grid-row: 2;
   text-align: center;
-  background-color: ${({ theme }) => theme.colors.white};
+  background-color: #000;
   border-radius: 5px;
   min-width: 700px;
   padding-top: 70px;
