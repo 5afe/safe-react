@@ -8,6 +8,7 @@ import * as React from 'react'
 import Col from 'src/components/layout/Col'
 import { screenSm, sm } from 'src/theme/variables'
 import { parsePrefixedAddress } from 'src/utils/prefixedAddress'
+import ProviderDisconnected from './ProviderInfo/ProviderDisconnected'
 
 const styles = () => ({
   root: {
@@ -76,9 +77,14 @@ class Provider extends React.Component<any> {
       <>
         <div className={classes.root} ref={this.myRef}>
           <Col className={classes.provider} end="sm" middle="xs" onClick={toggle}>
-            <Container>
+            { (address ? (
+              <Container>
               <p>{`${prefix}: ${parseAddress(address)}`}</p>
             </Container>
+            ) : (
+              <ProviderDisconnected />
+            ))}
+            
 
             <IconButton className={classes.expand} disableRipple>
               {open ? <ExpandLess /> : <ExpandMore />}
