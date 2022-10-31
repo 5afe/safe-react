@@ -41,7 +41,7 @@ export const useStyles = makeStyles(
       cursor: 'pointer',
     },
     controlsRow: {
-      backgroundColor: 'white',
+      backgroundColor: '#000',
       padding: lg,
       borderRadius: sm,
     },

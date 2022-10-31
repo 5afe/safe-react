@@ -100,7 +100,7 @@ const SafeAppsPermissions = (): ReactElement => {
     <StyledContainer>
       <Heading tag="h2">Safe Apps Permissions</Heading>
       <br />
-      {!domains.length && <Text size="lg">There are no Safe Apps using permissions</Text>}
+      {!domains.length && <StyledText size="lg">There are no Safe Apps using permissions</StyledText>}
       {domains.map((domain) => (
         <StyledPermissionsCard item key={domain}>
           <StyledPermissionsCardBody container>
@@ -180,6 +180,10 @@ const StyledSafeAppInfo = styled(Grid)`
 const StyledLink = styled(Link)`
   text-decoration: none;
   margin-left: 16px;
+`
+
+const StyledText = styled(Text)`
+  color: #06fc99;
 `
 
 export default SafeAppsPermissions
