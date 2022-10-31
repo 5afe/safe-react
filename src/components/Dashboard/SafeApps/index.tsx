@@ -136,7 +136,7 @@ const SafeApps = ({ size = 6 }: { size?: number }): ReactElement => {
           <StyledLink to={allAppsUrl}>
             <StyledAppCard>
               <StyledExploreBlock>
-                <Button size="md" color="primary" variant="contained">
+                <Button style={{color: "#000"}} size="md" color="primary" variant="contained">
                   Explore Safe Apps
                 </Button>
               </StyledExploreBlock>
