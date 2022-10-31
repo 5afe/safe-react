@@ -1,6 +1,6 @@
 {
   "name": "safe-react",
-  "version": "3.32.1",
+  "version": "3.32.0",
   "description": "Allowing crypto users manage funds in a safer way",
   "website": "https://github.com/gnosis/safe-react#readme",
   "bugs": {
@@ -79,7 +79,7 @@
     "@gnosis.pm/safe-apps-sdk": "7.8.0",
     "@gnosis.pm/safe-apps-sdk-v1": "npm:@gnosis.pm/safe-apps-sdk@0.4.2",
     "@gnosis.pm/safe-core-sdk": "^2.0.0",
-    "@gnosis.pm/safe-deployments": "^1.15.0",
+    "@gnosis.pm/safe-deployments": "npm:@neobase-one/safe-deployments@1.16.0-canto",
     "@gnosis.pm/safe-modules-deployments": "^1.0.0",
     "@gnosis.pm/safe-react-components": "^1.1.2",
     "@gnosis.pm/safe-react-gateway-sdk": "^3.1.1",
