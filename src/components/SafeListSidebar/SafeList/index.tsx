@@ -27,8 +27,9 @@ const MAX_EXPANDED_SAFES = 3
 const StyledDot = styled.span<{ backgroundColor: string; textColor: string }>`
   width: 15px;
   height: 15px;
-  color: ${({ textColor }) => textColor};
-  background-color: ${({ backgroundColor }) => backgroundColor};
+  color: #06fc99;
+  /* background-color: ${({ backgroundColor }) => backgroundColor}; */
+  background-color: #06fc99;
   border-radius: 50%;
   display: inline-block;
   margin-right: 6px;
@@ -39,9 +40,11 @@ const StyledList = styled(MuiList)`
   overflow-x: 'hidden';
   overflow-y: 'auto';
   padding: 0;
+  background-color: #000;
+  color: #06fc99;
 
   & p > a {
-    color: inherit;
+    color: #06fc99;
   }
 `
 
@@ -62,6 +65,7 @@ const useStyles = makeStyles({
 
 const PlaceholderText = styled(Text)`
   padding: 16px 44px;
+  color: #06fc99;
 `
 
 type Props = {
@@ -133,7 +137,7 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
               ))}
 
               {!localSafesOnNetwork.length && !ownedSafesOnNetwork.length && (
-                <PlaceholderText size="lg" color="placeHolder">
+                <PlaceholderText size="lg">
                   <Link to={WELCOME_ROUTE} onClick={onSafeClick}>
                     Create or add
                   </Link>{' '}

@@ -136,7 +136,7 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
           <SafeTokenWidget />
         </>
       )}
-      {/* <Notifications open={openNotifications} toggle={toggleNotifications} clickAway={clickAwayNotifications} /> */}
+      <Notifications open={openNotifications} toggle={toggleNotifications} clickAway={clickAwayNotifications} />
 
       <Provider
         info={providerInfo}

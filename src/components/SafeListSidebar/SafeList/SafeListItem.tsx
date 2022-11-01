@@ -123,6 +123,7 @@ const SafeListItem = ({
 
   return (
     <ListItem button onClick={handleOpenSafe} ref={safeRef}>
+  
       <StyledIcon type="check" size="md" color="primary" checked={isCurrentSafe} />
       <AddressContainer>
         <Box position="relative">
