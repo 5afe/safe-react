@@ -29,27 +29,27 @@ const useRemoteSafeApps = (): ReturnType => {
   const [status, setStatus] = useState<FETCH_STATUS>(FETCH_STATUS.NOT_ASKED)
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    const loadAppsList = async () => {
-      setStatus(FETCH_STATUS.LOADING)
-      try {
-        const result = await memoizedFetchSafeApps()
+  // useEffect(() => {
+  //   const loadAppsList = async () => {
+  //     setStatus(FETCH_STATUS.LOADING)
+  //     try {
+  //       const result = await memoizedFetchSafeApps()
 
-        if (result?.length) {
-          setRemoteSafeApps(result.map((app) => ({ ...app, fetchStatus: FETCH_STATUS.SUCCESS, id: String(app.id) })))
-          setStatus(FETCH_STATUS.SUCCESS)
-        } else {
-          throw new Error('Empty apps array 🤬')
-        }
-      } catch (e) {
-        setStatus(FETCH_STATUS.ERROR)
-        logError(Errors._902, e.message)
-        dispatch(showNotification(NOTIFICATIONS.SAFE_APPS_FETCH_ERROR_MSG))
-      }
-    }
+  //       if (result?.length) {
+  //         setRemoteSafeApps(result.map((app) => ({ ...app, fetchStatus: FETCH_STATUS.SUCCESS, id: String(app.id) })))
+  //         setStatus(FETCH_STATUS.SUCCESS)
+  //       } else {
+  //         throw new Error('Empty apps array 🤬')
+  //       }
+  //     } catch (e) {
+  //       setStatus(FETCH_STATUS.ERROR)
+  //       logError(Errors._902, e.message)
+  //       dispatch(showNotification(NOTIFICATIONS.SAFE_APPS_FETCH_ERROR_MSG))
+  //     }
+  //   }
 
-    loadAppsList()
-  }, [dispatch])
+  //   loadAppsList()
+  // }, [dispatch])
 
   return { remoteSafeApps, status }
 }
