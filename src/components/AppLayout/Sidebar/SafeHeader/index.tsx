@@ -274,10 +274,10 @@ const SafeHeader = ({
           </Track>
         </IconContainer>
 
-        <Paragraph color="black400" noMargin size="md">
+        {/* <Paragraph color="black400" noMargin size="md">
           Total Balance
         </Paragraph>
-        <StyledText size="xs">{balance}</StyledText>
+        <StyledText size="xs">{balance}</StyledText> */}
         <StyledButton
           size="md"
           disabled={!granted}

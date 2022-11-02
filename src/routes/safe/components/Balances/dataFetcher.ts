@@ -64,15 +64,15 @@ export const generateColumns = (): List<TableColumn> => {
     static: true,
   }
 
-  const value: TableColumn = {
-    id: BALANCE_TABLE_VALUE_ID,
-    align: 'right',
-    order: true,
-    label: 'Value',
-    custom: false,
-    static: true,
-    disablePadding: false,
-  }
+  // const value: TableColumn = {
+  //   id: BALANCE_TABLE_VALUE_ID,
+  //   align: 'right',
+  //   order: true,
+  //   label: 'Value',
+  //   custom: false,
+  //   static: true,
+  //   disablePadding: false,
+  // }
 
-  return List([assetColumn, balanceColumn, value, actions])
+  return List([assetColumn, balanceColumn, actions])
 }
