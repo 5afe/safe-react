@@ -156,7 +156,7 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
       />
 
         {/* network selector in navbar */}
-      {/* <NetworkSelector open={openNetworks} toggle={toggleNetworks} clickAway={clickAwayNetworks} /> */}
+      <NetworkSelector open={openNetworks} toggle={toggleNetworks} clickAway={clickAwayNetworks} />
     </Row>
   )
 }
