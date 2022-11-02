@@ -25,9 +25,9 @@ export const LOCAL_CONFIG_KEY = 'config'
 /**
  * Determine the initial chain id
  */
+
 const getInitialChainId = (): ChainId => {
-  const localItem = local.getItem<ConfigState>(LOCAL_CONFIG_KEY)
-  return localItem?.chainId || DEFAULT_CHAIN_ID
+  return DEFAULT_CHAIN_ID
 }
 
 let _chainId = getInitialChainId()

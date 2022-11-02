@@ -13,6 +13,7 @@ export const CHAIN_ID: Record<ChainName, ChainId> = {
   ETHEREUM: '1',
   RINKEBY: '4',
   GOERLI: '5',
+  CANTO: '7700',
   VOLTA: '73799',
 }
 
