@@ -12,6 +12,7 @@ import { currentCurrencySelector } from 'src/logic/currencyValues/store/selector
 import { ZERO_ADDRESS, sameAddress } from 'src/logic/wallets/ethAddresses'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { SafeBalanceResponse } from '@gnosis.pm/safe-react-gateway-sdk'
+import axios from 'axios'
 
 export type BalanceRecord = {
   tokenAddress?: string
@@ -23,6 +24,22 @@ interface ExtractedData {
   balances: Array<BalanceRecord>
   ethBalance: string
   tokens: Array<Token>
+}
+
+const URL = `https://api.coingecko.com/api/v3/coins`
+
+let cantoUSDPrice
+
+const fetchCantoValue = async () => {
+  const res = await axios.get(`${URL}/canto`)
+  const data = res.data
+  cantoUSDPrice = data.market_data.current_price.usd
+}
+
+try {
+  fetchCantoValue()
+} catch (err) {
+  console.error(err)
 }
 
 const extractDataFromResult = (
@@ -78,13 +95,20 @@ export const fetchSafeTokens =
       },
     )
 
+    const ethvalue = new BigNumber(ethBalance).toFixed(2)
+    const cantoBalance = Number(ethvalue) * Number(cantoUSDPrice)
+
+    console.log(`canto: ${ethvalue}, price: ${cantoUSDPrice}`)
+
     dispatch(
       updateSafe({
         address: safeAddress,
         balances,
         ethBalance,
-        totalFiatBalance: new BigNumber(tokenCurrenciesBalances.fiatTotal).toFixed(2),
+        totalFiatBalance: new BigNumber(cantoBalance).toFixed(2),
+        // totalFiatBalance: new BigNumber(tokenCurrenciesBalances.fiatTotal).toFixed(2),
       }),
     )
+
     dispatch(addTokens(tokens))
   }
