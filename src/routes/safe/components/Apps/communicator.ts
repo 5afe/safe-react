@@ -10,12 +10,16 @@ import {
 } from '@gnosis.pm/safe-apps-sdk'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { SafeApp } from './types'
+import { trackSafeAppMessage } from 'src/utils/googleTagManager'
 
 type MessageHandler = (
   msg: SDKMessageEvent,
 ) => void | MethodToResponse[Methods] | ErrorResponse | Promise<MethodToResponse[Methods] | ErrorResponse | void>
 
-type LegacyMethods = 'getEnvInfo'
+export enum LegacyMethods {
+  getEnvInfo = 'getEnvInfo',
+}
+
 type SDKMethods = Methods | LegacyMethods
 
 class AppCommunicator {
@@ -39,8 +43,7 @@ class AppCommunicator {
       return true
     }
 
-    // @ts-expect-error .parent doesn't exist on some possible types
-    const sentFromIframe = msg.source.parent === window.parent
+    const sentFromIframe = this.iframeRef.current?.contentWindow === msg.source
     const knownMethod = Object.values(Methods).includes(msg.data.method)
 
     return sentFromIframe && knownMethod
@@ -64,6 +67,13 @@ class AppCommunicator {
     const hasHandler = this.canHandleMessage(msg)
 
     if (validMessage && hasHandler) {
+      trackSafeAppMessage({
+        app: this.app,
+        method: msg.data.method,
+        params: msg.data.params,
+        sdkVersion: msg.data.env.sdkVersion,
+      })
+
       const handler = this.handlers.get(msg.data.method)
       try {
         // @ts-expect-error Handler existence is checked in this.canHandleMessage

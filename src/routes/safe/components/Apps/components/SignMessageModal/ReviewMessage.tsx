@@ -70,6 +70,7 @@ export const ReviewMessage = ({
   onClose,
   onTxReject,
   requestId,
+  method,
   utf8Message,
   txData,
   txRecipient,
@@ -139,11 +140,14 @@ export const ReviewMessage = ({
           <Text size="md">Balance:</Text>
           <Text size="md" strong>{`${ethBalance} ${nativeCurrency.symbol}`}</Text>
         </StyledBlock>
-
         <Divider withArrow />
-
-        <BasicTxInfo txRecipient={txRecipient} txData={txData} txValue="0" recipientName="SignMessageLib" />
-
+        <BasicTxInfo
+          txRecipient={txRecipient}
+          txData={txData}
+          txValue="0"
+          signMethod={method.toString()}
+          recipientName="SignMessageLib"
+        />
         <Text size="lg" strong>
           Signing message:
         </Text>
@@ -166,7 +170,7 @@ export const ReviewMessage = ({
         />
         <InfoMessage>
           <Icon size="md" type="info" color="warning" />
-          Signing a message with the Gnosis Safe requires a transaction on the blockchain
+          Signing a message with the Safe requires a transaction on the blockchain
         </InfoMessage>
       </Container>
     </TxModalWrapper>

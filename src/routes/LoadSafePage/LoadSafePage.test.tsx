@@ -6,7 +6,6 @@ import { fireEvent, getByText, render, screen, waitFor } from 'src/utils/test-ut
 import { generateSafeRoute, history, SAFE_ROUTES } from 'src/routes/routes'
 import LoadSafePage from './LoadSafePage'
 import * as safeVersion from 'src/logic/safe/utils/safeVersion'
-import { GATEWAY_URL } from 'src/utils/constants'
 
 const getENSAddressSpy = jest.spyOn(getWeb3ReadOnly().eth.ens, 'getAddress')
 jest.spyOn(getWeb3ReadOnly().eth.ens, 'getResolver')
@@ -178,7 +177,7 @@ describe('<LoadSafePage>', () => {
       await waitFor(() => {
         fireEvent.change(safeAddressInputNode, { target: { value: validSafeAddress } })
 
-        expect(mockedEndpoints.getSafeInfo).toBeCalledWith(GATEWAY_URL, rinkebyNetworkId, validSafeAddress)
+        expect(mockedEndpoints.getSafeInfo).toBeCalledWith(rinkebyNetworkId, validSafeAddress)
         expect(mockedEndpoints.getSafeInfo).toBeCalledTimes(1)
       })
     })
@@ -233,7 +232,7 @@ describe('<LoadSafePage>', () => {
       await waitFor(() => {
         const errorTextNode = screen.getByText('Address given is not a valid Safe address')
 
-        expect(mockedEndpoints.getSafeInfo).toBeCalledWith(GATEWAY_URL, rinkebyNetworkId, validSafeAddress)
+        expect(mockedEndpoints.getSafeInfo).toBeCalledWith(rinkebyNetworkId, validSafeAddress)
         expect(mockedEndpoints.getSafeInfo).toBeCalledTimes(1)
 
         expect(errorTextNode).toBeInTheDocument()
@@ -260,7 +259,7 @@ describe('<LoadSafePage>', () => {
 
       await waitFor(() => {
         expect(safeAddressInputNode.value).toBe(validSafeAddress)
-        expect(mockedEndpoints.getSafeInfo).toBeCalledWith(GATEWAY_URL, rinkebyNetworkId, validSafeAddress)
+        expect(mockedEndpoints.getSafeInfo).toBeCalledWith(rinkebyNetworkId, validSafeAddress)
         getENSAddressSpy.mockClear()
       })
     })
@@ -321,7 +320,7 @@ describe('<LoadSafePage>', () => {
 
       await waitFor(() => {
         expect(safeAddressInputNode.value).toBe(validSafeAddress)
-        expect(mockedEndpoints.getSafeInfo).toBeCalledWith(GATEWAY_URL, rinkebyNetworkId, validSafeAddress)
+        expect(mockedEndpoints.getSafeInfo).toBeCalledWith(rinkebyNetworkId, validSafeAddress)
         const errorTextNode = screen.getByText('Address given is not a valid Safe address')
 
         expect(errorTextNode).toBeInTheDocument()
@@ -614,7 +613,7 @@ describe('<LoadSafePage>', () => {
 
       await waitFor(() => {
         expect(historyPushSpy).toHaveBeenCalledWith(
-          generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
+          generateSafeRoute(SAFE_ROUTES.DASHBOARD, {
             shortName: getShortName(),
             safeAddress: validSafeAddress,
           }),

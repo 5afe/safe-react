@@ -3,28 +3,13 @@ import { render, screen } from 'src/utils/test-utils'
 import { ConfirmTxModal } from './'
 import { getEmptySafeApp } from '../../utils'
 import { BaseTransaction } from '@gnosis.pm/safe-apps-sdk'
+import * as estimateTxGas from 'src/logic/hooks/useEstimateTransactionGas'
 
-jest.mock('src/logic/hooks/useEstimateTransactionGas', () => ({
-  useEstimateTransactionGas: () => ({
-    txEstimationExecutionStatus: 'SUCCESS',
-    gasEstimation: 0,
-    gasCost: '0',
-    gasCostFormatted: '0',
-    gasPrice: '0',
-    gasPriceFormatted: '0',
-    gasLimit: '0',
-    isExecution: true,
-    isCreation: false,
-    isOffChainSignature: false,
-  }),
-  EstimationStatus: { LOADING: 'LOADING' },
-}))
-
-const MULTISEND_ADDRESS = '0x42424242424242424242424242424242424242424'
+const MULTISEND_ADDRESS = '0x4242424242424242424242424242424242424242'
 jest.mock('src/logic/contracts/safeContracts', () => ({
   ...jest.requireActual('src/logic/contracts/safeContracts'),
-  getMultisendContractAddress: () => MULTISEND_ADDRESS,
-  getMultisendContract: () => ({
+  getMultiSendCallOnlyContractAddress: () => MULTISEND_ADDRESS,
+  getMultiSendCallOnlyContract: () => ({
     methods: {
       multiSend: () => ({
         encodeABI: () => '0x',
@@ -34,6 +19,14 @@ jest.mock('src/logic/contracts/safeContracts', () => ({
 }))
 
 describe('ConfirmTxModal Component', () => {
+  beforeEach(() => {
+    jest.spyOn(estimateTxGas, 'calculateTotalGasCost').mockImplementation(() => {
+      return {
+        gasCost: '0',
+        gasCostFormatted: '0',
+      }
+    })
+  })
   test('Shows transaction details correctly for a single, non-multisend transaction', () => {
     const txs: BaseTransaction[] = [
       {
@@ -55,6 +48,7 @@ describe('ConfirmTxModal Component', () => {
         onTxReject={jest.fn()}
         requestId="1"
         app={getEmptySafeApp()}
+        appId="1"
       />,
     )
 
@@ -88,6 +82,7 @@ describe('ConfirmTxModal Component', () => {
         onTxReject={jest.fn()}
         requestId="1"
         app={getEmptySafeApp()}
+        appId="1"
       />,
     )
 
@@ -117,6 +112,7 @@ describe('ConfirmTxModal Component', () => {
         onTxReject={jest.fn()}
         requestId="1"
         app={getEmptySafeApp()}
+        appId="1"
       />,
     )
 
@@ -148,6 +144,7 @@ describe('ConfirmTxModal Component', () => {
         onTxReject={jest.fn()}
         requestId="1"
         app={getEmptySafeApp()}
+        appId="1"
       />,
     )
 
@@ -179,6 +176,7 @@ describe('ConfirmTxModal Component', () => {
         onTxReject={jest.fn()}
         requestId="1"
         app={getEmptySafeApp()}
+        appId="1"
       />,
     )
 
@@ -204,6 +202,7 @@ describe('ConfirmTxModal Component', () => {
         onTxReject={jest.fn()}
         requestId="1"
         app={getEmptySafeApp()}
+        appId="1"
       />,
     )
 
@@ -236,6 +235,7 @@ describe('ConfirmTxModal Component', () => {
         onTxReject={jest.fn()}
         requestId="1"
         app={getEmptySafeApp()}
+        appId="1"
       />,
     )
 
@@ -264,6 +264,7 @@ describe('ConfirmTxModal Component', () => {
         onTxReject={jest.fn()}
         requestId="1"
         app={getEmptySafeApp()}
+        appId="1"
       />,
     )
 
@@ -297,6 +298,7 @@ describe('ConfirmTxModal Component', () => {
         onTxReject={jest.fn()}
         requestId="1"
         app={getEmptySafeApp()}
+        appId="1"
       />,
     )
 

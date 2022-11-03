@@ -10,7 +10,6 @@ import { getSafeDeploymentTransaction } from 'src/logic/contracts/safeContracts'
 import { txMonitor } from 'src/logic/safe/transactions/txMonitor'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { SafeDeployment } from 'src/routes/opening'
-import { useAnalytics, USER_EVENTS } from 'src/utils/googleAnalytics'
 import { loadFromStorage, removeFromStorage, saveToStorage } from 'src/utils/storage'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import {
@@ -40,7 +39,13 @@ import { getExplorerInfo, getShortName } from 'src/config'
 import { createSendParams } from 'src/logic/safe/transactions/gas'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { CREATE_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
+import Track from 'src/components/Track'
 import { didTxRevert } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
+import { useQuery } from 'src/logic/hooks/useQuery'
+import { ADDRESSED_ROUTE } from 'src/routes/routes'
+import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
 
 export const InlinePrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
   display: inline-flex;
@@ -126,6 +131,7 @@ const createNewSafe = (userAddress: string, onHash: (hash: string) => void): Pro
     deploymentTx
       .send(sendParams)
       .once('transactionHash', (txHash) => {
+        trackEvent(CREATE_SAFE_EVENTS.SUBMIT_CREATE_SAFE)
         onHash(txHash)
 
         saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, {
@@ -145,6 +151,7 @@ const createNewSafe = (userAddress: string, onHash: (hash: string) => void): Pro
             }
 
             console.log('Sped-up tx mined:', txReceipt)
+            trackEvent(CREATE_SAFE_EVENTS.CREATED_SAFE)
             resolve(txReceipt)
           })
           .catch((error) => {
@@ -153,6 +160,7 @@ const createNewSafe = (userAddress: string, onHash: (hash: string) => void): Pro
       })
       .then((txReceipt) => {
         console.log('Original tx mined:', txReceipt)
+        trackEvent(CREATE_SAFE_EVENTS.CREATED_SAFE)
         resolve(txReceipt)
       })
       .catch((error) => {
@@ -175,14 +183,17 @@ const pollSafeInfo = async (safeAddress: string): Promise<SafeInfo> => {
   })
 }
 
+const APP_URL_QUERY_PARAM = 'appUrl'
+
 function SafeCreationProcess(): ReactElement {
   const [safeCreationTxHash, setSafeCreationTxHash] = useState<string | undefined>()
   const [creationTxPromise, setCreationTxPromise] = useState<Promise<TransactionReceipt>>()
 
-  const { trackEvent } = useAnalytics()
   const dispatch = useDispatch()
   const userAddress = useSelector(userAccountSelector)
   const chainId = useSelector(currentChainId)
+  const query = useQuery()
+  const redirect = query.get('redirect')
 
   const [showModal, setShowModal] = useState(false)
   const [modalData, setModalData] = useState<ModalDataType>({ safeAddress: '' })
@@ -222,8 +233,6 @@ function SafeCreationProcess(): ReactElement {
     const safeAddressBookEntry = makeAddressBookEntry({ address: safeAddress, name: safeName, chainId })
     dispatch(addressBookSafeLoad([...ownersAddressBookEntry, safeAddressBookEntry]))
 
-    trackEvent(USER_EVENTS.CREATE_SAFE)
-
     // a default 5s wait before starting to request safe information
     await sleep(5000)
 
@@ -247,6 +256,7 @@ function SafeCreationProcess(): ReactElement {
   }
 
   const onRetry = (): void => {
+    trackEvent(CREATE_SAFE_EVENTS.RETRY_CREATE_SAFE)
     const safeCreationFormValues = loadSavedDataOrLeave()
 
     if (!safeCreationFormValues) {
@@ -264,16 +274,40 @@ function SafeCreationProcess(): ReactElement {
   }
 
   const onCancel = () => {
+    trackEvent(CREATE_SAFE_EVENTS.CANCEL_CREATE_SAFE)
     removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
     goToWelcomePage()
   }
 
-  function onClickModalButton() {
+  const onClickModalButton = () => {
     removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
 
     const { safeName, safeCreationTxHash, safeAddress } = modalData
+
+    if (redirect) {
+      // If the URL includes ADDRESSED_ROUTE template, then we need to replace it with the new safe address
+      if (redirect.includes(ADDRESSED_ROUTE)) {
+        history.push({
+          pathname: generateSafeRoute(redirect, {
+            shortName: getShortName(),
+            safeAddress,
+          }),
+        })
+      } else {
+        history.push({
+          pathname: redirect,
+        })
+      }
+
+      if (redirect.includes(APP_URL_QUERY_PARAM)) {
+        trackEvent({ ...SAFE_APPS_EVENTS.SHARED_APP_OPEN_AFTER_SAFE_CREATION })
+      }
+
+      return
+    }
+
     history.push({
-      pathname: generateSafeRoute(SAFE_ROUTES.ASSETS_BALANCES, {
+      pathname: generateSafeRoute(SAFE_ROUTES.DASHBOARD, {
         shortName: getShortName(),
         safeAddress,
       }),
@@ -313,16 +347,18 @@ function SafeCreationProcess(): ReactElement {
           }
           footer={
             <ButtonContainer>
-              <Button
-                testId="safe-created-button"
-                onClick={onClickModalButton}
-                color="primary"
-                type={'button'}
-                size="small"
-                variant="contained"
-              >
-                Continue
-              </Button>
+              <Track {...CREATE_SAFE_EVENTS.GO_TO_SAFE}>
+                <Button
+                  testId="safe-created-button"
+                  onClick={onClickModalButton}
+                  color="primary"
+                  type={'button'}
+                  size="small"
+                  variant="contained"
+                >
+                  Continue
+                </Button>
+              </Track>
             </ButtonContainer>
           }
         />

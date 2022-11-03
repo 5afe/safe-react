@@ -1,11 +1,12 @@
 import { WalletInitOptions, WalletModule, WalletSelectModuleOptions } from 'bnc-onboard/dist/src/interfaces'
 
 import { getRpcServiceUrl, getDisabledWallets, getChainById } from 'src/config'
-import { ChainId, WALLETS } from 'src/config/chain.d'
-import { IS_DESKTOP, FORTMATIC_KEY, PORTIS_ID } from 'src/utils/constants'
+import { ChainId, CHAIN_ID, WALLETS } from 'src/config/chain.d'
+import { IS_DESKTOP, FORTMATIC_KEY, PORTIS_ID, WC_BRIDGE } from 'src/utils/constants'
 import getPairingModule from 'src/logic/wallets/pairing/module'
 import { isPairingSupported } from 'src/logic/wallets/pairing/utils'
-import getPatchedWCModule from 'src/logic/wallets/walletConnect/module'
+import { getChains } from 'src/config/cache/chains'
+import getE2EWalletModule from '../e2e-wallet/module'
 
 type Wallet = (WalletInitOptions | WalletModule) & {
   desktop: boolean // Whether wallet supports desktop app
@@ -19,13 +20,24 @@ const wallets = (chainId: ChainId): Wallet[] => {
 
   return [
     { walletName: WALLETS.METAMASK, preferred: true, desktop: false },
-    // A patched version of WalletConnect is spliced in at this index
-    // { preferred: true, desktop: true }
+    { walletName: WALLETS.TALLYHO, preferred: false, desktop: false },
+    {
+      walletName: WALLETS.WALLET_CONNECT,
+      rpc: getChains().reduce((map, { chainId, rpcUri }) => {
+        return {
+          ...map,
+          [chainId]: getRpcServiceUrl(rpcUri),
+        }
+      }, {}),
+      bridge: WC_BRIDGE,
+      preferred: true,
+      desktop: true,
+    },
     {
       walletName: WALLETS.TREZOR,
       appUrl: 'gnosis-safe.io',
       preferred: true,
-      email: 'safe@gnosis.io',
+      email: 'support@safe.global',
       desktop: true,
       rpcUrl,
     },
@@ -40,13 +52,13 @@ const wallets = (chainId: ChainId): Wallet[] => {
       walletName: WALLETS.KEYSTONE,
       desktop: false,
       rpcUrl,
-      appName: 'Gnosis Safe',
+      appName: 'Safe',
     },
     { walletName: WALLETS.TRUST, preferred: true, desktop: false },
     {
       walletName: WALLETS.LATTICE,
       rpcUrl,
-      appName: 'Gnosis Safe',
+      appName: 'Safe',
       desktop: false,
     },
     {
@@ -86,12 +98,9 @@ export const getSupportedWallets = (chainId: ChainId): WalletSelectModuleOptions
     })
     .map(({ desktop: _, ...rest }) => rest)
 
-  if (isSupportedWallet(WALLETS.WALLET_CONNECT)) {
-    const wc = getPatchedWCModule(chainId)
-    // Inset patched WC module at index 1
-    supportedWallets?.splice(1, 0, wc)
+  if (chainId === CHAIN_ID.RINKEBY && window.Cypress && window.Cypress.env('CYPRESS_MNEMONIC')) {
+    supportedWallets.push(getE2EWalletModule())
   }
 
-  // Pairing must be 1st in list (to hide via CSS)
   return isPairingSupported() ? [getPairingModule(chainId), ...supportedWallets] : supportedWallets
 }

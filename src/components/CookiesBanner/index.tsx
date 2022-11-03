@@ -10,13 +10,13 @@ import { closeCookieBanner, openCookieBanner } from 'src/logic/cookies/store/act
 import { cookieBannerState } from 'src/logic/cookies/store/selectors'
 import { loadFromCookie, saveCookie } from 'src/logic/cookies/utils'
 import { mainFontFamily, md, primary, screenSm } from 'src/theme/variables'
-import { loadGoogleAnalytics, unloadGoogleAnalytics } from 'src/utils/googleAnalytics'
 import { closeIntercom, isIntercomLoaded, loadIntercom } from 'src/utils/intercom'
 import AlertRedIcon from './assets/alert-red.svg'
 import IntercomIcon from './assets/intercom.png'
 import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
-import { IS_DESKTOP } from 'src/utils/constants'
+import { loadGoogleTagManager, unloadGoogleTagManager } from 'src/utils/googleTagManager'
 import { loadBeamer, unloadBeamer } from 'src/utils/beamer'
+import { IS_DESKTOP } from 'src/utils/constants'
 
 const useStyles = makeStyles({
   container: {
@@ -202,7 +202,7 @@ const CookiesBanner = IS_DESKTOP
       const [localAnalytics, setLocalAnalytics] = useState(false)
 
       const { cookieBannerOpen } = useSelector(cookieBannerState)
-      const isSafeAppView = useSafeAppUrl().getAppUrl() !== null
+      const isSafeAppView = !!useSafeAppUrl().getAppUrl()
 
       const openBanner = useCallback(
         (key?: COOKIE_IDS): void => {
@@ -269,9 +269,9 @@ const CookiesBanner = IS_DESKTOP
         setLocalAnalytics(acceptedAnalytics)
       }, [setLocalNecessary, setLocalSupportAndUpdates, setLocalAnalytics, openBanner])
 
-      // Load or unload analytics depending on user choice
+      // Load or unload GTM depending on user choice
       useEffect(() => {
-        localAnalytics ? loadGoogleAnalytics() : unloadGoogleAnalytics()
+        localAnalytics ? loadGoogleTagManager() : unloadGoogleTagManager()
       }, [localAnalytics])
 
       // Toggle Intercom

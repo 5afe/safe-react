@@ -6,7 +6,6 @@ import styled from 'styled-components'
 import { ErrorFooter } from 'src/routes/opening/components/Footer'
 import { isConfirmationStep, steps } from './steps'
 
-import Button from 'src/components/layout/Button'
 import Heading from 'src/components/layout/Heading'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
@@ -15,16 +14,19 @@ import { getWeb3ReadOnly, isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { background, connected, fontColor } from 'src/theme/variables'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 
-import SuccessSvg from './assets/safe-created.svg'
+import SuccessSvg from 'src/assets/icons/safe-created.svg'
 import VaultErrorSvg from './assets/vault-error.svg'
 import VaultLoading from './assets/creation-process.gif'
 import { TransactionReceipt } from 'web3-core'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { NOTIFICATIONS } from 'src/logic/notifications'
-import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
+import { showNotification } from 'src/logic/notifications/store/notifications'
 import { getNewSafeAddressFromLogs } from 'src/routes/opening/utils/getSafeAddressFromLogs'
 import { getExplorerInfo } from 'src/config'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { CREATE_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
+import { isWalletRejection } from 'src/logic/wallets/errors'
 
 export const SafeDeployment = ({
   creationTxHash,
@@ -55,10 +57,10 @@ export const SafeDeployment = ({
   const showSnackbarError = useCallback(
     (err: Error) => {
       if (isTxPendingError(err)) {
-        dispatch(enqueueSnackbar({ ...NOTIFICATIONS.TX_PENDING_MSG }))
+        dispatch(showNotification(NOTIFICATIONS.TX_PENDING_MSG))
       } else {
         dispatch(
-          enqueueSnackbar({
+          showNotification({
             ...NOTIFICATIONS.CREATE_SAFE_FAILED_MSG,
             message: `${NOTIFICATIONS.CREATE_SAFE_FAILED_MSG.message} – ${err.message}`,
           }),
@@ -119,6 +121,9 @@ export const SafeDeployment = ({
         setStepIndex(1)
         setIntervalStarted(true)
       } catch (err) {
+        if (isWalletRejection(err)) {
+          trackEvent(CREATE_SAFE_EVENTS.REJECT_CREATE_SAFE)
+        }
         onError(err)
       }
     }
@@ -219,6 +224,7 @@ export const SafeDeployment = ({
           }
           if (code !== EMPTY_DATA) {
             setStepIndex(5)
+            setError(false)
           }
         }, 1000)
       } catch (error) {
@@ -308,12 +314,6 @@ export const SafeDeployment = ({
           ) : null}
         </BodyFooter>
       </Body>
-
-      {stepIndex !== 0 && (
-        <BackButton color="primary" minWidth={140} onClick={onCancel} data-testid="safe-creation-back-btn">
-          Back
-        </BackButton>
-      )}
     </Wrapper>
   )
 }
@@ -416,9 +416,4 @@ const BodyFooter = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-end;
-`
-
-const BackButton = styled(Button)`
-  grid-column: 2;
-  margin: 20px auto 0;
 `

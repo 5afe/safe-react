@@ -6,6 +6,8 @@ import { HistoryPayload } from 'src/logic/safe/store/reducer/gatewayTransactions
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { SafesMap } from 'src/logic/safe/store/reducer/types/safe'
 import { Notification } from 'src/logic/notifications/notificationTypes'
+import { getPrefixedSafeAddressSlug, SAFE_ADDRESS_SLUG, SAFE_ROUTES, TRANSACTION_ID_SLUG } from 'src/routes/routes'
+import { generatePath } from 'react-router-dom'
 
 let nonce: number | undefined
 
@@ -17,6 +19,7 @@ export const getNotification = (
   { safeAddress, values }: HistoryPayload,
   userAddress: string,
   safes: SafesMap,
+  shortName: string,
 ): undefined | Notification => {
   const currentSafe = safes.get(safeAddress)
 
@@ -44,7 +47,12 @@ export const getNotification = (
       // reset nonce value
       setNonce(undefined)
 
-      return notification
+      const to = generatePath(SAFE_ROUTES.TRANSACTIONS_SINGULAR, {
+        [SAFE_ADDRESS_SLUG]: getPrefixedSafeAddressSlug({ safeAddress, shortName }),
+        [TRANSACTION_ID_SLUG]: executedTx.id,
+      })
+
+      return { ...notification, link: { title: 'View Transaction', to } }
     }
   }
 }

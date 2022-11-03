@@ -1,12 +1,13 @@
 import axios from 'axios'
 import memoize from 'lodash/memoize'
-
+// https://stackoverflow.com/questions/51269431/jest-mock-inner-function
+import * as utils from './utils'
 import { getContentFromENS } from 'src/logic/wallets/getWeb3'
 import appsIconSvg from 'src/assets/icons/apps.svg'
 import { FETCH_STATUS } from 'src/utils/requests'
 import { SafeAppAccessPolicyTypes } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import { SafeApp } from './types'
+import { AllowedFeatures, SafeApp } from './types'
 
 type AppManifestIcon = {
   src: string
@@ -21,15 +22,21 @@ export interface AppManifest {
   description: string
   icons?: AppManifestIcon[]
   providedBy: string
+  safe_apps_permissions?: AllowedFeatures[]
 }
 
 export const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 export const PINNED_SAFE_APP_IDS = 'PINNED_SAFE_APP_IDS'
+export const EMPTY_SAFE_APP = 'unknown'
 const MIN_ICON_WIDTH = 128
 const MANIFEST_ERROR_MESSAGE = 'Manifest does not fulfil the required structure.'
 
 const removeLastTrailingSlash = (url: string): string => {
   return url.replace(/\/+$/, '')
+}
+
+export const isSameUrl = (url1: string, url2: string): boolean => {
+  return removeLastTrailingSlash(url1) === removeLastTrailingSlash(url2)
 }
 
 export const getAppInfoFromOrigin = (origin: string): { url: string; name: string } | null => {
@@ -41,19 +48,37 @@ export const getAppInfoFromOrigin = (origin: string): { url: string; name: strin
   }
 }
 
+const validateRequestedPermissions = (permissions?: AllowedFeatures[]): boolean => {
+  if (!permissions) {
+    return true
+  }
+
+  if (!Array.isArray(permissions)) {
+    return false
+  }
+
+  const features = Object.values(AllowedFeatures)
+
+  return permissions.every((permission) => {
+    return features.includes(permission)
+  })
+}
+
 export const isAppManifestValid = (appInfo: AppManifest): boolean =>
   // `appInfo` exists and `name` exists
   !!appInfo?.name &&
   // if `name` exists is not 'unknown'
-  appInfo.name !== 'unknown' &&
+  appInfo.name !== EMPTY_SAFE_APP &&
   // `description` exists
-  !!appInfo.description
+  !!appInfo.description &&
+  // `safe_apps_permissions` are valid if we have been listed on the AllowFeatures enum
+  validateRequestedPermissions(appInfo.safe_apps_permissions)
 
 export const getEmptySafeApp = (url = ''): SafeApp => {
   return {
     id: Math.random().toString(),
     url,
-    name: 'unknown',
+    name: EMPTY_SAFE_APP,
     iconUrl: appsIconSvg,
     description: '',
     fetchStatus: FETCH_STATUS.LOADING,
@@ -61,6 +86,8 @@ export const getEmptySafeApp = (url = ''): SafeApp => {
     accessControl: {
       type: SafeAppAccessPolicyTypes.NoRestrictions,
     },
+    tags: [],
+    safeAppsPermissions: [],
   }
 }
 
@@ -105,6 +132,7 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string, validateManifest
     iconPath: appInfo.icons?.length ? getAppIcon(appInfo.icons) : appInfo.iconPath,
     description: appInfo.description,
     providedBy: appInfo.providedBy,
+    safeAppsPermissions: appInfo.safe_apps_permissions || [],
   }
 
   res = {
@@ -116,7 +144,7 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string, validateManifest
   }
 
   const concatenatedImgPath = `${noTrailingSlashUrl}/${appInfoData.iconPath}`
-  if (await canLoadAppImage(concatenatedImgPath)) {
+  if (await utils.canLoadAppImage(concatenatedImgPath)) {
     res.iconUrl = concatenatedImgPath
   }
 
@@ -169,7 +197,7 @@ export const uniqueApp =
     return exists ? 'This app is already registered.' : undefined
   }
 
-const canLoadAppImage = (path: string, timeout = 10000) =>
+export const canLoadAppImage = (path: string, timeout = 10000) =>
   new Promise(function (resolve) {
     try {
       const image = new Image()

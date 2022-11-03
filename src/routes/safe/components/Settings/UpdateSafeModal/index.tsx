@@ -9,11 +9,12 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getUpgradeSafeTransactionHash } from 'src/logic/safe/utils/upgradeSafe'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
+import { getMultiSendCallOnlyContractAddress } from 'src/logic/contracts/safeContracts'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
+import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 
 import { useStyles } from './style'
 
@@ -38,13 +39,13 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
     dispatch(
       createTransaction({
         safeAddress,
-        to: getMultisendContractAddress(),
+        to: getMultiSendCallOnlyContractAddress(),
         valueInWei: '0',
         txData: multiSendCallData,
         txNonce: txParameters.safeNonce,
         safeTxGas: txParameters.safeTxGas,
         ethParameters: txParameters,
-        notifiedTransaction: 'STANDARD_TX',
+        notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         operation: Operation.DELEGATE,
         delayExecution,
       }),
@@ -55,7 +56,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
   return (
     <TxModalWrapper
       txData={multiSendCallData}
-      txTo={getMultisendContractAddress()}
+      txTo={getMultiSendCallOnlyContractAddress()}
       operation={Operation.DELEGATE}
       onSubmit={handleSubmit}
       onClose={onClose}
@@ -70,7 +71,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
           <Paragraph>
             To check details about updates added by this smart contract version please visit{' '}
             <Link target="_blank" to={`https://github.com/gnosis/safe-contracts/releases/tag/v${LATEST_SAFE_VERSION}`}>
-              latest Gnosis Safe contracts changelog
+              latest Safe contracts changelog
             </Link>
           </Paragraph>
           <Paragraph noMargin>

@@ -1,13 +1,13 @@
 import { ReactElement, useState } from 'react'
-import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { Text, ButtonLink, Accordion, AccordionSummary, AccordionDetails } from '@gnosis.pm/safe-react-components'
 
-import { currentSafeThreshold } from 'src/logic/safe/store/selectors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ParametersStatus, areEthereumParamsVisible } from '../utils'
 import Bold from 'src/components/layout/Bold'
 import { isMaxFeeParam } from 'src/logic/safe/transactions/gas'
+import Track from 'src/components/Track'
+import { MODALS_EVENTS } from 'src/utils/events/modals'
 
 const TxParameterWrapper = styled.div`
   display: flex;
@@ -40,10 +40,7 @@ type Props = {
   gasCost: string
   onEdit: () => void
   compact?: boolean
-  parametersStatus?: ParametersStatus
-  isTransactionCreation: boolean
-  isTransactionExecution: boolean
-  isOffChainSignature: boolean
+  parametersStatus: ParametersStatus
 }
 
 export const TxEstimatedFeesDetail = ({
@@ -52,17 +49,8 @@ export const TxEstimatedFeesDetail = ({
   gasCost,
   compact = true,
   parametersStatus,
-  isTransactionCreation,
-  isTransactionExecution,
-  isOffChainSignature,
 }: Props): ReactElement | null => {
   const [isAccordionExpanded, setIsAccordionExpanded] = useState(false)
-  const threshold = useSelector(currentSafeThreshold) || 1
-  const defaultParameterStatus = isOffChainSignature && threshold > 1 ? 'ETH_HIDDEN' : 'ENABLED'
-
-  if (!isTransactionExecution && !isTransactionCreation && isOffChainSignature) {
-    return null
-  }
 
   const onChangeExpand = () => {
     setIsAccordionExpanded(!isAccordionExpanded)
@@ -70,15 +58,17 @@ export const TxEstimatedFeesDetail = ({
 
   return (
     <Accordion compact={compact} expanded={isAccordionExpanded} onChange={onChangeExpand}>
-      <StyledAccordionSummary>
-        <Text size="xl">Estimated fee price</Text>
-        <Text size="xl">
-          <Bold>{gasCost}</Bold>
-        </Text>
-      </StyledAccordionSummary>
+      <Track {...MODALS_EVENTS.ESTIMATION} label={isAccordionExpanded ? 'Close' : 'Open'}>
+        <StyledAccordionSummary>
+          <Text size="xl">Estimated fee price</Text>
+          <Text size="xl">
+            <Bold>{gasCost}</Bold>
+          </Text>
+        </StyledAccordionSummary>
+      </Track>
       <AccordionDetails>
         <AccordionDetailsWrapper>
-          {areEthereumParamsVisible(parametersStatus || defaultParameterStatus) && (
+          {areEthereumParamsVisible(parametersStatus) && (
             <>
               <TxParameterWrapper>
                 <Text size="lg">Nonce</Text>
@@ -103,9 +93,11 @@ export const TxEstimatedFeesDetail = ({
               )}
             </>
           )}
-          <StyledButtonLink color="primary" textSize="xl" onClick={onEdit}>
-            Edit
-          </StyledButtonLink>
+          <Track {...MODALS_EVENTS.EDIT_ESTIMATION}>
+            <StyledButtonLink color="primary" textSize="xl" onClick={onEdit}>
+              Edit
+            </StyledButtonLink>
+          </Track>
         </AccordionDetailsWrapper>
       </AccordionDetails>
     </Accordion>

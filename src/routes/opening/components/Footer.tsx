@@ -4,6 +4,8 @@ import { Loader } from '@gnosis.pm/safe-react-components'
 
 import Button from 'src/components/layout/Button'
 import Hairline from 'src/components/layout/Hairline'
+import Track from 'src/components/Track'
+import { CREATE_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
 import Paragraph from 'src/components/layout/Paragraph'
 
 const ButtonWithMargin = styled(Button)`
@@ -39,21 +41,23 @@ export const ContinueFooter = ({
 }): ReactElement => (
   <FooterContainer>
     <Hairline />
-    <Button
-      color="primary"
-      disabled={continueButtonDisabled}
-      onClick={onContinue}
-      variant="contained"
-      data-testid="continue-btn"
-    >
-      {continueButtonDisabled ? (
-        <>
-          <Loader size="xs" color="secondaryLight" /> <LoaderText>Loading your Safe</LoaderText>
-        </>
-      ) : (
-        <>Get started</>
-      )}
-    </Button>
+    <Track {...CREATE_SAFE_EVENTS.GET_STARTED}>
+      <Button
+        color="primary"
+        disabled={continueButtonDisabled}
+        onClick={onContinue}
+        variant="contained"
+        data-testid="continue-btn"
+      >
+        {continueButtonDisabled ? (
+          <>
+            <Loader size="xs" color="secondaryLight" /> <LoaderText>Loading your Safe</LoaderText>
+          </>
+        ) : (
+          <>Get started</>
+        )}
+      </Button>
+    </Track>
   </FooterContainer>
 )
 

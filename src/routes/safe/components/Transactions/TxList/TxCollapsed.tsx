@@ -8,7 +8,6 @@ import { useSelector } from 'react-redux'
 import { CustomIconText } from 'src/components/CustomIconText'
 import {
   isCustomTxInfo,
-  isMultiSendTxInfo,
   isSettingsChangeTxInfo,
   LocalTransactionStatus,
   Transaction,
@@ -28,8 +27,10 @@ import { getTxTo, isAwaitingExecution } from './utils'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { useKnownAddress } from './hooks/useKnownAddress'
 import useTxStatus from 'src/logic/hooks/useTxStatus'
+import Spacer from 'src/components/Spacer'
+import { isSupportedMultiSendCall } from 'src/logic/safe/transactions/multisend'
 
-const TxInfo = ({ info, name }: { info: AssetInfo; name?: string }) => {
+export const TxInfo = ({ info, name }: { info: AssetInfo; name?: string }): ReactElement | null => {
   if (isTokenTransferAsset(info)) {
     return <TokenTransferAmount assetInfo={info} />
   }
@@ -46,7 +47,7 @@ const TxInfo = ({ info, name }: { info: AssetInfo; name?: string }) => {
       case 'CHANGE_IMPLEMENTATION':
       case 'SET_GUARD':
       case 'DELETE_GUARD':
-        break
+        return <Spacer />
       case 'ENABLE_MODULE':
       case 'DISABLE_MODULE':
         return (
@@ -58,7 +59,7 @@ const TxInfo = ({ info, name }: { info: AssetInfo; name?: string }) => {
   }
 
   if (isCustomTxInfo(info)) {
-    if (isMultiSendTxInfo(info)) {
+    if (isSupportedMultiSendCall(info)) {
       return (
         <Text size="xl" as="span">
           {info.actionCount} {`action${(info as MultiSend).actionCount > 1 ? 's' : ''}`}

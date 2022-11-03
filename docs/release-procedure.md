@@ -4,6 +4,8 @@ We prepare at least one release every sprint. Sprints are two weeks long.
 
 ### Prepare a branch
 * Create a code-freeze branch named `release/X.Y.Z`
+  * If it's a regular release, this branch is typically based off of `dev`
+  * For hot fixes, it would be `main` + cherry-picked commits
 * Bump the version in the `package.json`
 * Create a PR with the list of changes
 

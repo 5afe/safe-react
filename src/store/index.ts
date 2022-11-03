@@ -2,7 +2,6 @@ import { applyMiddleware, CombinedState, combineReducers, compose, createStore, 
 import { save, load, LoadOptions, RLSOptions } from 'redux-localstorage-simple'
 import thunk from 'redux-thunk'
 
-import { addressBookMiddleware } from 'src/logic/addressBook/store/middleware'
 import addressBookReducer, { ADDRESS_BOOK_REDUCER_ID } from 'src/logic/addressBook/store/reducer'
 import {
   NFT_ASSETS_REDUCER_ID,
@@ -15,7 +14,10 @@ import currentSessionReducer, {
   CurrentSessionState,
   CURRENT_SESSION_REDUCER_ID,
 } from 'src/logic/currentSession/store/reducer/currentSession'
-import notificationsReducer, { NOTIFICATIONS_REDUCER_ID } from 'src/logic/notifications/store/reducer/notifications'
+import notificationsReducer, {
+  NotificationsState,
+  NOTIFICATIONS_REDUCER_ID,
+} from 'src/logic/notifications/store/notifications'
 import gatewayTransactionsReducer, {
   GatewayTransactionsState,
   GATEWAY_TRANSACTIONS_ID,
@@ -44,7 +46,7 @@ import appearanceReducer, {
   initialAppearanceState,
   AppearanceState,
 } from 'src/logic/appearance/reducer/appearance'
-import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles'
+import { NFTAssets, NFTTokensStore } from 'src/logic/collectibles/sources/collectibles'
 import { SafeReducerMap } from 'src/logic/safe/store/reducer/types/safe'
 import { LS_NAMESPACE, LS_SEPARATOR } from 'src/utils/constants'
 import { ConfigState } from 'src/logic/config/store/reducer/reducer'
@@ -73,7 +75,6 @@ const enhancer = composeEnhancers(
     notificationsMiddleware,
     safeStorageMiddleware,
     providerMiddleware,
-    addressBookMiddleware,
     configMiddleware,
     gatewayTransactionsMiddleware,
     pendingTransactionsMiddleware,
@@ -106,11 +107,11 @@ export type AppReduxState = CombinedState<{
   [PROVIDER_REDUCER_ID]: ProvidersState
   [SAFE_REDUCER_ID]: SafeReducerMap
   [NFT_ASSETS_REDUCER_ID]: NFTAssets
-  [NFT_TOKENS_REDUCER_ID]: NFTTokens
+  [NFT_TOKENS_REDUCER_ID]: NFTTokensStore
   [TOKEN_REDUCER_ID]: TokenState
   [GATEWAY_TRANSACTIONS_ID]: GatewayTransactionsState
   [PENDING_TRANSACTIONS_ID]: PendingTransactionsState
-  [NOTIFICATIONS_REDUCER_ID]: Map<string, Notification>
+  [NOTIFICATIONS_REDUCER_ID]: NotificationsState
   [CURRENCY_REDUCER_ID]: CurrencyValuesState
   [COOKIES_REDUCER_ID]: CookieState
   [ADDRESS_BOOK_REDUCER_ID]: AddressBookState
@@ -121,5 +122,5 @@ export type AppReduxState = CombinedState<{
 
 export const store: any = createStore(rootReducer, load(LS_CONFIG), enhancer)
 
-export const createPreloadedStore = (localState = {} as PreloadedState<unknown>): typeof store =>
+export const createPreloadedStore = (localState = {} as PreloadedState<Record<string, unknown>>): typeof store =>
   createStore(rootReducer, localState, enhancer)

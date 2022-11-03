@@ -7,7 +7,6 @@ import {
   ExpandedTxDetails,
   isCustomTxInfo,
   isModuleExecutionInfo,
-  isMultiSendTxInfo,
   isMultiSigExecutionDetails,
   isSettingsChangeTxInfo,
   isTransferTxInfo,
@@ -27,10 +26,15 @@ import useTxStatus from 'src/logic/hooks/useTxStatus'
 import { useSelector } from 'react-redux'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import TxModuleInfo from './TxModuleInfo'
+import Track from 'src/components/Track'
+import { TX_LIST_EVENTS } from 'src/utils/events/txList'
+import TxShareButton from './TxShareButton'
+import { isSupportedMultiSendCall } from 'src/logic/safe/transactions/multisend'
 
 const NormalBreakingText = styled(Text)`
   line-break: normal;
   word-break: normal;
+  padding-right: 32px;
 `
 
 const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElement | null => {
@@ -89,28 +93,28 @@ type TxDetailsProps = {
 
 export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
-  const { data, loading } = useTransactionDetails(transaction.id)
+  const { data, loading } = useTransactionDetails(transaction.id, transaction.txDetails)
   const txStatus = useTxStatus(transaction)
   const willBeReplaced = txStatus === LocalTransactionStatus.WILL_BE_REPLACED
   const isPending = txStatus === LocalTransactionStatus.PENDING
   const currentUser = useSelector(userAccountSelector)
-  const isMultiSend = data && isMultiSendTxInfo(data.txInfo)
+  const isMultiSend = data && isSupportedMultiSendCall(data.txInfo)
   const shouldShowStepper = data?.detailedExecutionInfo && isMultiSigExecutionDetails(data.detailedExecutionInfo)
 
   // To avoid prop drilling into TxDataGroup, module details are positioned here accordingly
   const getModuleDetails = () => {
-    if (!transaction.txDetails || !isModuleExecutionInfo(transaction.txDetails.detailedExecutionInfo)) {
+    if (!data || !isModuleExecutionInfo(data.detailedExecutionInfo)) {
       return null
     }
 
     return (
       <div className="tx-module">
-        <TxModuleInfo detailedExecutionInfo={transaction.txDetails?.detailedExecutionInfo} />
+        <TxModuleInfo detailedExecutionInfo={data?.detailedExecutionInfo} />
       </div>
     )
   }
 
-  if (loading) {
+  if (loading && !data) {
     return (
       <Centered padding={10}>
         <Loader size="sm" />
@@ -128,6 +132,16 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
     )
   }
 
+  const TrackedShareButton = () => {
+    return (
+      <div className="tx-share">
+        <Track {...TX_LIST_EVENTS.COPY_DEEPLINK}>
+          <TxShareButton txId={data.txId} />
+        </Track>
+      </div>
+    )
+  }
+
   const customTxNoData = isCustomTxInfo(data.txInfo) && !data.txInfo.methodName && !parseInt(data.txInfo.dataSize, 10)
   const onChainRejection = isCancelTxDetails(data.txInfo) && isMultiSigExecutionDetails(data.detailedExecutionInfo)
   const noTxDataBlock = customTxNoData && !onChainRejection
@@ -135,12 +149,12 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
     isMultiSend ? (
       <>
         <div className={cn('tx-summary', { 'will-be-replaced': willBeReplaced })}>
+          <TrackedShareButton />
           <TxSummary txDetails={data} />
         </div>
         {getModuleDetails()}
         <div
-          className={cn('tx-details', {
-            'no-padding': isMultiSendTxInfo(data.txInfo),
+          className={cn('tx-details', 'no-padding', {
             'not-executed': !data.executedAt,
             'will-be-replaced': willBeReplaced,
           })}
@@ -152,11 +166,12 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
       <>
         <div
           className={cn('tx-details', {
-            'no-padding': isMultiSendTxInfo(data.txInfo) || noTxDataBlock,
+            'no-padding': noTxDataBlock,
             'not-executed': !data.executedAt,
             'will-be-replaced': willBeReplaced,
           })}
         >
+          <TrackedShareButton />
           <TxDataGroup txDetails={data} />
         </div>
         {getModuleDetails()}

@@ -58,3 +58,8 @@ html[class="darkMode"] [class*="networkLabel"] {
 html[class="darkMode"] [class*="networkLabel"] {
   outline: 1px solid #333;
 }
+
+body[data-with-banner="true"],
+body[data-with-banner="true"] [class*="safe-list-sidebar"] {
+  padding-top: 80px;
+}

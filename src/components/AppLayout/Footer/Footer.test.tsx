@@ -13,7 +13,7 @@ describe('<Footer>', () => {
   it('Should show footer links', () => {
     render(<Footer />)
 
-    const gnosisCopyrightNode = screen.getByText(/©\d{4} Gnosis/)
+    const gnosisCopyrightNode = screen.getByText(/©\d{4} Safe Ecosystem Foundation/)
 
     expect(gnosisCopyrightNode).toBeInTheDocument()
 

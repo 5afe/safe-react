@@ -1,4 +1,5 @@
 import { REMOVE_GUARD_BTN_TEST_ID } from 'src/routes/safe/components/Settings/Advanced/TransactionGuard'
+import * as safeContracts from 'src/logic/contracts/safeContracts'
 import { render, screen, getByText, fireEvent } from 'src/utils/test-utils'
 import { history } from 'src/routes/routes'
 import Advanced from '.'
@@ -31,6 +32,9 @@ jest.mock('src/logic/hooks/useEstimateTransactionGas', () => {
 })
 
 describe('Advanced Settings Component', () => {
+  beforeEach(() => {
+    jest.spyOn(safeContracts, 'getMultiSendCallOnlyContractAddress').mockReturnValue('mockAddress')
+  })
   it('Renders Advanced Settings Component', () => {
     const customState = {
       providers: {
@@ -79,6 +83,9 @@ describe('Advanced Settings Component', () => {
               currentVersion: '1.3.0',
             },
           },
+        },
+        currentSession: {
+          currentSafeAddress: safeAddress,
         },
       }
 
@@ -134,6 +141,9 @@ describe('Advanced Settings Component', () => {
             },
           },
         },
+        currentSession: {
+          currentSafeAddress: safeAddress,
+        },
       }
 
       render(<Advanced />, customState)
@@ -162,6 +172,9 @@ describe('Advanced Settings Component', () => {
               currentVersion: '1.3.0',
             },
           },
+        },
+        currentSession: {
+          currentSafeAddress: safeAddress,
         },
       }
 
@@ -195,6 +208,9 @@ describe('Advanced Settings Component', () => {
               currentVersion: '1.3.0',
             },
           },
+        },
+        currentSession: {
+          currentSafeAddress: safeAddress,
         },
       }
 
@@ -260,6 +276,9 @@ describe('Advanced Settings Component', () => {
             },
           },
         },
+        currentSession: {
+          currentSafeAddress: safeAddress,
+        },
       }
 
       render(<Advanced />, customState)
@@ -290,6 +309,9 @@ describe('Advanced Settings Component', () => {
               currentVersion: '1.3.0',
             },
           },
+        },
+        currentSession: {
+          currentSafeAddress: safeAddress,
         },
       }
 

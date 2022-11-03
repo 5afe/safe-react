@@ -53,12 +53,15 @@ export const ActionAccordion = styled(Accordion)`
 `
 
 export const StyledTransactionsGroup = styled.div`
+  box-sizing: border-box;
   align-items: flex-start;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  margin: 16px 8px;
-  width: 98%;
+  margin: 16px 0px;
+  width: 100%;
+  padding: 0px 8px;
+  box-sizing: border-box;
 `
 
 export const H2 = styled.h2`
@@ -68,7 +71,7 @@ export const H2 = styled.h2`
 
 export const SubTitle = styled(Text)`
   margin-bottom: 8px;
-
+  margin-left: 2px;
   font-size: 0.76em;
   font-weight: 600;
   line-height: 1.5;
@@ -84,6 +87,10 @@ export const StyledTransactions = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 6px;
+
+  & .MuiAccordion-root.highlight .MuiAccordionSummary-root {
+    background-color: ${primary200};
+  }
 
   & > .MuiAccordion-root {
     border: 2px solid ${grey400};
@@ -106,7 +113,7 @@ export const StyledTransactions = styled.div`
 
 export const GroupedTransactionsCard = styled(StyledTransactions)<{ expanded?: boolean }>`
   transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  background-color: ${({ theme }) => theme.colors.white}};
+  background-color: ${({ theme }) => theme.colors.white};
 
   border: 2px solid ${({ expanded }) => (expanded ? `${primary300}` : `${grey400}`)};
   box-sizing: border-box;
@@ -233,8 +240,8 @@ export const GroupedTransactions = styled(StyledTransaction)`
 
   // builds the tree-view layout
   .tree-lines {
-    height: 100%;
-    margin-left: 30px;
+    height: auto;
+    margin: 0 0 0 30px;
     position: relative;
     width: 30%;
 
@@ -252,7 +259,7 @@ export const GroupedTransactions = styled(StyledTransaction)`
         content: '';
         height: 22px;
         position: absolute;
-        top: 8px;
+        top: 18px;
         width: 100%;
       }
     }
@@ -267,7 +274,7 @@ export const GroupedTransactions = styled(StyledTransaction)`
         border-left: 2px solid ${({ theme }) => theme.colors.separator};
         content: '';
         height: 100%;
-        margin-top: 14px;
+        margin-top: 26px;
         position: absolute;
         width: 100%;
       }
@@ -389,6 +396,8 @@ export const TxDetailsContainer = styled.div`
   }
 
   .tx-details {
+    position: relative;
+
     &.not-executed {
       grid-row-end: span 2;
     }
@@ -475,7 +484,7 @@ export const StyledScrollableBar = styled.div`
 `
 
 export const ScrollableTransactionsContainer = styled(StyledScrollableBar)`
-  height: calc(100vh - 170px);
+  height: calc(100vh - 218px);
   overflow-x: hidden;
   overflow-y: auto;
   width: 100%;

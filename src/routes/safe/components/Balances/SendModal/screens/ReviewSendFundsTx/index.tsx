@@ -1,6 +1,6 @@
 import { RecordOf } from 'immutable'
 import { makeStyles } from '@material-ui/core/styles'
-import { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
@@ -12,7 +12,8 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
-import { getSpendingLimitContract } from 'src/logic/contracts/spendingLimitContracts'
+import { currentChainId } from 'src/logic/config/store/selectors'
+import { getSpendingLimitContract, getSpendingLimitModuleAddress } from 'src/logic/contracts/spendingLimitContracts'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getERC20TokenContract } from 'src/logic/tokens/store/actions/fetchTokens'
@@ -27,12 +28,18 @@ import { styles } from './style'
 import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/TxModalWrapper'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { extractSafeAddress } from 'src/routes/routes'
 import { getNativeCurrencyAddress } from 'src/config/utils'
 import { ModalHeader } from 'src/routes/safe/components/Balances/SendModal/screens/ModalHeader'
 import { isSpendingLimit } from 'src/routes/safe/components/Transactions/helpers/utils'
 import { TransferAmount } from 'src/routes/safe/components/Balances/SendModal/TransferAmount'
 import { getStepTitle } from 'src/routes/safe/components/Balances/SendModal/utils'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { MODALS_EVENTS } from 'src/utils/events/modals'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
+import { createSendParams } from 'src/logic/safe/transactions/gas'
+import { SpendingLimitModalWrapper } from 'src/routes/safe/components/Transactions/helpers/SpendingLimitModalWrapper'
+import { getNotificationsFromTxType } from 'src/logic/notifications'
+import { closeNotification, showNotification } from 'src/logic/notifications/store/notifications'
 
 const useStyles = makeStyles(styles)
 
@@ -84,7 +91,7 @@ const useTxData = (
 const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const safeAddress = extractSafeAddress()
+  const { safeAddress } = useSafeAddress()
   const nativeCurrency = getNativeCurrency()
   const tokens = useSelector(extendedSafeTokensSelector)
   const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])
@@ -93,14 +100,24 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
   const txValue = isSendingNativeToken ? toTokenUnit(tx.amount, nativeCurrency.decimals) : '0'
   const txData = useTxData(isSendingNativeToken, tx.amount, tx.recipientAddress, txToken)
   const isSpendingLimitTx = isSpendingLimit(tx.txType)
+  const chainId = useSelector(currentChainId)
 
-  const submitTx = async (txParameters: TxParameters, delayExecution: boolean) => {
-    if (isSpendingLimitTx && txToken && tx.tokenSpendingLimit) {
-      const spendingLimitTokenAddress = isSendingNativeToken ? ZERO_ADDRESS : txToken.address
-      const spendingLimit = getSpendingLimitContract()
-      try {
-        await spendingLimit.methods
-          .executeAllowanceTransfer(
+  const submitSpendingLimitTx = useCallback(
+    async (txParameters: TxParameters) => {
+      if (isSpendingLimitTx && txToken && tx.tokenSpendingLimit) {
+        const spendingLimitTokenAddress = isSendingNativeToken ? ZERO_ADDRESS : txToken.address
+        const spendingLimitModuleAddress = getSpendingLimitModuleAddress(chainId)
+        if (!spendingLimitModuleAddress) return
+        const spendingLimit = getSpendingLimitContract(spendingLimitModuleAddress)
+        const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.SPENDING_LIMIT_TX)
+
+        trackEvent(MODALS_EVENTS.USE_SPENDING_LIMIT)
+
+        let beforeExecutionKey = ''
+        try {
+          beforeExecutionKey = dispatch(showNotification(notification.beforeExecution)) as unknown as string
+
+          const allowanceTransferTx = await spendingLimit.methods.executeAllowanceTransfer(
             safeAddress,
             spendingLimitTokenAddress,
             tx.recipientAddress,
@@ -110,43 +127,70 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
             tx.tokenSpendingLimit.delegate,
             EMPTY_DATA,
           )
-          .send({ from: tx.tokenSpendingLimit.delegate })
-          .on('transactionHash', () => onClose())
-      } catch (err) {
-        logError(Errors._801, err.message)
+
+          dispatch(closeNotification({ key: beforeExecutionKey, read: false }))
+
+          const sendParams = createSendParams(tx.tokenSpendingLimit.delegate, txParameters)
+
+          await allowanceTransferTx.send(sendParams).on('transactionHash', () => {
+            onClose()
+            dispatch(showNotification(notification.afterExecution.noMoreConfirmationsNeeded))
+          })
+        } catch (err) {
+          logError(Errors._801, err.message)
+          dispatch(closeNotification({ key: beforeExecutionKey, read: false }))
+          dispatch(showNotification(notification.afterRejection))
+        }
+        onClose()
       }
-      return
-    }
+    },
+    [
+      chainId,
+      dispatch,
+      isSendingNativeToken,
+      isSpendingLimitTx,
+      onClose,
+      safeAddress,
+      tx.amount,
+      tx.recipientAddress,
+      tx.tokenSpendingLimit,
+      txToken,
+    ],
+  )
 
-    dispatch(
-      createTransaction({
-        safeAddress: safeAddress,
-        to: txRecipient as string,
-        valueInWei: txValue,
-        txData,
-        txNonce: txParameters.safeNonce,
-        safeTxGas: txParameters.safeTxGas,
-        ethParameters: txParameters,
-        notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-        delayExecution,
-      }),
-    )
-    onClose()
-  }
+  const submitTx = useCallback(
+    async (txParameters: TxParameters, delayExecution: boolean) => {
+      dispatch(
+        createTransaction({
+          safeAddress: safeAddress,
+          to: txRecipient as string,
+          valueInWei: txValue,
+          txData,
+          txNonce: txParameters.safeNonce,
+          safeTxGas: txParameters.safeTxGas,
+          ethParameters: txParameters,
+          notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
+          delayExecution,
+        }),
+      )
+      onClose()
+    },
+    [dispatch, onClose, safeAddress, txData, txRecipient, txValue],
+  )
 
-  return (
-    <TxModalWrapper
-      txData={txData}
-      txValue={txValue}
-      txTo={txRecipient}
-      txType={tx.txType || ''}
-      onSubmit={submitTx}
-      onBack={onPrev}
-    >
-      {/* Header */}
+  const ModalWrapperBody = (
+    <>
       <ModalHeader onClose={onClose} subTitle={getStepTitle(2, 2)} title="Send funds" />
 
       <Hairline />
+
+      {isSpendingLimitTx ? (
+        <Block className={classes.container}>
+          Spending limit transactions only appear in the interface once they are successfully mined and indexed. Pending
+          transactions can only be viewed in your signer wallet application or under your owner wallet address through a
+          Blockchain Explorer.
+        </Block>
+      ) : null}
 
       <Block className={classes.container}>
         {/* Amount */}
@@ -179,6 +223,36 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
           </Col>
         </Row>
       </Block>
+    </>
+  )
+
+  if (isSpendingLimitTx) {
+    return (
+      <SpendingLimitModalWrapper
+        txData=""
+        txToken={txToken}
+        txAmount={tx.amount}
+        txDelegate={tx.tokenSpendingLimit?.delegate}
+        txTo={tx.recipientAddress}
+        onSubmit={submitSpendingLimitTx}
+        onBack={onPrev}
+        txType={tx.txType || ''}
+      >
+        {ModalWrapperBody}
+      </SpendingLimitModalWrapper>
+    )
+  }
+
+  return (
+    <TxModalWrapper
+      txData={txData}
+      txValue={txValue}
+      txTo={txRecipient}
+      txType={tx.txType || ''}
+      onSubmit={submitTx}
+      onBack={onPrev}
+    >
+      {ModalWrapperBody}
     </TxModalWrapper>
   )
 }

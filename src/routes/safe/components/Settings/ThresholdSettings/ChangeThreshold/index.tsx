@@ -20,6 +20,8 @@ import { TxModalWrapper } from 'src/routes/safe/components/Transactions/helpers/
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 import { useStyles } from './style'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { SETTINGS_EVENTS } from 'src/utils/events/settings'
 
 const THRESHOLD_FIELD_NAME = 'threshold'
 
@@ -79,6 +81,10 @@ export const ChangeThresholdModal = ({
         delayExecution,
       }),
     )
+
+    trackEvent({ ...SETTINGS_EVENTS.THRESHOLD.OWNERS, label: ownersCount })
+    trackEvent({ ...SETTINGS_EVENTS.THRESHOLD.THRESHOLD, label: editedThreshold })
+
     onClose()
   }
 
@@ -99,15 +105,13 @@ export const ChangeThresholdModal = ({
                   name={THRESHOLD_FIELD_NAME}
                   onChange={handleThreshold}
                   render={(props) => (
-                    <>
-                      <SelectField {...props} disableError>
-                        {[...Array(Number(ownersCount))].map((x, index) => (
-                          <MenuItem key={index} value={`${index + 1}`}>
-                            {index + 1}
-                          </MenuItem>
-                        ))}
-                      </SelectField>
-                    </>
+                    <SelectField {...props} disableError>
+                      {[...Array(Number(ownersCount))].map((x, index) => (
+                        <MenuItem key={index} value={`${index + 1}`}>
+                          {index + 1}
+                        </MenuItem>
+                      ))}
+                    </SelectField>
                   )}
                   validate={composeValidators(required, mustBeInteger, minValue(1), differentFrom(threshold))}
                 />

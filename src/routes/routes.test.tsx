@@ -8,10 +8,13 @@ import {
   ADDRESSED_ROUTE,
   history,
   LOAD_SPECIFIC_SAFE_ROUTE,
+  getShareSafeAppUrl,
+  SAFE_APP_LANDING_PAGE_ROUTE,
 } from './routes'
 import { Route, Switch } from 'react-router'
 import { render } from 'src/utils/test-utils'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+import { PUBLIC_URL } from 'src/utils/constants'
 
 const validSafeAddress = '0xF5A2915982BC8b0dEDda9cEF79297A83081Fe88f'
 
@@ -94,9 +97,6 @@ describe('extractPrefixedSafeAddress', () => {
   })
 })
 
-// Not testing extractShortChainName or extractSafeAddress because
-// they return from { [key]: extractPrefixedSafeAddress()[key] }
-
 describe('getPrefixedSafeAddressSlug', () => {
   it('returns a chain-specific address slug with provided safeAddress/shortName', () => {
     const shortName = 'matic'
@@ -115,7 +115,7 @@ describe('getPrefixedSafeAddressSlug', () => {
     // Check for route change as function references this
     expect(history.location.pathname).toBe(route)
 
-    const slug = getPrefixedSafeAddressSlug({ safeAddress: validSafeAddress })
+    const slug = getPrefixedSafeAddressSlug({ shortName, safeAddress: validSafeAddress })
 
     expect(slug).toBe(`${shortName}:${validSafeAddress}`)
   })
@@ -131,7 +131,7 @@ describe('getPrefixedSafeAddressSlug', () => {
     // Check for route change as function references this
     expect(history.location.pathname).toBe(route)
 
-    const slug = getPrefixedSafeAddressSlug()
+    const slug = getPrefixedSafeAddressSlug({ shortName, safeAddress: fakeAddress })
 
     expect(slug).toBe(`${shortName}:${fakeAddress}`)
   })
@@ -164,5 +164,18 @@ describe('generatePrefixedAddressRoutes', () => {
     )
 
     expect(hasAllPrefixedSafeAddressesRoutes).toBe(true)
+  })
+})
+
+describe('getShareSafeAppUrl', () => {
+  it('generates the share Safe App url', () => {
+    const appUrl = 'https://my-safe-app-url'
+    const chainId = '4'
+
+    expect(getShareSafeAppUrl(appUrl, chainId)).toBe(
+      `${window.location.origin}${PUBLIC_URL}${SAFE_APP_LANDING_PAGE_ROUTE}?appUrl=${encodeURI(
+        appUrl,
+      )}&chainId=${chainId}`,
+    )
   })
 })

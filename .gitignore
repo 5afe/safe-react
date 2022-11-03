@@ -17,3 +17,6 @@ tsconfig.tsbuildinfo
 public/**/*.js
 jest.results.json
 *.#*
+cypress/videos
+cypress/screenshots
+cypress/downloads

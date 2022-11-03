@@ -1,5 +1,5 @@
 import { Loader, Title } from '@gnosis.pm/safe-react-components'
-import { ReactElement } from 'react'
+import { ReactElement, useEffect, useMemo } from 'react'
 
 import Img from 'src/components/layout/Img'
 import NoTransactionsImage from './assets/no-transactions.svg'
@@ -8,9 +8,26 @@ import { QueueTxList } from './QueueTxList'
 import { Centered, NoTransactions } from './styled'
 import { TxsInfiniteScroll } from './TxsInfiniteScroll'
 import { TxLocationContext } from './TxLocationProvider'
+import { BatchExecute } from 'src/routes/safe/components/Transactions/TxList/BatchExecute'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { TX_LIST_EVENTS } from 'src/utils/events/txList'
+import { BatchExecuteHoverProvider } from 'src/routes/safe/components/Transactions/TxList/BatchExecuteHoverProvider'
 
 export const QueueTransactions = (): ReactElement => {
-  const { count, isLoading, hasMore, next, transactions } = usePagedQueuedTransactions()
+  const { count, isLoading, next, transactions } = usePagedQueuedTransactions()
+
+  const queuedTxCount = useMemo(
+    () => (transactions ? transactions.next.count + transactions.queue.count : 0),
+    [transactions],
+  )
+  useEffect(() => {
+    if (queuedTxCount > 0) {
+      trackEvent({
+        ...TX_LIST_EVENTS.QUEUED_TXS,
+        label: queuedTxCount,
+      })
+    }
+  }, [queuedTxCount])
 
   if (count === 0 && isLoading) {
     return (
@@ -32,16 +49,19 @@ export const QueueTransactions = (): ReactElement => {
   }
 
   return (
-    <TxsInfiniteScroll next={next} hasMore={hasMore} isLoading={isLoading}>
-      {/* Next list */}
-      <TxLocationContext.Provider value={{ txLocation: 'queued.next' }}>
-        {transactions.next.count !== 0 && <QueueTxList transactions={transactions.next.transactions} />}
-      </TxLocationContext.Provider>
+    <BatchExecuteHoverProvider>
+      <BatchExecute />
+      <TxsInfiniteScroll next={next} isLoading={isLoading}>
+        {/* Next list */}
+        <TxLocationContext.Provider value={{ txLocation: 'queued.next' }}>
+          {transactions.next.count !== 0 && <QueueTxList transactions={transactions.next.transactions} />}
+        </TxLocationContext.Provider>
 
-      {/* Queue list */}
-      <TxLocationContext.Provider value={{ txLocation: 'queued.queued' }}>
-        {transactions.queue.count !== 0 && <QueueTxList transactions={transactions.queue.transactions} />}
-      </TxLocationContext.Provider>
-    </TxsInfiniteScroll>
+        {/* Queue list */}
+        <TxLocationContext.Provider value={{ txLocation: 'queued.queued' }}>
+          {transactions.queue.count !== 0 && <QueueTxList transactions={transactions.queue.transactions} />}
+        </TxLocationContext.Provider>
+      </TxsInfiniteScroll>
+    </BatchExecuteHoverProvider>
   )
 }

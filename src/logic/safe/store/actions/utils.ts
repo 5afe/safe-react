@@ -20,7 +20,7 @@ import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { getRecommendedNonce } from '../../api/fetchSafeTxGasEstimation'
 import {
-  extractShortChainName,
+  extractPrefixedSafeAddress,
   getPrefixedSafeAddressSlug,
   history,
   SAFE_ADDRESS_SLUG,
@@ -78,7 +78,11 @@ export const extractRemoteSafeInfo = async (remoteSafeInfo: SafeInfo): Promise<P
   if (safeInfoModules.length) {
     safeInfo.modules = buildModulesLinkedList(safeInfoModules)
     try {
-      safeInfo.spendingLimits = await getSpendingLimits(safeInfoModules, remoteSafeInfo.address.value)
+      safeInfo.spendingLimits = await getSpendingLimits(
+        safeInfoModules,
+        remoteSafeInfo.address.value,
+        remoteSafeInfo.chainId,
+      )
     } catch (e) {
       e.log()
       safeInfo.spendingLimits = null
@@ -95,6 +99,7 @@ export const extractRemoteSafeInfo = async (remoteSafeInfo: SafeInfo): Promise<P
   safeInfo.txQueuedTag = remoteSafeInfo.txQueuedTag
   safeInfo.txHistoryTag = remoteSafeInfo.txHistoryTag
   safeInfo.chainId = remoteSafeInfo.chainId as ChainId
+  safeInfo.implementation = remoteSafeInfo.implementation
 
   return safeInfo
 }
@@ -136,10 +141,11 @@ export const navigateToTx = (safeAddress: string, txDetails: TransactionDetails)
   if (!isMultiSigExecutionDetails(txDetails.detailedExecutionInfo)) {
     return
   }
-  const prefixedSafeAddress = getPrefixedSafeAddressSlug({ shortName: extractShortChainName(), safeAddress })
+  const { shortName } = extractPrefixedSafeAddress()
+  const prefixedSafeAddress = getPrefixedSafeAddressSlug({ shortName, safeAddress })
   const txRoute = generatePath(SAFE_ROUTES.TRANSACTIONS_SINGULAR, {
     [SAFE_ADDRESS_SLUG]: prefixedSafeAddress,
-    [TRANSACTION_ID_SLUG]: txDetails.detailedExecutionInfo.safeTxHash,
+    [TRANSACTION_ID_SLUG]: txDetails.txId,
   })
 
   history.push(txRoute)

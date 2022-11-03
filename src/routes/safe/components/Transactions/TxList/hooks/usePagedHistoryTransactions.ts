@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { loadPagedHistoryTransactions } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadGatewayTransactions'
 import { addHistoryTransactions } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
@@ -7,12 +7,11 @@ import { currentChainId } from 'src/logic/config/store/selectors'
 import { useHistoryTransactions } from 'src/routes/safe/components/Transactions/TxList/hooks/useHistoryTransactions'
 import { Errors } from 'src/logic/exceptions/CodedException'
 import { Await } from 'src/types/helpers'
-import { extractSafeAddress } from 'src/routes/routes'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 type PagedTransactions = {
   count: number
   transactions: TransactionDetails['transactions']
-  hasMore: boolean
   next: () => Promise<void>
   isLoading: boolean
 }
@@ -21,9 +20,8 @@ export const usePagedHistoryTransactions = (): PagedTransactions => {
   const { count, transactions } = useHistoryTransactions()
   const chainId = useSelector(currentChainId)
 
-  const dispatch = useRef(useDispatch())
-  const safeAddress = useRef(extractSafeAddress())
-  const [hasMore, setHasMore] = useState(true)
+  const dispatch = useDispatch()
+  const { safeAddress } = useSafeAddress()
   const [isLoading, setIsLoading] = useState(false)
 
   const next = useCallback(async () => {
@@ -31,7 +29,7 @@ export const usePagedHistoryTransactions = (): PagedTransactions => {
 
     let results: Await<ReturnType<typeof loadPagedHistoryTransactions>>
     try {
-      results = await loadPagedHistoryTransactions(safeAddress.current)
+      results = await loadPagedHistoryTransactions(safeAddress)
     } catch (e) {
       // No next page
       if (e.content !== Errors._608) {
@@ -40,24 +38,17 @@ export const usePagedHistoryTransactions = (): PagedTransactions => {
     }
 
     if (!results) {
-      setHasMore(false)
       setIsLoading(false)
       return
     }
 
-    const { values, next } = results
-
-    if (next === null) {
-      setHasMore(false)
-    }
+    const { values } = results
 
     if (values) {
-      dispatch.current(addHistoryTransactions({ chainId, safeAddress: safeAddress.current, values }))
-    } else {
-      setHasMore(false)
+      dispatch(addHistoryTransactions({ chainId, safeAddress, values }))
     }
     setIsLoading(false)
-  }, [chainId])
+  }, [chainId, dispatch, safeAddress])
 
-  return { count, transactions, hasMore, next, isLoading }
+  return { count, transactions, next, isLoading }
 }

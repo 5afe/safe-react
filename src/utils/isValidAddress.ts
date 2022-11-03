@@ -1,4 +1,6 @@
+import { isValidShortChainName } from 'src/routes/routes'
 import { isAddress, isHexStrict } from 'web3-utils'
+import { parsePrefixedAddress } from './prefixedAddress'
 
 export const isValidAddress = (address?: string): boolean => {
   if (address) {
@@ -8,4 +10,14 @@ export const isValidAddress = (address?: string): boolean => {
   }
 
   return false
+}
+
+export const isValidPrefixedAddress = (value?: string): boolean => {
+  if (!value || typeof value !== 'string') {
+    return false
+  }
+
+  const { prefix, address } = parsePrefixedAddress(value)
+
+  return isValidShortChainName(prefix) && isValidAddress(address)
 }

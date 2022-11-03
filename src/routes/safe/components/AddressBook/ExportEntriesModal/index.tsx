@@ -5,9 +5,8 @@ import { CSVDownloader, jsonToCSV } from 'react-papaparse'
 import { Button, Loader, Text } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
-import { enhanceSnackbarForAction, getNotificationsFromTxType } from 'src/logic/notifications'
-import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
-import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
+import { showNotification } from 'src/logic/notifications/store/notifications'
+import { NOTIFICATIONS } from 'src/logic/notifications'
 
 import { addressBookState } from 'src/logic/addressBook/store/selectors'
 
@@ -21,6 +20,8 @@ import HelpInfo from 'src/routes/safe/components/AddressBook/HelpInfo'
 import SuccessSvg from './assets/success.svg'
 import ErrorSvg from './assets/error.svg'
 import LoadingSvg from './assets/wait.svg'
+import { ADDRESS_BOOK_EVENTS } from 'src/utils/events/addressBook'
+import Track from 'src/components/Track'
 
 type ExportEntriesModalProps = {
   isOpen: boolean
@@ -61,12 +62,8 @@ export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps)
     //This timeout prevents modal to be closed abruptly
     setLoading(true)
     setTimeout(() => {
-      if (!loading) {
-        const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESS_BOOK_EXPORT_ENTRIES)
-        const action = error
-          ? notification.afterExecution.afterExecutionError
-          : notification.afterExecution.noMoreConfirmationsNeeded
-        dispatch(enqueueSnackbar(enhanceSnackbarForAction(action)))
+      if (!loading && error) {
+        dispatch(showNotification(NOTIFICATIONS.ADDRESS_BOOK_EXPORT_ENTRIES_ERROR))
       }
       onClose()
     }, 600)
@@ -133,11 +130,13 @@ export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps)
             Retry
           </Button>
         ) : (
-          <CSVDownloader data={csvData} bom={true} filename={`gnosis-safe-address-book-${date}`} type="link">
-            <Button color="primary" size="md" disabled={loading} onClick={handleClose}>
-              {loading && <StyledLoader color="secondaryLight" size="xs" />}
-              Download
-            </Button>
+          <CSVDownloader data={csvData} bom filename={`gnosis-safe-address-book-${date}`} type="link">
+            <Track {...ADDRESS_BOOK_EVENTS.DOWNLOAD_BUTTON} label={addressBook.length}>
+              <Button color="primary" size="md" disabled={loading} onClick={handleClose}>
+                {loading && <StyledLoader color="secondaryLight" size="xs" />}
+                Download
+              </Button>
+            </Track>
           </CSVDownloader>
         )}
       </Modal.Footer>

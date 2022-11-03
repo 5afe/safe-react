@@ -12,6 +12,7 @@ export const CHAIN_ID: Record<ChainName, ChainId> = {
   UNKNOWN: '0',
   ETHEREUM: '1',
   RINKEBY: '4',
+  GOERLI: '5',
   VOLTA: '73799',
 }
 
@@ -19,6 +20,7 @@ export const CHAIN_ID: Record<ChainName, ChainId> = {
 export enum WALLETS {
   SAFE_MOBILE = 'safeMobile',
   METAMASK = 'metamask',
+  TALLYHO = 'tally',
   WALLET_CONNECT = 'walletConnect',
   TREZOR = 'trezor',
   LEDGER = 'ledger',

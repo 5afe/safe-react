@@ -1,7 +1,14 @@
 import { Transaction } from '@gnosis.pm/safe-apps-sdk-v1'
 
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { getMultisendContract } from 'src/logic/contracts/safeContracts'
+import {
+  getMultiSendCallOnlyContract,
+  getMultiSendCallOnlyContractAddress,
+  getMultiSendContractAddress,
+} from 'src/logic/contracts/safeContracts'
+import { MultiSend, TransactionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import { isCustomTxInfo } from 'src/logic/safe/store/models/types/gateway.d'
+import { sameString } from 'src/utils/strings'
 
 export interface MultiSendTx {
   to: string
@@ -10,8 +17,14 @@ export interface MultiSendTx {
 }
 
 export const encodeMultiSendCall = (txs: Transaction[]): string => {
+  const multiSend = getMultiSendCallOnlyContract()
+  const joinedTxs = getMultiSendJoinedTxs(txs)
+
+  return multiSend.methods.multiSend(joinedTxs).encodeABI()
+}
+
+export const getMultiSendJoinedTxs = (txs: Transaction[]): string => {
   const web3 = getWeb3()
-  const multiSend = getMultisendContract()
 
   const joinedTxs = txs
     .map((tx) =>
@@ -26,7 +39,16 @@ export const encodeMultiSendCall = (txs: Transaction[]): string => {
     )
     .join('')
 
-  const encodedMultiSendCallData = multiSend.methods.multiSend(`0x${joinedTxs}`).encodeABI()
-
-  return encodedMultiSendCallData
+  return `0x${joinedTxs}`
 }
+
+export const isSupportedMultiSendAddress = (txInfo: TransactionInfo): boolean => {
+  const toAddress = isCustomTxInfo(txInfo) ? txInfo.to.value : ''
+  const multiSendCallOnlyAddress = getMultiSendCallOnlyContractAddress()
+  const multiSendAddress = getMultiSendContractAddress()
+
+  return sameString(multiSendAddress, toAddress) || sameString(multiSendCallOnlyAddress, toAddress)
+}
+
+export const isSupportedMultiSendCall = (txInfo: TransactionInfo): txInfo is MultiSend =>
+  isSupportedMultiSendAddress(txInfo) && isCustomTxInfo(txInfo) && txInfo.methodName === 'multiSend'

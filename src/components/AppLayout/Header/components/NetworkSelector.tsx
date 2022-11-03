@@ -21,6 +21,8 @@ import { useSelector } from 'react-redux'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { getChainById } from 'src/config'
 import { ChainId } from 'src/config/chain.d'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 
 const styles = {
   root: {
@@ -90,6 +92,8 @@ const NetworkSelector = ({ open, toggle, clickAway }: NetworkSelectorProps): Rea
       e.preventDefault()
       clickAway()
 
+      trackEvent({ ...OVERVIEW_EVENTS.SWITCH_NETWORK, label: chainId })
+
       const newRoute = getNetworkRootRoutes().find((network) => network.chainId === chainId)
       if (newRoute) {
         history.push(newRoute.route)
@@ -118,22 +122,20 @@ const NetworkSelector = ({ open, toggle, clickAway }: NetworkSelectorProps): Rea
       >
         {({ TransitionProps }) => (
           <Grow {...TransitionProps}>
-            <>
-              <ClickAwayListener mouseEvent="onClick" onClickAway={clickAway} touchEvent={false}>
-                <List className={classes.network} component="div">
-                  {getNetworkRootRoutes().map((network) => (
-                    <Fragment key={network.chainId}>
-                      <StyledLink onClick={(e) => onNetworkSwitch(e, network.chainId)} href={network.route}>
-                        <NetworkLabel networkInfo={getChainById(network.chainId)} />
+            <ClickAwayListener mouseEvent="onClick" onClickAway={clickAway} touchEvent={false}>
+              <List className={classes.network} component="div">
+                {getNetworkRootRoutes().map((network) => (
+                  <Fragment key={network.chainId}>
+                    <StyledLink onClick={(e) => onNetworkSwitch(e, network.chainId)} href={network.route}>
+                      <NetworkLabel networkInfo={getChainById(network.chainId)} />
 
-                        {chainId === network.chainId && <Icon type="check" size="md" color="primary" />}
-                      </StyledLink>
-                      <StyledDivider />
-                    </Fragment>
-                  ))}
-                </List>
-              </ClickAwayListener>
-            </>
+                      {chainId === network.chainId && <Icon type="check" size="md" color="primary" />}
+                    </StyledLink>
+                    <StyledDivider />
+                  </Fragment>
+                ))}
+              </List>
+            </ClickAwayListener>
           </Grow>
         )}
       </Popper>

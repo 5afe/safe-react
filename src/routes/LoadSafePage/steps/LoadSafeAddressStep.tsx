@@ -31,6 +31,8 @@ import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { getLoadSafeName } from '../fields/utils'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { reverseENSLookup } from 'src/logic/wallets/getWeb3'
+import { trackEvent } from 'src/utils/googleTagManager'
+import { LOAD_SAFE_EVENTS } from 'src/utils/events/createLoadSafe'
 
 export const loadSafeAddressStepLabel = 'Name and address'
 
@@ -129,13 +131,23 @@ function LoadSafeAddressStep(): ReactElement {
 
   const formValues = loadSafeForm.getState().values as LoadSafeFormValues
   const safeName = getLoadSafeName(formValues, addressBook)
+  const hasCustomSafeName = !!formValues[FIELD_LOAD_CUSTOM_SAFE_NAME]
+
+  useEffect(() => {
+    // On unmount, e.g. go back/next
+    return () => {
+      if (hasCustomSafeName) {
+        trackEvent(LOAD_SAFE_EVENTS.NAME_SAFE)
+      }
+    }
+  }, [hasCustomSafeName])
 
   return (
     <Container data-testid={'load-safe-address-step'}>
       <Block margin="md">
         <Paragraph color="primary" noMargin size="lg">
-          You are about to add an existing Gnosis Safe on <NetworkLabel />. First, choose a name and enter the Safe
-          address. The name is only stored locally and will never be shared with Gnosis or any third parties.
+          You are about to add an existing Safe on <NetworkLabel />. First, choose a name and enter the Safe address.
+          The name is only stored locally and will never be shared with us or any third parties.
         </Paragraph>
         <Paragraph color="primary" size="lg">
           Your connected wallet does not have to be the owner of this Safe. In this case, the interface will provide you

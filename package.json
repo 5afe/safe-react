@@ -1,6 +1,6 @@
 {
   "name": "safe-react",
-  "version": "3.22.1",
+  "version": "3.32.1",
   "description": "Allowing crypto users manage funds in a safer way",
   "website": "https://github.com/gnosis/safe-react#readme",
   "bugs": {
@@ -12,8 +12,8 @@
   },
   "license": "MIT",
   "author": {
-    "name": "Gnosis Team",
-    "email": "safe@gnosis.io"
+    "name": "Safe Team",
+    "email": "support@safe.global"
   },
   "homepage": "/app",
   "main": "public/electron.js",
@@ -29,9 +29,9 @@
     "generate-types": "yarn generate-types:spendingLimit && yarn generate-types:safeDeployments && yarn generate-types:erc20 && yarn generate-types:erc721",
     "generate-types:erc20": "cross-env typechain --target=web3-v1 --out-dir './src/types/contracts' './node_modules/@openzeppelin/contracts/build/contracts/ERC20.json'",
     "generate-types:erc721": "cross-env typechain --target=web3-v1 --out-dir './src/types/contracts' './node_modules/@openzeppelin/contracts/build/contracts/ERC721.json'",
-    "generate-types:spendingLimit": "cross-env typechain --target=web3-v1 --out-dir './src/types/contracts' ./src/logic/contracts/artifacts/*.json",
+    "generate-types:spendingLimit": "cross-env typechain --target=web3-v1 --out-dir './src/types/contracts' ./node_modules/@gnosis.pm/safe-modules-deployments/dist/assets/**/*.json",
     "generate-types:safeDeployments": "cross-env typechain --target=web3-v1 --out-dir './src/types/contracts' ./node_modules/@gnosis.pm/safe-deployments/dist/assets/**/*.json",
-    "lint:check": "eslint './src/**/*.{js,jsx,ts,tsx}'",
+    "lint:check": "eslint './src/**/*.{ts,tsx}'",
     "lint:fix": "yarn lint:check --fix",
     "postinstall": "patch-package && electron-builder install-app-deps && yarn generate-types",
     "preelectron-pack": "yarn build",
@@ -41,23 +41,17 @@
     "release": "electron-builder --mac --linux --windows -p always",
     "start": "rescripts start",
     "start:docker": "docker-compose build && docker-compose up",
-    "test": "REACT_APP_ENV=test rescripts test --env=jsdom",
+    "test": "cross-env TZ=Europe/Berlin REACT_APP_ENV=test rescripts test --env=jsdom",
     "test:coverage": "REACT_APP_ENV=test yarn test --coverage --watchAll=false",
     "test:ci": "REACT_APP_ENV=test yarn test --ci --coverage --json --watchAll=false --testLocationInResults --runInBand --outputFile=jest.results.json",
     "update-mocks": "./scripts/update-mocks.sh",
     "sentry-upload-sourcemaps": "sentry-cli --auth-token $SENTRY_AUTH_TOKEN releases -o $SENTRY_ORG -p $SENTRY_PROJECT files $npm_package_version upload-sourcemaps ./build/static/js/",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "cypress:open": "node ./scripts/cypress.js open",
+    "cypress:run": "node ./scripts/cypress.js run"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "public/**/*.ts": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "scripts/**/*.{js,jsx,ts,tsx}": [
+    "*.{ts,tsx}": [
       "eslint --fix",
       "prettier --write"
     ]
@@ -163,26 +157,28 @@
     ]
   },
   "dependencies": {
-    "@ethersproject/hash": "^5.5.0",
-    "@gnosis.pm/safe-apps-sdk": "7.3.0",
+    "@ethersproject/hash": "^5.6.1",
+    "@gnosis.pm/safe-apps-sdk": "7.8.0",
     "@gnosis.pm/safe-apps-sdk-v1": "npm:@gnosis.pm/safe-apps-sdk@0.4.2",
     "@gnosis.pm/safe-core-sdk": "^2.0.0",
-    "@gnosis.pm/safe-deployments": "^1.8.0",
+    "@gnosis.pm/safe-deployments": "^1.15.0",
+    "@gnosis.pm/safe-modules-deployments": "^1.0.0",
     "@gnosis.pm/safe-react-components": "^1.1.2",
-    "@gnosis.pm/safe-react-gateway-sdk": "^2.10.1",
+    "@gnosis.pm/safe-react-gateway-sdk": "^3.1.1",
     "@gnosis.pm/safe-web3-lib": "^1.0.0",
     "@ledgerhq/hw-transport-node-hid-singleton": "6.20.0",
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.0",
     "@material-ui/lab": "4.0.0-alpha.60",
-    "@openzeppelin/contracts": "4.4.2",
+    "@openzeppelin/contracts": "4.7.3",
     "@sentry/react": "^6.10.0",
     "@sentry/tracing": "^6.10.0",
-    "@unstoppabledomains/resolution": "^1.17.0",
+    "@truffle/hdwallet-provider": "^2.0.8",
+    "@unstoppabledomains/resolution": "^7.1.4",
     "abi-decoder": "^2.4.0",
     "axios": "0.21.4",
     "bignumber.js": "9.0.1",
-    "bnc-onboard": "^1.37.3",
+    "bnc-onboard": "^1.38.2",
     "classnames": "^2.2.6",
     "currency-flags": "3.2.1",
     "date-fns": "^2.20.2",
@@ -203,7 +199,7 @@
     "immutable": "4.0.0-rc.12",
     "js-cookie": "^3.0.0",
     "lodash": "^4.17.21",
-    "notistack": "https://github.com/gnosis/notistack.git#v0.9.5",
+    "notistack": "1.0.10",
     "object-hash": "^2.1.1",
     "qrcode.react": "1.0.1",
     "query-string": "7.0.1",
@@ -212,7 +208,8 @@
     "react-dom": "17.0.2",
     "react-final-form": "^6.5.3",
     "react-final-form-listeners": "^1.0.2",
-    "react-ga": "3.3.0",
+    "react-gtm-module": "^2.0.11",
+    "react-hook-form": "^7.29.0",
     "react-intersection-observer": "^8.32.0",
     "react-papaparse": "^3.16.1",
     "react-qr-reader": "^2.2.1",
@@ -237,6 +234,7 @@
     "@gnosis.pm/safe-core-sdk-types": "1.0.0",
     "@rescripts/cli": "^0.0.16",
     "@sentry/cli": "^1.67.2",
+    "@testing-library/cypress": "^8.0.2",
     "@testing-library/jest-dom": "^5.11.10",
     "@testing-library/react": "^12.1.2",
     "@testing-library/react-hooks": "^7.0.2",
@@ -250,6 +248,7 @@
     "@types/node": "^16.9.1",
     "@types/react": "^17.0.21",
     "@types/react-dom": "^17.0.9",
+    "@types/react-gtm-module": "^2.0.1",
     "@types/react-redux": "^7.1.18",
     "@types/react-router-dom": "^5.1.9",
     "@types/redux-actions": "^2.6.2",
@@ -259,6 +258,8 @@
     "@typescript-eslint/parser": "^4.31.1",
     "concurrently": "^6.0.0",
     "cross-env": "^7.0.3",
+    "cypress": "^9.5.1",
+    "cypress-file-upload": "^5.0.8",
     "dotenv": "^10.0.0",
     "dotenv-expand": "^5.1.0",
     "electron": "13.6.9",

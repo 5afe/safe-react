@@ -18,6 +18,7 @@ import { getChainInfo, getExplorerInfo } from 'src/config'
 import { ChainInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { copyShortNameSelector } from 'src/logic/appearance/selectors'
 import { getPrefixedSafeAddressSlug } from 'src/routes/routes'
+import useSafeAddress from 'src/logic/currentSession/hooks/useSafeAddress'
 
 const useStyles = (chainInfo: ChainInfo) =>
   makeStyles(
@@ -73,6 +74,8 @@ const useStyles = (chainInfo: ChainInfo) =>
     }),
   )()
 
+export const RECEIVE_ASSETS_MODAL_TEST_ID = 'receive-assets-modal'
+
 type Props = {
   onClose: () => void
   safeAddress: string
@@ -82,14 +85,15 @@ type Props = {
 const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement => {
   const chainInfo = getChainInfo()
   const classes = useStyles(chainInfo)
+  const { shortName } = useSafeAddress()
 
   const copyShortName = useSelector(copyShortNameSelector)
   const [shouldEncodePrefix, setShouldEncodePrefix] = useState<boolean>(copyShortName)
 
-  const qrCodeString = shouldEncodePrefix ? getPrefixedSafeAddressSlug() : safeAddress
+  const qrCodeString = shouldEncodePrefix ? getPrefixedSafeAddressSlug({ shortName, safeAddress }) : safeAddress
 
   return (
-    <>
+    <div data-testid={RECEIVE_ASSETS_MODAL_TEST_ID}>
       <Row align="center" className={classes.heading} grow>
         <Paragraph noMargin size="xl" weight="bolder">
           Receive assets
@@ -117,7 +121,7 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
           control={<Switch checked={shouldEncodePrefix} onChange={setShouldEncodePrefix} />}
           label={
             <>
-              QR code with chain prefix (<b>{chainInfo.shortName}:</b>)
+              QR code with chain prefix (<b>{shortName}:</b>)
             </>
           }
         />
@@ -131,7 +135,7 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
           Done
         </Button>
       </Row>
-    </>
+    </div>
   )
 }
 

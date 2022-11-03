@@ -5,6 +5,8 @@ import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add'
 import { Text } from '@gnosis.pm/safe-react-components'
 import { WELCOME_ROUTE } from 'src/routes/routes'
+import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
+import Track from '../Track'
 
 interface Props {
   onAdd: () => unknown
@@ -34,15 +36,17 @@ const StyledLink = styled(Link)`
 
 const AddSafeButton = ({ onAdd }: Props): ReactElement => {
   return (
-    <StyledLink onClick={onAdd} to={WELCOME_ROUTE}>
-      <Fab color="secondary" size="small" aria-label="Add Safe">
-        <AddIcon />
+    <Track {...OVERVIEW_EVENTS.ADD_SAFE}>
+      <StyledLink onClick={onAdd} to={WELCOME_ROUTE}>
+        <Fab color="secondary" size="small" aria-label="Add Safe">
+          <AddIcon />
 
-        <Text color="primary" size="xl" strong>
-          Add Safe
-        </Text>
-      </Fab>
-    </StyledLink>
+          <Text color="primary" size="xl" strong>
+            Add Safe
+          </Text>
+        </Fab>
+      </StyledLink>
+    </Track>
   )
 }
 

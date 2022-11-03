@@ -41,7 +41,6 @@ jest.mock('@gnosis.pm/safe-react-gateway-sdk', () => {
     __esModule: true,
     // We require some of the enums/types from the original module
     ...originalModule,
-    Operation: jest.fn(),
     TokenType: jest.fn(),
     TransactionTokenType: jest.fn(),
     TransactionStatus: jest.fn(),
@@ -55,6 +54,9 @@ jest.mock('@gnosis.pm/safe-react-gateway-sdk', () => {
     getTransactionQueue: jest.fn(),
     postTransaction: jest.fn(),
     getChainsConfig: jest.fn(),
+    getIncomingTransfers: jest.fn(),
+    getMultisigTransactions: jest.fn(),
+    getModuleTransactions: jest.fn(),
   }
 })
 

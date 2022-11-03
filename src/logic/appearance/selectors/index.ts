@@ -1,6 +1,16 @@
+import { createSelector } from 'reselect'
+
 import { AppReduxState } from 'src/store'
-import { APPEARANCE_REDUCER_ID } from '../reducer/appearance'
+import { AppearanceState, APPEARANCE_REDUCER_ID } from '../reducer/appearance'
 
-export const copyShortNameSelector = (state: AppReduxState): boolean => state[APPEARANCE_REDUCER_ID].copyShortName
+const appearanceStateSelector = (state: AppReduxState): AppearanceState => state[APPEARANCE_REDUCER_ID]
 
-export const showShortNameSelector = (state: AppReduxState): boolean => state[APPEARANCE_REDUCER_ID].showShortName
+export const copyShortNameSelector = createSelector(
+  appearanceStateSelector,
+  ({ copyShortName }: AppearanceState): boolean => copyShortName,
+)
+
+export const showShortNameSelector = createSelector(
+  appearanceStateSelector,
+  ({ showShortName }: AppearanceState): boolean => showShortName,
+)
