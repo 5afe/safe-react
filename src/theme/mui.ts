@@ -408,8 +408,7 @@ const theme = createTheme({
     MuiBackdrop: {
       root: {
         backdropFilter: 'blur(1px)',
-        backgroundColor: 'rgba(228, 232, 241, 0.75)',
-        top: '52px',
+        backgroundColor: 'rgba(0, 0, 0, 0.75)',
       },
     },
     MuiMenuItem: {

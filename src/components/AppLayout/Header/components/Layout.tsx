@@ -39,7 +39,7 @@ const styles = () => ({
     height: '5rem',
     position: 'fixed',
     width: '100%',
-    zIndex: 1301,
+    zIndex: 99999,
   },
   logo: {
     [`@media (min-width: ${screenSm}px)`]: {

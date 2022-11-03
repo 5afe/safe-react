@@ -5,7 +5,7 @@ import { headerHeight, md, mediumFontSize, screenSm, secondaryText, xs } from 's
 const sidebarWidth = '400px'
 const sidebarMarginLeft = '0px'
 const sidebarMarginTop = '0px'
-const sidebarPaddingTop = '2rem'
+const sidebarPaddingTop = '0'
 const sidebarMarginBottom = '0px'
 const sidebarBorderRadius = '0px'
 
@@ -16,7 +16,7 @@ const useSidebarStyles = makeStyles({
     top: sidebarMarginTop,
     width: sidebarWidth,
     zIndex: '99999 !important',
-    background: 'transparent',
+    background: '#000',
   },
   sidebarPaper: {
     borderRadius: sidebarBorderRadius,

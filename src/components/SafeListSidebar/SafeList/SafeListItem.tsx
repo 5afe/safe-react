@@ -29,10 +29,6 @@ const StyledButton = styled(Button)`
     padding: 8px 16px;
     min-width: auto;
     height: 100%;
-
-    &:hover {
-      background-color: #cbf1eb;
-    }
   }
 `
 
@@ -45,7 +41,7 @@ const StyledText = styled(Text)`
 
 const StyledPrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
   & > div > p:first-of-type {
-    width: 210px;
+    /* width: 210px; */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -130,7 +126,7 @@ const SafeListItem = ({
           {threshold && owners && <Threshold threshold={threshold} owners={owners.length} size={11} />}
           <Identicon address={address} size="md" />
         </Box>
-        <StyledPrefixedEthHashInfo hash={address} name={safeName} shortName={shortName} shortenHash={4} />
+        <StyledPrefixedEthHashInfo textColor='primary' hash={address} name={safeName} shortName={shortName} shortenHash={4} />
       </AddressContainer>
       <ListItemSecondaryAction>
         {ethBalance ? (

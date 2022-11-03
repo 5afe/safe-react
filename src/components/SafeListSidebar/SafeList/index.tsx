@@ -28,7 +28,6 @@ const StyledDot = styled.span<{ backgroundColor: string; textColor: string }>`
   width: 15px;
   height: 15px;
   color: #06fc99;
-  /* background-color: ${({ backgroundColor }) => backgroundColor}; */
   background-color: #06fc99;
   border-radius: 50%;
   display: inline-block;
@@ -151,7 +150,7 @@ export const SafeList = ({ onSafeClick }: Props): ReactElement => {
                     title={
                       <Text
                         size="lg"
-                        color="placeHolder"
+                        color="primary"
                       >{`Safes owned on ${chainName} (${ownedSafesOnNetwork.length})`}</Text>
                     }
                     key={String(shouldExpandOwnedSafes)}
