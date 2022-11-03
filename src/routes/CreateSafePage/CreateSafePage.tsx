@@ -234,8 +234,3 @@ const BackIcon = styled(IconButton)`
 const MainHeading = styled.h2`
   color: #06fc99;
 `
-
-// const NewStepFormElement = styled(StepFormElement)`
-//   display: none;
-//   margin-top: 10rem;
-// `

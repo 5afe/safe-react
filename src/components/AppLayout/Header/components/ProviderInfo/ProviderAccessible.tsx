@@ -2,8 +2,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 import { useSelector } from 'react-redux'
 import { Text } from '@gnosis.pm/safe-react-components'
-
-import styled from 'styled-components'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'

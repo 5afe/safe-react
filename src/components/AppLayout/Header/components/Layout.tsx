@@ -13,7 +13,6 @@ import { headerHeight, md, screenSm, sm } from 'src/theme/variables'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
 import { ROOT_ROUTE } from 'src/routes/routes'
 import WalletSwitch from 'src/components/WalletSwitch'
-import Divider from 'src/components/layout/Divider'
 import { shouldSwitchWalletChain } from 'src/logic/wallets/store/selectors'
 import { useSelector } from 'react-redux'
 import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
@@ -36,7 +35,7 @@ const styles = () => ({
     alignItems: 'center',
     backgroundColor: 'black',
     flexWrap: 'nowrap',
-    height: '5rem',
+    height: headerHeight,
     position: 'fixed',
     width: '100%',
     zIndex: 99999,

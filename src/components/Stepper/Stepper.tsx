@@ -89,7 +89,6 @@ function StepperComponent(): ReactElement {
             <StepContent>
               <Paper className={classes.root} elevation={1}>
                 {currentComponent}
-                {/* <Hairline /> */}
                 <Row align="center" grow className={classes.controlStyle}>
                   <Col center="xs" xs={12}>
                     {trackingCategory ? (

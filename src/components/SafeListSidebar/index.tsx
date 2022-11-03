@@ -44,7 +44,7 @@ export const SafeListSidebar = ({ children }: Props): ReactElement => {
       >
         <AddSafeButton onAdd={toggleSidebar} />
 
-        {/* <Hairline /> */}
+
 
         <SafeList onSafeClick={toggleSidebar} />
       </Drawer>

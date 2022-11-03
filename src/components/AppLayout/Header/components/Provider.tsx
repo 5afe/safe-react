@@ -60,7 +60,6 @@ class Provider extends React.Component<any> {
   render() {
     const { render, classes, info, open, toggle } = this.props
 
-    console.log(info.props)
     const providerData = info.props
 
     const parsedPrefixAddress = parsePrefixedAddress(providerData.userAddress)
@@ -69,22 +68,20 @@ class Provider extends React.Component<any> {
     const address = parsedPrefixAddress.address
 
     const parseAddress = (address: string): string => {
-      return `${address.substring(0,5)}....${address.substring(address.length-3)}`
+      return `${address.substring(0, 5)}....${address.substring(address.length - 3)}`
     }
-
 
     return (
       <>
         <div className={classes.root} ref={this.myRef}>
           <Col className={classes.provider} end="sm" middle="xs" onClick={toggle}>
-            { (address ? (
+            {address ? (
               <Container>
-              <p>{`${prefix}: ${parseAddress(address)}`}</p>
-            </Container>
+                <p>{`${prefix}: ${parseAddress(address)}`}</p>
+              </Container>
             ) : (
               <ProviderDisconnected />
-            ))}
-            
+            )}
 
             <IconButton className={classes.expand} disableRipple>
               {open ? <ExpandLess /> : <ExpandMore />}

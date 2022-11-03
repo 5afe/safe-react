@@ -26,7 +26,6 @@ export const StyledListItem = styled(ListItem)<ListItemProps>`
   }
 
   &.MuiListItem-button:hover {
-    /* background-color: #06fc99; */
     border-radius: 8px;
   }
 
@@ -95,12 +94,10 @@ const StyledListSubItem = styled(ListItem)<ListItemProps>`
   }
 
   &.MuiListItem-button:hover {
-    /* background-color: ${background}; */
     border-radius: 8px;
   }
 
   &.MuiButtonBase-root.MuiListItem-root.Mui-selected {
-    /* background-color: ${background}; */
     border-radius: 8px;
     color: #06fc99;
     span {

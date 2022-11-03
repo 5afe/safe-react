@@ -125,12 +125,15 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
           . The new Safe will ONLY be available on <NetworkLabel />
         </Paragraph>
       </BlockWithPadding>
-      {/* <Hairline /> */}
+
       <RowHeader>
-        <Col xs={3}><ColText>NAME</ColText></Col>
-        <Col xs={7}><ColText>ADDRESS</ColText></Col>
+        <Col xs={3}>
+          <ColText>NAME</ColText>
+        </Col>
+        <Col xs={7}>
+          <ColText>ADDRESS</ColText>
+        </Col>
       </RowHeader>
-      {/* <Hairline /> */}
       <Block margin="sm" padding="md">
         <RowHeader>
           {owners.map(({ nameFieldName, addressFieldName }, i: number) => {
@@ -216,7 +219,7 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
         </OwnerContainer>
         <BlockWithPadding>
           <Block>
-            <Paragraph color='#06fc99'>Any transaction requires the confirmation of:</Paragraph>
+            <Paragraph color="#06fc99">Any transaction requires the confirmation of:</Paragraph>
           </Block>
           <OwnerContainer align="center" grow>
             <Col xs={1}>
@@ -243,7 +246,9 @@ function OwnersAndConfirmationsNewSafeStep(): ReactElement {
               </Field>
             </Col>
             <Col xs={11}>
-              <StyledParagraph color='#06fc99' noMargin>out of {owners.length} owner(s)</StyledParagraph>
+              <StyledParagraph color="#06fc99" noMargin>
+                out of {owners.length} owner(s)
+              </StyledParagraph>
             </Col>
           </OwnerContainer>
         </BlockWithPadding>

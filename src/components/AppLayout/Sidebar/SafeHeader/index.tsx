@@ -175,7 +175,6 @@ const ToggleSafeListButton = styled.button`
   cursor: pointer;
   border: 0;
   background-color: black;
-  /* background-color: ${secondaryBackground}; */
   width: 42px;
   height: 42px;
   position: absolute;
@@ -200,8 +199,8 @@ type Props = {
 }
 
 const SidebarText = styled.h2`
-    color: #06fc99;
-    font-size: 1rem;
+  color: #06fc99;
+  font-size: 1rem;
 `
 const NewStyledPrefixedEthHashInfo = styled(StyledPrefixedEthHashInfo)`
   color: 'red';
@@ -232,7 +231,6 @@ const SafeHeader = ({
       <Container>
         <IdenticonContainer>
           <FlexSpacer />
-          {/* <FixedIcon type="notConnected" /> */}
           <SidebarText>Not connected</SidebarText>
           <ToggleSafeListButton onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
             <StyledIcon size="md" type="circleDropdown" />
@@ -245,11 +243,6 @@ const SafeHeader = ({
 
   return (
     <>
-      {/* Network */}
-      {/* <StyledTextLabel size="sm" chainInfo={chainInfo}>
-        {chainInfo.chainName}
-      </StyledTextLabel> */}
-
       <Container>
         {/* Identicon */}
         <IdenticonContainer>
@@ -285,15 +278,8 @@ const SafeHeader = ({
           Total Balance
         </Paragraph>
         <StyledText size="xs">{balance}</StyledText>
-        <StyledButton
-          size="md"
-          disabled={!granted}
-          variant="contained"
-          onClick={handleNewTransactionClick}
-        >
-          <Text size="xl">
-            {granted ? 'New Transaction' : 'Read Only'}
-          </Text>
+        <StyledButton size="md" disabled={!granted} variant="contained" onClick={handleNewTransactionClick}>
+          <Text size="xl">{granted ? 'New Transaction' : 'Read Only'}</Text>
         </StyledButton>
       </Container>
     </>

@@ -45,8 +45,6 @@ const App: React.FC = ({ children }) => {
 
   return (
     <Frame>
-      {/* <PsaBanner /> */}
-
       <AppLayout
         sidebarItems={sidebarItems}
         safeAddress={safeAddress}

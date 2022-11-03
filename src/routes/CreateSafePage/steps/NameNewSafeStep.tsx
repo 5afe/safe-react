@@ -135,7 +135,6 @@ const FieldContainer = styled(Block)`
   display: flex;
   max-width: 480px;
   margin-top: 12px;
-  /* background-color: red; */
 `
 
 const Link = styled.a`
