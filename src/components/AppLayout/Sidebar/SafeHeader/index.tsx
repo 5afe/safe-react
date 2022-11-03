@@ -274,12 +274,20 @@ const SafeHeader = ({
           </Track>
         </IconContainer>
 
-        <Paragraph color="black400" noMargin size="md">
+        {/* <Paragraph color="black400" noMargin size="md">
           Total Balance
         </Paragraph>
-        <StyledText size="xs">{balance}</StyledText>
-        <StyledButton size="md" disabled={!granted} variant="contained" onClick={handleNewTransactionClick}>
-          <Text size="xl">{granted ? 'New Transaction' : 'Read Only'}</Text>
+        <StyledText size="xs">{balance}</StyledText> */}
+        <StyledButton
+          size="md"
+          disabled={!granted}
+          color="primary"
+          variant="contained"
+          onClick={handleNewTransactionClick}
+        >
+          <Text size="xl" color="white">
+            {granted ? 'New Transaction' : 'Read Only'}
+          </Text>
         </StyledButton>
       </Container>
     </>
