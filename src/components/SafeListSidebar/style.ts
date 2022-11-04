@@ -5,8 +5,7 @@ import { headerHeight, md, mediumFontSize, screenSm, secondaryText, xs } from 's
 const sidebarWidth = '400px'
 const sidebarMarginLeft = '0px'
 const sidebarMarginTop = '0px'
-const sidebarPaddingTop = '0'
-const sidebarMarginBottom = '0px'
+const sidebarPaddingTop = '3rem'
 const sidebarBorderRadius = '0px'
 
 const useSidebarStyles = makeStyles({
@@ -15,16 +14,17 @@ const useSidebarStyles = makeStyles({
     marginLeft: sidebarMarginLeft,
     top: sidebarMarginTop,
     width: sidebarWidth,
-    zIndex: '99999 !important',
+    zIndex: '99999',
     background: '#000',
   },
   sidebarPaper: {
     borderRadius: sidebarBorderRadius,
-    background: "#000",
+    background: '#000',
+    marginTop: '-5rem',
     borderRight: '#06fc99 2px solid',
     paddingTop: sidebarPaddingTop,
     marginLeft: sidebarMarginLeft,
-    maxHeight: `calc(100vh - ${headerHeight} - ${sidebarMarginTop} - ${sidebarMarginBottom})`,
+    maxHeight: '100vh',
     top: `calc(${headerHeight} + ${sidebarMarginTop})`,
     width: sidebarWidth,
     maxWidth: `calc(100% - ${sidebarMarginLeft} - ${sidebarMarginLeft})`,
