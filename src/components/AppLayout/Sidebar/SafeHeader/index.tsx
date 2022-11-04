@@ -239,7 +239,6 @@ const SafeHeader = ({
       </Container>
     )
   }
-  const chainInfo = getChainInfo()
 
   return (
     <>
@@ -273,11 +272,6 @@ const SafeHeader = ({
             <StyledExplorerButton explorerUrl={getExplorerInfo(address)} />
           </Track>
         </IconContainer>
-
-        {/* <Paragraph color="black400" noMargin size="md">
-          Total Balance
-        </Paragraph>
-        <StyledText size="xs">{balance}</StyledText> */}
         <StyledButton
           size="md"
           disabled={!granted}
@@ -285,7 +279,7 @@ const SafeHeader = ({
           variant="contained"
           onClick={handleNewTransactionClick}
         >
-          <Text size="xl" color="white">
+          <Text size="xl" color="text">
             {granted ? 'New Transaction' : 'Read Only'}
           </Text>
         </StyledButton>
