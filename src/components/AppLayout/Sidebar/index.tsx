@@ -15,11 +15,6 @@ import { loadFromCookie } from 'src/logic/cookies/utils'
 import { COOKIES_KEY, BannerCookiesType, COOKIE_IDS } from 'src/logic/cookies/model/cookie'
 import { background, primaryLite } from 'src/theme/variables'
 
-const StyledDivider = styled(Divider)`
-  margin: 16px -8px 0;
-  border-top: 1px solid ${background};
-`
-
 const HelpContainer = styled.div`
   margin-top: auto;
 `
