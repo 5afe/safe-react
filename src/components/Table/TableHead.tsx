@@ -3,6 +3,7 @@ import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
 import * as React from 'react'
+import { primary } from 'src/theme/variables'
 
 interface CellWidth {
   maxWidth: string
@@ -30,6 +31,8 @@ class GnoTableHead extends React.PureComponent<any> {
   render(): React.ReactElement {
     const { columns, order, orderBy } = this.props
 
+    console.log('col: ', columns)
+
     return (
       <TableHead>
         <TableRow>
@@ -41,13 +44,13 @@ class GnoTableHead extends React.PureComponent<any> {
               sortDirection={orderBy === column.id ? order : false}
             >
               {column.static ? (
-                <div style={column.style}>{column.label}</div>
+                <div style={{ color: primary }}>{column.label}</div>
               ) : (
                 <TableSortLabel
                   active={orderBy === column.id}
                   direction={order}
                   onClick={this.changeSort(column.id, column.order)}
-                  style={column.style}
+                  style={{ color: primary }}
                 >
                   {column.label}
                 </TableSortLabel>

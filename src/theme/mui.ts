@@ -141,7 +141,7 @@ const theme = createTheme({
     },
     MuiStepContent: {
       root: {
-        borderLeft: `1px solid ${secondaryText}`,
+        borderLeft: `${secondaryText}`,
       },
     },
     MuiTypography: {
@@ -386,9 +386,10 @@ const theme = createTheme({
     },
     MuiTableCell: {
       root: {
-        borderBottomWidth: '2px',
+        borderBottom: `2px solid #69fc99`,
         fontFamily: secondaryFontFamily,
         fontSize: mediumFontSize,
+        borderRadius: md,
       },
       head: {
         letterSpacing: '1px',

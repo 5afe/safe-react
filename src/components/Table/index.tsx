@@ -12,27 +12,30 @@ import { sm, xxl } from 'src/theme/variables'
 
 const styles = {
   root: {
-    backgroundColor: 'white',
-    borderTopRightRadius: sm,
-    borderTopLeftRadius: sm,
-    boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
+    backgroundColor: 'black',
+    borderBottom: 'none', // can't change border radius - wip
+    // borderTop: "none",
+    // borderTopRightRadius: md,
+    // borderTopLeftRadius: md,
+    border: '2px solid #69fc99',
+  },
+  head: {
+    backgroundColor: 'red',
   },
   selectRoot: {
     lineHeight: xxl,
-    backgroundColor: 'white',
+    backgroundColor: 'black',
   },
   white: {
-    backgroundColor: 'white',
+    backgroundColor: 'black',
   },
   paginationRoot: {
-    backgroundColor: 'white',
-    boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
+    backgroundColor: 'black',
+    border: '2px solid #69fc99',
+    borderTop: 'none',
     marginBottom: '90px',
     borderBottomRightRadius: sm,
     borderBottomLeftRadius: sm,
-  },
-  loader: {
-    boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
   },
 }
 
