@@ -86,7 +86,7 @@ export const TxDataRow = ({
   if (value == undefined) return null
   return (
     <StyledGridRow>
-      <Text size="xl" as="span" color="placeHolder">
+      <Text size="xl" as="span" color="primary">
         {title}
       </Text>
       {isArray && value && method && paramType && (
@@ -96,7 +96,7 @@ export const TxDataRow = ({
       )}
       {!isArray && generateInlineTypeValue(inlineType, value, hasExplorer)}
       {!isArray && !inlineType && value && (
-        <Text size="xl" as="span">
+        <Text size="xl" as="span" color="primary">
           {value}
         </Text>
       )}

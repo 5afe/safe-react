@@ -135,6 +135,7 @@ export const TxCollapsed = ({
   const txCollapsedType = (
     <div className={'tx-type' + willBeReplaced}>
       <CustomIconText
+        // transaction history table text color need to be changed from here.
         address={toAddress?.value || '0x'}
         iconUrl={type.icon || toInfo?.logoUri || undefined}
         iconUrlFallback={type.fallbackIcon}

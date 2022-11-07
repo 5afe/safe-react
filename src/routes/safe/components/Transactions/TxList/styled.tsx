@@ -89,25 +89,16 @@ export const StyledTransactions = styled.div`
   row-gap: 6px;
 
   & .MuiAccordion-root.highlight .MuiAccordionSummary-root {
-    background-color: ${primary200};
   }
 
   & > .MuiAccordion-root {
-    border: 2px solid ${grey400};
     border-radius: 8px;
-
+    background-color: #000;
     &:first-child {
-      border: 2px solid ${grey400};
+      border: 2px solid #06fc99;
     }
 
-    & .MuiAccordionSummary-root.Mui-expanded,
-    & .MuiAccordionSummary-root:hover {
-      background-color: ${primary200};
-    }
-
-    &.Mui-expanded {
-      border: 2px solid ${primary300};
-    }
+    & .MuiAccordionSummary-root.Mui-expanded
   }
 `
 
@@ -308,7 +299,6 @@ export const GroupedTransactions = styled(StyledTransaction)`
       }
     }
   }
-}
 `
 
 export const DisclaimerContainer = styled(StyledTransaction)`
@@ -347,7 +337,7 @@ export const TxDetailsContainer = styled.div`
 
     & > div {
       padding: 20px 24px;
-      background-color: ${({ theme }) => theme.colors.white};
+      background-color: black;
     }
   }
 

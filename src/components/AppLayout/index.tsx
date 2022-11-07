@@ -5,7 +5,6 @@ import { useLocation, matchPath, useRouteMatch } from 'react-router-dom'
 import { ListItemType } from 'src/components/List'
 
 import Header from './Header'
-import Footer from './Footer'
 import Sidebar from './Sidebar'
 import { MobileNotSupported } from './MobileNotSupported'
 import { SAFE_APP_LANDING_PAGE_ROUTE, SAFE_ROUTES, WELCOME_ROUTE } from 'src/routes/routes'
@@ -28,9 +27,7 @@ const HeaderWrapper = styled.nav`
   width: 100%;
   z-index: 1299;
 
-  background-color: white;
-  background-color: red;
-  box-shadow: 0 2px 4px 0 rgba(40, 54, 61, 0.18);
+  background-color: #000;
 `
 
 const BodyWrapper = styled.div`
@@ -134,9 +131,9 @@ const Layout: React.FC<Props> = ({
 
   const closeMobileNotSupported = () => setMobileNotSupportedClosed(true)
 
-  const hasFooter = !!matchPath(pathname, {
-    path: [SAFE_ROUTES.SETTINGS, WELCOME_ROUTE],
-  })
+  // const hasFooter = !!matchPath(pathname, {
+  //   path: [SAFE_ROUTES.SETTINGS, WELCOME_ROUTE],
+  // })
 
   const showSideBar = !useRouteMatch({ path: SAFE_APP_LANDING_PAGE_ROUTE })
   const onSidebarClick = useCallback(

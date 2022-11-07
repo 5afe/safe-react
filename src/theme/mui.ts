@@ -386,7 +386,7 @@ const theme = createTheme({
     },
     MuiTableCell: {
       root: {
-        borderBottom: `2px solid #69fc99`,
+        borderBottom: `2px solid #60fc99`,
         fontFamily: secondaryFontFamily,
         fontSize: mediumFontSize,
         borderRadius: md,
