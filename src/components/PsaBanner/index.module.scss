@@ -12,6 +12,17 @@
 
 .banner a {
   color: inherit;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.banner a:hover {
+  text-decoration: underline;
+}
+
+.banner a:not([href]) {
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .wrapper {
