@@ -16,13 +16,16 @@ const redirectToNewApp = (): void => {
   window.location.replace(NEW_URL + path)
 }
 
-const BANNERS: Record<string, ReactElement | string> = {}
-
 const NO_REDIRECT_PARAM = 'no-redirect'
 
 const WebCoreBanner = (): ReactElement | null => {
   const { search } = useLocation()
-  const shouldRedirect = !new URLSearchParams(search).get(NO_REDIRECT_PARAM)
+  const [shouldRedirect = false, setShouldRedirect] = useCachedState<boolean>('shouldRedirect', true)
+
+  useEffect(() => {
+    setShouldRedirect(!new URLSearchParams(search).get(NO_REDIRECT_PARAM))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <>
@@ -37,13 +40,20 @@ const WebCoreBanner = (): ReactElement | null => {
   )
 }
 
+const BANNERS: Record<string, ReactElement | string> = {
+  '*': <WebCoreBanner />,
+}
+
 const WARNING_BANNER = 'WARNING_BANNER'
 
 const PsaBanner = (): ReactElement | null => {
   const chainId = useSelector(currentChainId)
-  const banner = BANNERS[chainId] || <WebCoreBanner />
+  const banner = BANNERS[chainId] || BANNERS['*']
   const isEnabled = hasFeature(WARNING_BANNER as FEATURES)
-  const [closed = false, setClosed] = useCachedState<boolean>(`${WARNING_BANNER}_${chainId}_closed`, true)
+  const [closed = false, setClosed] = useCachedState<boolean>(
+    BANNERS[chainId] ? `${WARNING_BANNER}_${chainId}_closed` : `${WARNING_BANNER}_closed`,
+    true,
+  )
 
   const showBanner = Boolean(isEnabled && banner && !closed)
 
