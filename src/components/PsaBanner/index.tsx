@@ -7,6 +7,7 @@ import { hasFeature } from 'src/logic/safe/utils/safeVersion'
 import useCachedState from 'src/utils/storage/useCachedState'
 import styles from './index.module.scss'
 import Countdown from './Countdown'
+import { useLocation } from 'react-router-dom'
 
 const NEW_URL = 'https://app.safe.global'
 
@@ -15,23 +16,32 @@ const redirectToNewApp = (): void => {
   window.location.replace(NEW_URL + path)
 }
 
-const BANNERS: Record<string, ReactElement | string> = {
-  '*': (
+const BANNERS: Record<string, ReactElement | string> = {}
+
+const REDIRECT_PARAM = 'redirect'
+
+const WebCoreBanner = (): ReactElement | null => {
+  const { search } = useLocation()
+  const shouldRedirect = new URLSearchParams(search).get(REDIRECT_PARAM)
+
+  return (
     <>
       ⚠️ Safe&apos;s new official URL is <a href={NEW_URL}>app.safe.global</a>.<br />
       Please update your bookmarks.{' '}
-      <Countdown seconds={10} onEnd={redirectToNewApp}>
-        {(count) => <>Redirecting in {count} seconds...</>}
-      </Countdown>
+      {shouldRedirect && (
+        <Countdown seconds={10} onEnd={redirectToNewApp}>
+          {(count) => <>Redirecting in {count} seconds...</>}
+        </Countdown>
+      )}
     </>
-  ),
+  )
 }
 
 const WARNING_BANNER = 'WARNING_BANNER'
 
 const PsaBanner = (): ReactElement | null => {
   const chainId = useSelector(currentChainId)
-  const banner = BANNERS[chainId] || BANNERS['*']
+  const banner = BANNERS[chainId] || BANNERS['*'] || <WebCoreBanner />
   const isEnabled = hasFeature(WARNING_BANNER as FEATURES)
   const [closed = false, setClosed] = useCachedState<boolean>(`${WARNING_BANNER}_${chainId}_closed`, true)
 
