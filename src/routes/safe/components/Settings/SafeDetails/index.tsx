@@ -190,7 +190,7 @@ const SafeDetails = (): ReactElement => {
           <Block className={classes.formContainer}>
             <Heading tag="h2">Export your data</Heading>
             <Paragraph>
-              Download your local storage data with your added safes and address book. You can import it on
+              Download your local storage data with your added Safes and address book. You can import it on
               app.safe.global.
             </Paragraph>
             <DataExport />
