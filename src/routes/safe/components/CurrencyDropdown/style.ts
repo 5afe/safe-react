@@ -6,6 +6,7 @@ export const useDropdownStyles = makeStyles({
     maxWidth: (props: any) => (props.buttonWidth ? props.buttonWidth : buttonWidth),
     boxSizing: 'border-box',
     background: 'black',
+    //needs to add correct border here
   },
   listItemSearch: {
     maxWidth: (props: any) => (props.buttonWidth ? props.buttonWidth : buttonWidth),

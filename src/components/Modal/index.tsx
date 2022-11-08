@@ -19,7 +19,7 @@ const ModalStyled = styled(ModalMUI)`
   }
 
   .overlay {
-    background-color: rgba(232, 231, 230, 0.75) !important;
+    background-color: rgba(0, 0, 0, 0.75) !important;
   }
 
   .paper {
@@ -27,8 +27,8 @@ const ModalStyled = styled(ModalMUI)`
     top: 68px;
     width: 525px;
     border-radius: 8px;
-    background-color: #ffffff;
-    box-shadow: 1px 2px 10px 0 rgba(40, 54, 61, 0.18);
+    background-color: #000;
+    /* box-shadow: 1px 2px 10px 0 rgba(40, 54, 61, 0.18); */
     display: flex;
     flex-direction: column;
 
@@ -51,6 +51,8 @@ const ModalStyled = styled(ModalMUI)`
 
     &.smaller-modal-window {
       height: auto;
+      background-color: #000;
+      outline: "2px solid #06fc99";
     }
 
     &.modal {
