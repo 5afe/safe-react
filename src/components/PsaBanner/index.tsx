@@ -16,11 +16,12 @@ const redirectToNewApp = (): void => {
   window.location.replace(NEW_URL + path)
 }
 
+const WARNING_BANNER = 'WARNING_BANNER'
 const NO_REDIRECT_PARAM = 'no-redirect'
 
 const WebCoreBanner = (): ReactElement | null => {
   const { search } = useLocation()
-  const [shouldRedirect = false, setShouldRedirect] = useCachedState<boolean>('shouldRedirect', true)
+  const [shouldRedirect = false, setShouldRedirect] = useCachedState<boolean>(`${WARNING_BANNER}_shouldRedirect`, true)
 
   useEffect(() => {
     setShouldRedirect(!new URLSearchParams(search).get(NO_REDIRECT_PARAM))
@@ -43,8 +44,6 @@ const WebCoreBanner = (): ReactElement | null => {
 const BANNERS: Record<string, ReactElement | string> = {
   '*': <WebCoreBanner />,
 }
-
-const WARNING_BANNER = 'WARNING_BANNER'
 
 const PsaBanner = (): ReactElement | null => {
   const chainId = useSelector(currentChainId)
