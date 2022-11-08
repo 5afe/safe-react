@@ -103,9 +103,9 @@ export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps)
         <InfoContainer>
           <Text color="primary" as="p" size="xl">
             {!error ? (
-              <Text size="xl" as="span">
+              <Text color='primary' size="xl" as="span">
                 You&apos;re about to export a CSV file with{' '}
-                <Text size="xl" strong as="span">
+                <Text color='primary' size="xl" strong as="span">
                   {addressBook.length} address book entries. <br />
                   <HelpInfo />
                 </Text>

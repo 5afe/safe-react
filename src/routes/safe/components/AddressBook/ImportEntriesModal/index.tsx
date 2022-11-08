@@ -23,7 +23,8 @@ const ImportContainer = styled.div`
 `
 
 const InfoContainer = styled.div`
-  background-color: ${({ theme }) => theme.colors.background};
+  background-color: "#000";
+  color: #69fc99;
   flex-direction: column;
   justify-content: center;
   padding: 24px;
@@ -150,7 +151,7 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
               },
             }}
           >
-            <Text size="xl">
+            <Text color="primary" size="xl">
               Drop your CSV file here <br />
               or click to upload.
             </Text>
@@ -163,7 +164,7 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
             </Text>
           )}
           {!csvLoaded && importError === '' && (
-            <Text color="text" as="p" size="xl">
+            <Text color="primary" as="p" size="xl">
               Only CSV files exported from the Safe are allowed. <br />
               <HelpInfo />
             </Text>

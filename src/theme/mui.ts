@@ -311,10 +311,14 @@ const theme = createTheme({
     MuiStepLabel: {
       label: {
         textAlign: 'left',
-        color: secondary,
+        color: primary,
         '&$active': {
           color: primary,
         },
+        '&$completed': {
+          color: primary,
+        },
+        
       },
     },
     MuiSvgIcon: {
