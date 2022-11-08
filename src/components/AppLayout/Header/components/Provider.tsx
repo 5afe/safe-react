@@ -1,8 +1,8 @@
 import IconButton from '@material-ui/core/IconButton'
 import styled from 'styled-components'
 import { withStyles } from '@material-ui/core/styles'
-import ExpandLess from '@material-ui/icons/ExpandLess'
-import ExpandMore from '@material-ui/icons/ExpandMore'
+// import ExpandLess from '@material-ui/icons/ExpandLess'
+// import ExpandMore from '@material-ui/icons/ExpandMore'
 import * as React from 'react'
 
 import Col from 'src/components/layout/Col'
@@ -15,10 +15,6 @@ const styles = () => ({
     alignItems: 'center',
     display: 'flex',
     height: '100%',
-
-    [`@media (min-width: ${screenSm}px)`]: {
-      flexBasis: '280px',
-    },
   },
   provider: {
     alignItems: 'center',
@@ -41,8 +37,9 @@ const styles = () => ({
 })
 
 const Container = styled.div`
-  background-color: #000;
+cursor: pointer;
   padding: 0rem 1rem;
+
 `
 
 class Provider extends React.Component<any> {
@@ -55,13 +52,12 @@ class Provider extends React.Component<any> {
   }
 
   render() {
-    const { render, classes, info, open, toggle } = this.props
+    const { render, classes, info, toggle } = this.props
 
     const providerData = info.props
 
     const parsedPrefixAddress = parsePrefixedAddress(providerData.userAddress)
 
-    const prefix = parsedPrefixAddress.prefix
     const address = parsedPrefixAddress.address
 
     const parseAddress = (address: string): string => {
@@ -71,21 +67,17 @@ class Provider extends React.Component<any> {
     return (
       <>
         <div className={classes.root} ref={this.myRef}>
-          <Col className={classes.provider} end="sm" middle="xs" onClick={toggle}>
+          <div onClick={toggle}>
+
             {address ? (
               <Container>
                 <p>{`${parseAddress(address)}`}</p>
               </Container>
             ) : (
               <ProviderDisconnected />
-            )}
-
-            {/* should we keep the expand arrow or not? */}
-            {/* <IconButton className={classes.expand} disableRipple>
-              {open ? <ExpandLess /> : <ExpandMore />}
-            </IconButton> */} 
-          </Col>
+              )}
         </div>
+            </div>
         {render(this.myRef)}
       </>
     )

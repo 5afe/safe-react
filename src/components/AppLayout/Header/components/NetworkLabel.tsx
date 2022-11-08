@@ -5,7 +5,7 @@ import { ChainInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import { getChainInfo } from 'src/config'
-import { border, md, screenSm, sm, xs, fontColor } from 'src/theme/variables'
+import { md, screenSm, sm, xs } from 'src/theme/variables'
 
 const StyledCol = styled(Col)`
   flex-grow: 0;
@@ -25,7 +25,7 @@ const StyledParagraph = styled(Paragraph)`
   text-transform: capitalize;
   margin: 0;
   padding: ${xs} ${sm};
-  min-width: 70px;
+  min-width: 50px;
   text-align: center;
 `
 

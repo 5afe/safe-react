@@ -142,7 +142,7 @@ const Notifications = ({ open, toggle, clickAway }: Props): ReactElement => {
 
 const Wrapper = styled.div`
   height: 100%;
-  margin-left: 2rem;
+  margin-left: 1rem;
 `
 
 const BellIconButton = styled(IconButton)`

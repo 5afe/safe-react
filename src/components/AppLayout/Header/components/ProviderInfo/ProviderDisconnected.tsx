@@ -1,36 +1,23 @@
 import { withStyles } from '@material-ui/core/styles'
 import { ReactElement } from 'react'
-
-import Col from 'src/components/layout/Col'
-import Paragraph from 'src/components/layout/Paragraph'
 import styled from 'styled-components'
-import { sm } from 'src/theme/variables'
-import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 
 const styles = () => ({
   network: {
     fontFamily: 'Averta, sans-serif',
   },
   account: {
-    alignItems: 'start',
     display: 'flex',
-    flexDirection: 'column',
-    flexGrow: 1,
     justifyContent: 'center',
-    paddingRight: sm,
-
-    marginLeft: "6rem",
+    alignItems: 'center',
+    flexGrow: 1,
+    marginTop: '0.5rem'
   },
   connect: {
     letterSpacing: '-0.5px',
     whiteSpace: 'nowrap',
   },
 })
-
-const NotConnectedText = styled.h2`
-  color: #06fc99;
-  font-size: 1rem;
-`
 
 const ConnectWalletText = styled.h2`
   color: #000;
@@ -45,13 +32,11 @@ const ConnectWalletButton = styled.div`
 
 const ProviderDisconnected = ({ classes }): ReactElement => (
   <>
-    {/* <KeyRing circleSize={35} dotRight={11} dotSize={16} dotTop={24} keySize={17} mode="error" /> */}
-    <Col className={classes.account} end="sm" layout="column" middle="xs">
-      
+    <div className={classes.account}>   
       <ConnectWalletButton>
         <ConnectWalletText>Connect Wallet</ConnectWalletText>
       </ConnectWalletButton>
-    </Col>
+    </div>
   </>
 )
 
