@@ -134,7 +134,7 @@ const AppsList = ({ onRemoveApp }: AppListProps): React.ReactElement => {
         {showPinnedApps && (
           <Collapse
             title={
-              <StyledText color="placeHolder" strong size="md">
+              <StyledText color="primary" strong size="md">
                 BOOKMARKED APPS
               </StyledText>
             }
@@ -160,7 +160,7 @@ const AppsList = ({ onRemoveApp }: AppListProps): React.ReactElement => {
         {showCustomApps && (
           <Collapse
             title={
-              <StyledText color="placeHolder" strong size="md">
+              <StyledText color="primary" strong size="md">
                 CUSTOM APPS
               </StyledText>
             }
@@ -183,7 +183,7 @@ const AppsList = ({ onRemoveApp }: AppListProps): React.ReactElement => {
           </Collapse>
         )}
 
-        <SectionHeading color="placeHolder" strong size="md">
+        <SectionHeading color="primary" strong size="md">
           {appSearch ? 'SEARCH RESULTS' : 'ALL APPS'}
         </SectionHeading>
         {noAppsFound && <NoAppsFound query={appSearch} onWalletConnectSearch={() => setAppSearch('WalletConnect')} />}
@@ -192,7 +192,7 @@ const AppsList = ({ onRemoveApp }: AppListProps): React.ReactElement => {
             {!appSearch && (
               <AddCustomSafeAppCard>
                 <AddCustomAppLogo src={AddAppIcon} alt="Add Custom Safe App logo" />
-                <Button style={{color: "#000"}} size="md" variant="contained" onClick={() => openAddAppModal()}>
+                <Button style={{ color: '#000' }} size="md" variant="contained" onClick={() => openAddAppModal()}>
                   Add custom app
                 </Button>
               </AddCustomSafeAppCard>

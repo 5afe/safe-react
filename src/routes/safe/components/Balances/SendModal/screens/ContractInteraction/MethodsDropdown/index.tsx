@@ -89,7 +89,7 @@ export const MethodsDropdown = ({ onChange }: MethodsDropdownProps): ReactElemen
             <Button className={buttonClasses.button} onClick={handleClick} variant="outlined">
               <StyledText
                 size="xl"
-                color="placeHolder"
+                color="primary"
                 className={classNames(buttonClasses.buttonInner, anchorEl && buttonClasses.openMenuButton)}
               >
                 {(selectedMethod as Record<string, string>).name || 'Method'}

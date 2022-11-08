@@ -72,7 +72,7 @@ export const ModifySpendingLimitDetails = ({ txData, txInfo }: SpendingLimitProp
           address={(beneficiary as string) || txTo?.value || '0x'}
           name={txTo?.name || undefined}
           logoUri={txTo?.logoUri || undefined}
-          color="placeHolder"
+          color="primary"
         />
       </StyledInfoBlock>
       {tokenInfo && (
@@ -81,12 +81,12 @@ export const ModifySpendingLimitDetails = ({ txData, txInfo }: SpendingLimitProp
             amount={fromTokenUnit(amount as string, tokenInfo.decimals)}
             title="Amount"
             token={tokenInfo}
-            color="placeHolder"
+            color="primary"
           />
         </StyledInfoBlock>
       )}
       <StyledInfoBlock>
-        <ResetTimeInfo title="Reset Time" label={resetTimeLabel} color="placeHolder" />
+        <ResetTimeInfo title="Reset Time" label={resetTimeLabel} color="primary" />
       </StyledInfoBlock>
     </StyledTxInfoDetails>
   )

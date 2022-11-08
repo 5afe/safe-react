@@ -96,7 +96,7 @@ const Settings = (): React.ReactElement => {
         <Col start="sm" sm={6} xs={12}>
           <Breadcrumb>
             <BreadcrumbElement iconType="settings" text="SETTINGS" />
-            <BreadcrumbElement text={settingsSection} color="placeHolder" />
+            <BreadcrumbElement text={settingsSection} color="primary" />
           </Breadcrumb>
         </Col>
         {!loadedViaUrl ? (

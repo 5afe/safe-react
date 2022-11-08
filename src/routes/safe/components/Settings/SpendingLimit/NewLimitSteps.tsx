@@ -37,15 +37,15 @@ export const NewLimitSteps = (): ReactElement => (
     <Step>
       <Img alt="Select Beneficiary" title="Beneficiary" height={96} src={Beneficiary} />
 
-      <StyledText size="lg" color="placeHolder" strong center>
+      <StyledText size="lg" color="primary" strong center>
         Select Beneficiary
       </StyledText>
 
-      <StyledText size="lg" color="placeHolder" center>
+      <StyledText size="lg" color="primary" center>
         Define beneficiary that will be able to use the allowance.
       </StyledText>
 
-      <StyledText size="lg" color="placeHolder" center>
+      <StyledText size="lg" color="primary" center>
         The beneficiary does not have to be an owner of this Safe
       </StyledText>
     </Step>
@@ -55,11 +55,11 @@ export const NewLimitSteps = (): ReactElement => (
     <Step>
       <Img alt="Select asset and amount" title="Asset and Amount" height={96} src={AssetAmount} />
 
-      <StyledText size="lg" color="placeHolder" strong center>
+      <StyledText size="lg" color="primary" strong center>
         Select asset and amount
       </StyledText>
 
-      <StyledText size="lg" color="placeHolder" center>
+      <StyledText size="lg" color="primary" center>
         You can set a spending limit for any asset stored in your Safe
       </StyledText>
     </Step>
@@ -69,11 +69,11 @@ export const NewLimitSteps = (): ReactElement => (
     <Step>
       <Img alt="Select time" title="Time" height={96} src={Time} />
 
-      <StyledText size="lg" color="placeHolder" strong center>
+      <StyledText size="lg" color="primary" strong center>
         Select time
       </StyledText>
 
-      <StyledText size="lg" color="placeHolder" center>
+      <StyledText size="lg" color="primary" center>
         You can choose to set a one-time spending limit or to have it automatically refill after a defined time-period
       </StyledText>
     </Step>
