@@ -7,6 +7,7 @@ import { hasFeature } from 'src/logic/safe/utils/safeVersion'
 import useCachedState from 'src/utils/storage/useCachedState'
 import styles from './index.module.scss'
 import Countdown from './Countdown'
+import { useLocation } from 'react-router-dom'
 
 const NEW_URL = 'https://app.safe.global'
 
@@ -15,25 +16,47 @@ const redirectToNewApp = (): void => {
   window.location.replace(NEW_URL + path)
 }
 
-const BANNERS: Record<string, ReactElement | string> = {
-  '*': (
+const WARNING_BANNER = 'WARNING_BANNER'
+const NO_REDIRECT_PARAM = 'no-redirect'
+
+const WebCoreBanner = (): ReactElement | null => {
+  const { search } = useLocation()
+  const [shouldRedirect = true, setShouldRedirect] = useCachedState<boolean>(`${WARNING_BANNER}_shouldRedirect`, true)
+
+  useEffect(() => {
+    // Prevent refresh from overwriting the cached value
+    const noRedirect = new URLSearchParams(search).get(NO_REDIRECT_PARAM)
+    if (noRedirect) {
+      setShouldRedirect(false)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  return (
     <>
       ⚠️ Safe&apos;s new official URL is <a href={NEW_URL}>app.safe.global</a>.<br />
       Please update your bookmarks.{' '}
-      <Countdown seconds={10} onEnd={redirectToNewApp}>
-        {(count) => <>Redirecting in {count} seconds...</>}
-      </Countdown>
+      {shouldRedirect && (
+        <Countdown seconds={10} onEnd={redirectToNewApp}>
+          {(count) => <>Redirecting in {count} seconds...</>}
+        </Countdown>
+      )}
     </>
-  ),
+  )
 }
 
-const WARNING_BANNER = 'WARNING_BANNER'
+const BANNERS: Record<string, ReactElement | string> = {
+  '*': <WebCoreBanner />,
+}
 
 const PsaBanner = (): ReactElement | null => {
   const chainId = useSelector(currentChainId)
   const banner = BANNERS[chainId] || BANNERS['*']
   const isEnabled = hasFeature(WARNING_BANNER as FEATURES)
-  const [closed = false, setClosed] = useCachedState<boolean>(`${WARNING_BANNER}_${chainId}_closed`, true)
+  const [closed = false, setClosed] = useCachedState<boolean>(
+    BANNERS[chainId] ? `${WARNING_BANNER}_${chainId}_closed` : `${WARNING_BANNER}_closed`,
+    true,
+  )
 
   const showBanner = Boolean(isEnabled && banner && !closed)
 
