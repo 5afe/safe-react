@@ -76,7 +76,7 @@ export const SubTitle = styled(Text)`
   font-weight: 600;
   line-height: 1.5;
   letter-spacing: 1px;
-  color: ${({ theme }) => theme.colors.placeHolder};
+  color: #06fc99;
   text-transform: uppercase;
 `
 
