@@ -5,6 +5,7 @@ export const useDropdownStyles = makeStyles({
   listItem: {
     maxWidth: (props: any) => (props.buttonWidth ? props.buttonWidth : buttonWidth),
     boxSizing: 'border-box',
+    background: 'black',
   },
   listItemSearch: {
     maxWidth: (props: any) => (props.buttonWidth ? props.buttonWidth : buttonWidth),
@@ -32,7 +33,7 @@ export const useDropdownStyles = makeStyles({
     marginLeft: '18px',
   },
   button: {
-    backgroundColor: '#e8e7e6',
+    backgroundColor: '#000',
     border: 'none',
     borderRadius: '3px',
     boxSizing: 'border-box',
@@ -41,9 +42,10 @@ export const useDropdownStyles = makeStyles({
     fontSize: '12px',
     fontWeight: 'normal',
     height: '24px',
+    width: '30px',
     lineHeight: '1.33',
     marginRight: '20px',
-    minWidth: (props: any) => (props.buttonWidth ? props.buttonWidth : buttonWidth),
+    minWidth: "80px", // this should be enough for any 3 letter text
     outline: 'none',
     padding: '0',
     textAlign: 'left',
@@ -87,12 +89,10 @@ export const useDropdownStyles = makeStyles({
   search: {
     position: 'relative',
     borderRadius: '0',
-    backgroundColor: '#fff',
-    '&:hover': {
-      backgroundColor: '#fff',
-    },
+    background: '#000',
     marginRight: 0,
     width: '100%',
+    border: '2px solid #05de87',
   },
   searchIcon: {
     alignItems: 'center',
