@@ -41,7 +41,7 @@ const WARNING_BANNER = 'WARNING_BANNER'
 
 const PsaBanner = (): ReactElement | null => {
   const chainId = useSelector(currentChainId)
-  const banner = BANNERS[chainId] || BANNERS['*'] || <WebCoreBanner />
+  const banner = BANNERS[chainId] || <WebCoreBanner />
   const isEnabled = hasFeature(WARNING_BANNER as FEATURES)
   const [closed = false, setClosed] = useCachedState<boolean>(`${WARNING_BANNER}_${chainId}_closed`, true)
 
