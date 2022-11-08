@@ -18,11 +18,11 @@ const redirectToNewApp = (): void => {
 
 const BANNERS: Record<string, ReactElement | string> = {}
 
-const REDIRECT_PARAM = 'redirect'
+const NO_REDIRECT_PARAM = 'no-redirect'
 
 const WebCoreBanner = (): ReactElement | null => {
   const { search } = useLocation()
-  const shouldRedirect = new URLSearchParams(search).get(REDIRECT_PARAM)
+  const shouldRedirect = !new URLSearchParams(search).get(NO_REDIRECT_PARAM)
 
   return (
     <>
