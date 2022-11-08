@@ -41,11 +41,8 @@ const styles = () => ({
 })
 
 const Container = styled.div`
-  background-color: black;
-  border: #06fc99 3px solid;
+  background-color: #000;
   padding: 0rem 1rem;
-  margin-top: 0.5rem;
-  margin-right: 1rem;
 `
 
 class Provider extends React.Component<any> {
@@ -77,15 +74,16 @@ class Provider extends React.Component<any> {
           <Col className={classes.provider} end="sm" middle="xs" onClick={toggle}>
             {address ? (
               <Container>
-                <p>{`${prefix}: ${parseAddress(address)}`}</p>
+                <p>{`${parseAddress(address)}`}</p>
               </Container>
             ) : (
               <ProviderDisconnected />
             )}
 
-            <IconButton className={classes.expand} disableRipple>
+            {/* should we keep the expand arrow or not? */}
+            {/* <IconButton className={classes.expand} disableRipple>
               {open ? <ExpandLess /> : <ExpandMore />}
-            </IconButton>
+            </IconButton> */} 
           </Col>
         </div>
         {render(this.myRef)}
