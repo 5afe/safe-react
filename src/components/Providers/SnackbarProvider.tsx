@@ -31,7 +31,6 @@ const useStyles = makeStyles({
   },
   snackbar: {
     borderRadius: `${sm}`,
-    boxShadow: '0 0 10px 0 rgba(212, 212, 211, 0.59)',
     flexWrap: 'nowrap',
     padding: '20px',
     alignItems: 'space-between',

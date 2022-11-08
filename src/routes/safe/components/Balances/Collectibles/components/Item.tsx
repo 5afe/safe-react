@@ -13,7 +13,6 @@ const useStyles = makeStyles({
   item: {
     backgroundColor: '#fff',
     borderRadius: '8px',
-    boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.10)',
     boxSizing: 'border-box',
     cursor: (props) => (props.granted ? 'pointer' : 'default'),
     display: 'flex',

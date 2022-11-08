@@ -123,7 +123,6 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
                 width: 200,
                 height: 100,
                 background: '#fff',
-                boxShadow: 'rgb(40 54 61 / 18%) 1px 2px 10px 0px',
                 borderRadius: 8,
               },
               fileSizeInfo: {

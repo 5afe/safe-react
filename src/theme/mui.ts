@@ -73,7 +73,7 @@ const theme = createTheme({
         borderRadius: sm,
       },
       contained: {
-        boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
+       
       },
       containedPrimary: {
         backgroundColor: secondary,
@@ -500,7 +500,6 @@ export const DropdownListTheme = {
         marginTop: '10px',
       },
       elevation0: {
-        boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
       },
       rounded: {
         borderRadius: xs,

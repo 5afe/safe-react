@@ -21,9 +21,7 @@ const isDesktop = process.env.REACT_APP_BUILD_FOR_DESKTOP
 
 const useStyles = makeStyles({
   container: {
-    backgroundColor: '#fff',
     bottom: '0',
-    boxShadow: '1px 2px 10px 0 rgba(40, 54, 61, 0.18)',
     boxSizing: 'border-box',
     display: 'flex',
     justifyContent: 'center',
@@ -185,7 +183,6 @@ const FakeIntercomButton = ({ onClick }: { onClick: () => void }): ReactElement 
         bottom: '8px',
         right: '10px',
         zIndex: 1000,
-        boxShadow: '1px 2px 10px 0 var(rgba(40, 54, 61, 0.18))',
       }}
       src={IntercomIcon}
       onClick={onClick}
