@@ -24,7 +24,10 @@ const WebCoreBanner = (): ReactElement | null => {
   const [shouldRedirect = false, setShouldRedirect] = useCachedState<boolean>(`${WARNING_BANNER}_shouldRedirect`, true)
 
   useEffect(() => {
-    setShouldRedirect(!new URLSearchParams(search).get(NO_REDIRECT_PARAM))
+    // Prevent refresh from overwriting the cached value
+    if (shouldRedirect) {
+      setShouldRedirect(!new URLSearchParams(search).get(NO_REDIRECT_PARAM))
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
