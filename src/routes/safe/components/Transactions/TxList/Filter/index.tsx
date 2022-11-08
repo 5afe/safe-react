@@ -224,6 +224,7 @@ const Filter = (): ReactElement => {
                       )}
                     />
                   </TxTypeFormControl>
+
                   <ParamsFormControl>
                     <StyledFormLabel>Parameters</StyledFormLabel>
                     <ParametersFormWrapper>
@@ -302,7 +303,7 @@ const Filter = (): ReactElement => {
                       <Button type="submit" variant="contained" color="primary">
                         Apply
                       </Button>
-                      <Button variant="contained" onClick={clearFilter} color="default" disabled={!search}>
+                      <Button variant="contained" onClick={clearFilter} color="primary" disabled={!search}>
                         Clear
                       </Button>
                     </ButtonWrapper>
@@ -345,13 +346,13 @@ const Wrapper = styled.div`
 `
 
 const StyledPaper = styled(Paper)`
-  border: 2px solid ${primary300};
+  border: 2px solid #06fc99;
+  /* background-color: black; */ // will come back to it
   position: absolute;
   width: calc(100% - 30px);
   margin-left: 10px;
   top: 0;
   left: 0;
-  box-shadow: 1px 2px 10px 0 rgba(40, 54, 61, 0.18);
 `
 
 const FilterWrapper = styled.div`
@@ -372,13 +373,15 @@ const StyledFormLabel = styled(FormLabel)`
   &.MuiFormLabel-root {
     margin-bottom: ${lg};
     font-size: 12px;
-    color: #b2bbc0;
+    color: #06fc99;
   }
 `
 
 const StyledRadioFormControlLabel = styled(FormControlLabel)`
   .MuiFormControlLabel-root {
     font-size: ${largeFontSize};
+    color: #06fc99;
+    
   }
 `
 
