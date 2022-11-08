@@ -21,12 +21,13 @@ const NO_REDIRECT_PARAM = 'no-redirect'
 
 const WebCoreBanner = (): ReactElement | null => {
   const { search } = useLocation()
-  const [shouldRedirect = false, setShouldRedirect] = useCachedState<boolean>(`${WARNING_BANNER}_shouldRedirect`, true)
+  const [shouldRedirect = true, setShouldRedirect] = useCachedState<boolean>(`${WARNING_BANNER}_shouldRedirect`, true)
 
   useEffect(() => {
     // Prevent refresh from overwriting the cached value
-    if (shouldRedirect) {
-      setShouldRedirect(!new URLSearchParams(search).get(NO_REDIRECT_PARAM))
+    const noRedirect = new URLSearchParams(search).get(NO_REDIRECT_PARAM)
+    if (noRedirect) {
+      setShouldRedirect(false)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
