@@ -14,7 +14,9 @@ const WebCoreBanner = (): ReactElement | null => {
   return (
     <>
       ⚠️ Safe&apos;s new official URL is <a href={NEW_URL}>app.safe.global</a>, with a fully rebranded and refurbished
-      application. The old app will run in parallel and we will announce its deprecation in time.
+      application.
+      <br />
+      The old app will run in parallel and we will announce its deprecation in time.
     </>
   )
 }
