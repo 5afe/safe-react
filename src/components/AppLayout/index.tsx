@@ -3,6 +3,7 @@ import styled, { keyframes } from 'styled-components'
 import { useLocation, matchPath, useRouteMatch } from 'react-router-dom'
 
 import { ListItemType } from 'src/components/List'
+import { StaticOverlay, ThemedBackground } from '..'
 
 import Header from './Header'
 import Sidebar from './Sidebar'
@@ -25,9 +26,7 @@ const HeaderWrapper = styled.nav`
   height: 52px;
   min-height: 52px;
   width: 100%;
-  z-index: 1299;
-
-  background-color: #000;
+  z-index: 100;
 `
 
 const BodyWrapper = styled.div`
@@ -146,6 +145,8 @@ const Layout: React.FC<Props> = ({
 
   return (
     <Container onClick={() => setExpanded(false)}>
+      <ThemedBackground />
+      <StaticOverlay />
       <HeaderWrapper>
         <Header />
       </HeaderWrapper>
