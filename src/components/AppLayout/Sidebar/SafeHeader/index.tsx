@@ -160,7 +160,7 @@ const StyledTextSafeName = styled(Text)`
 `
 
 const StyledPrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
-  p {
+  p, span {
     color: #06fc99;
     font-size: 14px;
     line-height: 20px;
@@ -258,7 +258,7 @@ const SafeHeader = ({
         <StyledTextSafeName size="xl" center>
           {safeName}
         </StyledTextSafeName>
-        <StyledPrefixedEthHashInfo hash={address} shortenHash={4} textSize="sm" />
+        <StyledPrefixedEthHashInfo textColor='primary' hash={address} shortenHash={4} textSize="sm" />
         <IconContainer>
           <Track {...OVERVIEW_EVENTS.SHOW_QR}>
             <StyledQRCodeButton onClick={onReceiveClick}>
