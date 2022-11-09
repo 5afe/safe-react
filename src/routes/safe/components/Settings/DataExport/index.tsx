@@ -24,7 +24,7 @@ const DataExport = (): ReactElement => {
     <>
       <Heading tag="h2">Export your data</Heading>
       <Paragraph>
-        Download your local storage data with your added Safes and address book. You can import it on app.safe.global.
+        Download your local data with your added Safes and address book. You can import it on app.safe.global.
       </Paragraph>
       <Button onClick={handleExport} color="primary" size="small" variant="outlined">
         Download
