@@ -6,41 +6,20 @@ import { currentChainId } from 'src/logic/config/store/selectors'
 import { hasFeature } from 'src/logic/safe/utils/safeVersion'
 import useCachedState from 'src/utils/storage/useCachedState'
 import styles from './index.module.scss'
-import Countdown from './Countdown'
-import { useLocation } from 'react-router-dom'
 
 const NEW_URL = 'https://app.safe.global'
-
-const redirectToNewApp = (): void => {
-  const path = window.location.pathname.replace(/^\/app/, '')
-  window.location.replace(NEW_URL + path)
-}
-
 const WARNING_BANNER = 'WARNING_BANNER'
-const NO_REDIRECT_PARAM = 'no-redirect'
+const EXPORT_HELP = 'https://help.gnosis-safe.io/en/articles/5299068-address-book-export-and-import'
 
 const WebCoreBanner = (): ReactElement | null => {
-  const { search } = useLocation()
-  const [shouldRedirect = true, setShouldRedirect] = useCachedState<boolean>(`${WARNING_BANNER}_shouldRedirect`, true)
-
-  useEffect(() => {
-    // Prevent refresh from overwriting the cached value
-    const noRedirect = new URLSearchParams(search).get(NO_REDIRECT_PARAM)
-    if (noRedirect) {
-      setShouldRedirect(false)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   return (
     <>
       ⚠️ Safe&apos;s new official URL is <a href={NEW_URL}>app.safe.global</a>.<br />
-      Please update your bookmarks.{' '}
-      {shouldRedirect && (
-        <Countdown seconds={10} onEnd={redirectToNewApp}>
-          {(count) => <>Redirecting in {count} seconds...</>}
-        </Countdown>
-      )}
+      We recommend{' '}
+      <a href={EXPORT_HELP} target="_blank" rel="noreferrer">
+        exporting your address book
+      </a>{' '}
+      as CSV and importing it in the new app.
     </>
   )
 }
