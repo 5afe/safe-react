@@ -1,5 +1,7 @@
 import { ReactElement } from 'react'
 import Button from 'src/components/layout/Button'
+import Heading from 'src/components/layout/Heading'
+import Paragraph from 'src/components/layout/Paragraph'
 
 const DataExport = (): ReactElement => {
   const handleExport = () => {
@@ -17,9 +19,15 @@ const DataExport = (): ReactElement => {
   }
 
   return (
-    <Button onClick={handleExport} color="primary" size="small" variant="outlined">
-      Download
-    </Button>
+    <>
+      <Heading tag="h2">Export your data</Heading>
+      <Paragraph>
+        Download your local storage data with your added Safes and address book. You can import it on app.safe.global.
+      </Paragraph>
+      <Button onClick={handleExport} color="primary" size="small" variant="outlined">
+        Download
+      </Button>
+    </>
   )
 }
 
