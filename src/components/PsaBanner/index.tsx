@@ -9,17 +9,14 @@ import styles from './index.module.scss'
 
 const NEW_URL = 'https://app.safe.global'
 const WARNING_BANNER = 'WARNING_BANNER'
-const EXPORT_HELP = 'https://help.gnosis-safe.io/en/articles/5299068-address-book-export-and-import'
 
 const WebCoreBanner = (): ReactElement | null => {
   return (
     <>
-      ⚠️ Safe&apos;s new official URL is <a href={NEW_URL}>app.safe.global</a>.<br />
-      We recommend{' '}
-      <a href={EXPORT_HELP} target="_blank" rel="noreferrer">
-        exporting your address book
-      </a>{' '}
-      as CSV and importing it in the new app.
+      ⚠️ Safe&apos;s new official URL is <a href={NEW_URL}>app.safe.global</a>, with a fully rebranded and refurbished
+      application.
+      <br />
+      The old app will run in parallel and we will announce its deprecation in time.
     </>
   )
 }
