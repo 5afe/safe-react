@@ -237,7 +237,7 @@ const theme = createTheme({
         fontFamily: secondaryFontFamily,
         fontSize: largeFontSize,
         '&:$disabled': {
-          color: '#0000ff',
+          color: primary,
         },
         '& .MuiOutlinedInput-notchedOutline': {
           borderColor: black300,
@@ -311,13 +311,16 @@ const theme = createTheme({
     MuiStepLabel: {
       label: {
         textAlign: 'left',
-        color: primary,
-        '&$active': {
+        '&.MuiStepLabel-label > p': {
+          color: 'green',
+        },
+        '&$active > p': {
           color: primary,
         },
-        '&$completed': {
-          color: primary,
+        '&$completed > p': {
+          color: primary, 
         },
+        
         
       },
     },
