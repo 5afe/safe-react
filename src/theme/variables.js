@@ -15,8 +15,8 @@ const secondary = '#05de87'
 const secondaryTextOrSvg = '#05de87'
 const secondaryBackground = '#06fc99'
 const sm = '8px'
-const warningColor = '#ffc05f'
-const alertWarningColor = '#FBE5C5'
+const warningColor = '#05de87'
+const alertWarningColor = '#05de87'
 const infoColor = '#06fc99'
 const xl = '32px'
 const xs = '4px'
@@ -44,9 +44,9 @@ module.exports = {
   fontSizeHeadingMd: 20,
   fontSizeHeadingSm: 16,
   fontSizeHeadingXs: 13,
-  grey400: '#EEEFF0',
-  gray500: '#E2E3E3',
-  green200: '#EFFAF1',
+  grey400: '#05de87',
+  gray500: '#05de87',
+  green200: '#05de87',
   green500: '#05de87',
   headerHeight,
   largeFontSize: '16px',
@@ -56,13 +56,13 @@ module.exports = {
   marginButtonImg,
   md,
   mediumFontSize: '14px',
-  orange500: '#e8663d',
-  orange200: '#FFF4E3',
+  orange500: '#05de87',
+  orange200: '#05de87',
   primary,
   primaryLite,
   primaryActive,
   primary200: primaryLite,
-  primary300: '#92C9BE',
+  primary300: '#05de87',
   primary400: primaryActive,
   infoColor,
   regularFont: 400,
