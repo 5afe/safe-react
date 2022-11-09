@@ -28,6 +28,19 @@ export const NoPaddingAccordion = styled(Accordion).attrs((props) =>
   &.MuiAccordion-root .MuiAccordionDetails-root {
     padding: 0;
   }
+
+  .MuiAccordionSummary-root {
+    background-color: #000;
+  }
+
+  .MuiAccordionSummary-root:hover {
+    background-color: #000;
+  }
+
+  .MuiAccordionSummary-root.Mui-expanded {
+    background-color: #000;
+  }
+
 `
 
 export const ActionAccordion = styled(Accordion)`
@@ -104,7 +117,7 @@ export const StyledTransactions = styled.div`
 
 export const GroupedTransactionsCard = styled(StyledTransactions)<{ expanded?: boolean }>`
   transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  background-color: ${({ theme }) => theme.colors.white};
+  /* background-color: ${({ theme }) => theme.colors.white}; */
 
   border: 2px solid ${({ expanded }) => (expanded ? `${primary300}` : `${grey400}`)};
   box-sizing: border-box;
@@ -181,12 +194,21 @@ export const StyledTransaction = styled.div`
   grid-template-columns: ${Object.values(gridColumns).join(' ')};
   width: 100%;
 
+   /* &:hover {
+    background-color: red;
+  } */
+
+  ,
+  p {
+    color: #69fc99;
+  }
+
   & > div {
     align-self: center;
   }
 
   .tx-votes {
-    justify-self: center;
+    /* justify-self: center; */
   }
 
   .tx-actions {
@@ -342,7 +364,7 @@ export const TxDetailsContainer = styled.div`
   }
 
   .tx-summary {
-    background-color: ${({ theme }) => theme.colors.white};
+    /* background-color: ${({ theme }) => theme.colors.white}; */
     // grows to the height of tx-owner column
     flex-grow: 1;
     position: relative;
@@ -410,10 +432,10 @@ export const TxDetailsContainer = styled.div`
     justify-content: center;
 
     button {
-      color: ${({ theme }) => theme.colors.white};
+      /* color: ${({ theme }) => theme.colors.white}; */
 
       &:hover {
-        color: ${({ theme }) => theme.colors.white};
+        /* color: ${({ theme }) => theme.colors.white}; */
       }
 
       &.error {
@@ -497,10 +519,20 @@ export const StyledAccordionSummary = styled(AccordionSummary).attrs((props) =>
   isDeeplinkedTx() ? { expandIcon: null, ...props } : props,
 )`
   height: 52px;
+  background: #000;
   .tx-nonce {
     margin: 0 16px 0 8px;
   }
+
+  .Mui-expanded {
+    background-color: #000;
+  }
+
+  :hover {
+    background-color: #000;
+  }
 `
+
 export const AlignItemsWithMargin = styled.div`
   display: flex;
   align-items: center;

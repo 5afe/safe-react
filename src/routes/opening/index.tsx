@@ -266,7 +266,7 @@ export const SafeDeployment = ({
         Safe creation process
       </Title>
       <Nav>
-        <StyledStepper activeStepIndex={stepIndex} error={error} orientation="vertical" steps={steps} />
+        <Stepper activeStepIndex={stepIndex} error={error} orientation="vertical" steps={steps} />
       </Nav>
       <Body>
         <BodyImage>
@@ -414,9 +414,4 @@ const BodyFooter = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-end;
-`
-const StyledStepper = styled(Stepper)`
-  /* .MuiStepLabel-label .MuiStepLabel-completed {
-    color: red !important;
-  } */
 `

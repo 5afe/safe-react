@@ -178,6 +178,7 @@ const AddressBookTable = (): ReactElement => {
               iconType="exportImg"
               iconSize="sm"
               textSize="xl"
+              style={{textDecoration: 'none'}}
             >
               Export
             </ButtonLink>
@@ -191,6 +192,7 @@ const AddressBookTable = (): ReactElement => {
               iconType="importImg"
               iconSize="sm"
               textSize="xl"
+              style={{textDecoration: 'none'}}
             >
               Import
             </ButtonLink>
@@ -205,6 +207,7 @@ const AddressBookTable = (): ReactElement => {
               iconType="add"
               iconSize="sm"
               textSize="xl"
+              style={{textDecoration: 'none'}}
             >
               Create entry
             </ButtonLink>

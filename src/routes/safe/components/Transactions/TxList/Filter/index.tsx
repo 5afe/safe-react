@@ -347,7 +347,7 @@ const Wrapper = styled.div`
 
 const StyledPaper = styled(Paper)`
   border: 2px solid #06fc99;
-  /* background-color: black; */ // will come back to it
+  background-color: black; 
   position: absolute;
   width: calc(100% - 30px);
   margin-left: 10px;
