@@ -46,6 +46,7 @@ export const OPEN_SAFE_ROUTE = '/open'
 export const GENERIC_APPS_ROUTE = '/apps'
 export const LOAD_SAFE_ROUTE = generatePath(LOAD_SPECIFIC_SAFE_ROUTE) // By providing no slug, we get '/load'
 export const SAFE_APP_LANDING_PAGE_ROUTE = '/share/safe-app'
+export const EXPORT_ROUTE = '/export'
 
 // [SAFE_SECTION_SLUG], [SAFE_SUBSECTION_SLUG] populated safe routes
 export const SAFE_ROUTES = {

@@ -35,6 +35,7 @@ import ChainIndicator from 'src/components/ChainIndicator'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { trackEvent } from 'src/utils/googleTagManager'
 import { SETTINGS_EVENTS } from 'src/utils/events/settings'
+import DataExport from 'src/routes/safe/components/Settings/DataExport'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
 export const SAFE_NAME_SUBMIT_BTN_TEST_ID = 'change-safe-name-btn'
@@ -185,6 +186,10 @@ const SafeDetails = (): ReactElement => {
               </Block>
             </Block>
           )}
+
+          <Block className={classes.formContainer}>
+            <DataExport />
+          </Block>
 
           <Row align="end" className={classes.controlsRow} grow>
             <Col end="xs">
