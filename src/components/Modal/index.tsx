@@ -19,7 +19,7 @@ const ModalStyled = styled(ModalMUI)`
   }
 
   .overlay {
-    background-color: rgba(0, 0, 0, 0.75) !important;
+    background-color: rgba(0, 0, 0, 0.65) !important;
   }
 
   .paper {
@@ -28,7 +28,7 @@ const ModalStyled = styled(ModalMUI)`
     width: 525px;
     border-radius: 8px;
     background-color: #000;
-    /* box-shadow: 1px 2px 10px 0 rgba(40, 54, 61, 0.18); */
+    border: 1px solid #69fc99;
     display: flex;
     flex-direction: column;
 
@@ -51,8 +51,6 @@ const ModalStyled = styled(ModalMUI)`
 
     &.smaller-modal-window {
       height: auto;
-      background-color: #000;
-      outline: "2px solid #06fc99";
     }
 
     &.modal {
@@ -170,7 +168,7 @@ const FooterSection = styled.div<{ withoutBorder: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  border-top: ${({ withoutBorder }) => (withoutBorder ? '0' : '2px')} solid ${({ theme }) => theme.colors.separator};
+  /* border-top: ${({ withoutBorder }) => (withoutBorder ? '0' : '2px')} solid ${({ theme }) => theme.colors.separator}; */
   height: 84px;
   gap: 16px;
 `
