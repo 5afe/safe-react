@@ -7,7 +7,7 @@ const DataExport = (): ReactElement => {
   const handleExport = () => {
     const filename = `safe-data-${new Date().toISOString().slice(0, 10)}.json`
 
-    const data = JSON.stringify(localStorage)
+    const data = JSON.stringify({ version: '1.0', data: localStorage })
 
     const blob = new Blob([data], { type: 'text/json' })
     const link = document.createElement('a')
