@@ -13,8 +13,6 @@ import Row from 'src/components/layout/Row'
 import { boldFont, lg, sm } from 'src/theme/variables'
 import { StepperProvider, useStepper } from './stepperContext'
 import Track from 'src/components/Track'
-import { blue } from '@material-ui/core/colors'
-import { NONE } from 'react-virtuoso/dist/sizeRangeSystem'
 
 type StepperProps = {
   children: ReactElement[]

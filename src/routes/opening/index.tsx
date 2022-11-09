@@ -266,7 +266,7 @@ export const SafeDeployment = ({
         Safe creation process
       </Title>
       <Nav>
-        <Stepper activeStepIndex={stepIndex} error={error} orientation="vertical" steps={steps} />
+        <StyledStepper activeStepIndex={stepIndex} error={error} orientation="vertical" steps={steps} />
       </Nav>
       <Body>
         <BodyImage>
@@ -364,7 +364,6 @@ const Body = styled.div`
   border-radius: 5px;
   min-width: 700px;
   padding-top: 70px;
-  box-shadow: 0 0 10px 0 rgba(33, 48, 77, 0.1);
 
   display: grid;
   grid-template-rows: 100px 50px 110px 1fr;
@@ -376,8 +375,7 @@ const CardTitle = styled.div`
 `
 
 const FullParagraph = styled(Paragraph)<FullParagraphProps>`
-  background-color: ${({ $stepIndex }) => ($stepIndex === 0 ? connected : background)};
-  color: ${({ theme, $stepIndex }) => ($stepIndex === 0 ? theme.colors.white : fontColor)};
+  background-color: #000;
   padding: 28px;
   font-size: 20px;
   margin-bottom: 16px;
@@ -416,4 +414,9 @@ const BodyFooter = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-end;
+`
+const StyledStepper = styled(Stepper)`
+  /* .MuiStepLabel-label .MuiStepLabel-completed {
+    color: red !important;
+  } */
 `
