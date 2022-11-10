@@ -168,7 +168,9 @@ const StyledPrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
 `
 
 const StyledText = styled(Title)`
-  margin: 0 0 14px 0;
+  font-family: monospace;
+  color: #000;
+  font-size: 1rem;
 `
 
 const ToggleSafeListButton = styled.button`
@@ -202,9 +204,7 @@ const SidebarText = styled.h2`
   color: #06fc99;
   font-size: 1rem;
 `
-const NewStyledPrefixedEthHashInfo = styled(StyledPrefixedEthHashInfo)`
-  color: 'red';
-`
+
 
 const SafeHeader = ({
   address,
@@ -279,9 +279,9 @@ const SafeHeader = ({
           variant="contained"
           onClick={handleNewTransactionClick}
         >
-          <StyledCXText size="xl" color="text">
+          <StyledText size="xl">
             {granted ? 'New Transaction' : 'Read Only'}
-          </StyledCXText>
+          </StyledText>
         </StyledButton>
       </Container>
     </>
@@ -290,6 +290,6 @@ const SafeHeader = ({
 
 export default SafeHeader
 
-const StyledCXText = styled(Text)`
-  font-family: 'IBM Plex Mono, monospace, sans-serif';
-`
+// const StyledText = styled(Text)`
+//   font-family: 'IBM Plex Mono, monospace, sans-serif';
+// `

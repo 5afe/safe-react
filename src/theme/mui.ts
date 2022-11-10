@@ -14,14 +14,12 @@ import {
   fontColor,
   largeFontSize,
   lg,
-  mainFontFamily,
   md,
   mediumFontSize,
   primary,
   regularFont,
   secondary,
   secondaryBackground,
-  secondaryFontFamily,
   secondaryText,
   sm,
   smallFontSize,
@@ -52,8 +50,8 @@ const palette = {
 // see https://github.com/mui-org/material-ui/blob/v1-beta/src/styles/createMuiTheme.js
 const theme = createTheme({
   typography: {
-    fontFamily: mainFontFamily,
-    useNextVariants: true,
+    fontFamily: 'monospace',
+    // useNextVariants: true,
   },
   overrides: {
     MuiButton: {
@@ -63,7 +61,7 @@ const theme = createTheme({
         fontWeight: regularFont,
       },
       root: {
-        fontFamily: secondaryFontFamily,
+        fontFamily: 'monospace',
         letterSpacing: '0.9px',
         '&$disabled': {
           color: disabled,
@@ -123,7 +121,7 @@ const theme = createTheme({
     },
     MuiChip: {
       root: {
-        fontFamily: secondaryFontFamily,
+        fontFamily: 'monospace',
       },
     },
     MuiStepIcon: {
@@ -146,12 +144,12 @@ const theme = createTheme({
     },
     MuiTypography: {
       body1: {
-        fontFamily: secondaryFontFamily,
+        fontFamily: 'monospace',
         letterSpacing: '-0.5px',
         fontSize: mediumFontSize,
       },
       body2: {
-        fontFamily: secondaryFontFamily,
+        fontFamily: 'monospace',
       },
     },
     MuiFormControl: {
@@ -164,7 +162,7 @@ const theme = createTheme({
         backgroundColor: secondaryBackground,
         borderRadius: '5px',
         color: primary,
-        fontFamily: secondaryFontFamily,
+        fontFamily: 'monospace',
         fontSize: mediumFontSize,
         lineHeight: '56px',
         order: '1',
@@ -234,7 +232,7 @@ const theme = createTheme({
         padding: 0,
         borderRadius: xs,
         color: primary,
-        fontFamily: secondaryFontFamily,
+        fontFamily: 'monospace',
         fontSize: largeFontSize,
         '&:$disabled': {
           color: primary,
@@ -330,7 +328,7 @@ const theme = createTheme({
     },
     MuiTab: {
       root: {
-        fontFamily: secondaryFontFamily,
+        fontFamily: 'monospace',
         fontWeight: 'normal',
         fontSize: extraSmallFontSize,
         '&$selected': {
@@ -365,7 +363,7 @@ const theme = createTheme({
       },
       caption: {
         color: disabled,
-        fontFamily: secondaryFontFamily,
+        fontFamily: 'monospace',
         fontSize: mediumFontSize,
         order: '2',
       },
@@ -394,7 +392,7 @@ const theme = createTheme({
     MuiTableCell: {
       root: {
         borderBottom: `2px solid #60fc99`,
-        fontFamily: secondaryFontFamily,
+        fontFamily: 'monospace',
         fontSize: mediumFontSize,
         borderRadius: md,
       },
@@ -421,7 +419,7 @@ const theme = createTheme({
     },
     MuiMenuItem: {
       root: {
-        fontFamily: secondaryFontFamily,
+        fontFamily: 'monospace',
       },
     },
     MuiListItemIcon: {
@@ -432,13 +430,13 @@ const theme = createTheme({
     MuiListItemText: {
       primary: {
         color: primary,
-        fontFamily: secondaryFontFamily,
+        fontFamily: 'monospace',
         fontSize: mediumFontSize,
         fontWeight: bolderFont,
       },
       secondary: {
         color: disabled,
-        fontFamily: secondaryFontFamily,
+        fontFamily: 'monospace',
         fontSize: smallFontSize,
       },
     },

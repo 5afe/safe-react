@@ -28,11 +28,13 @@ const StyledText = styled(Text)`
   font-size: 24px;
   font-weight: bold;
   color: #06fc99;
+  font-family: monospace;
 `
 const StyledP = styled(Text)`
   margin-top: 8px;
   font-size: 16px;
   color: #06fc99;
+  font-family: monospace;
   
 `
 
