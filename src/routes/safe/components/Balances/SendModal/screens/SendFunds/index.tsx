@@ -253,7 +253,7 @@ const SendFunds = ({
             <>
               <Block className={classes.formContainer}>
                 <SafeInfo text="Sending from" />
-                <Divider withArrow />
+
                 {selectedEntry && selectedEntry.address ? (
                   <div
                     onKeyDown={(e) => {

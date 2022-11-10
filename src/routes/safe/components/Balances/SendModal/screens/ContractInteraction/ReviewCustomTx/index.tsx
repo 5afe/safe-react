@@ -78,7 +78,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
           <TransferAmount token={getEthAsToken('0')} text={`${tx.value || 0} ${nativeCurrency.symbol}`} />
         </Row>
         <SafeInfo text="Sending from" />
-        <Divider withArrow />
+
         <Row margin="xs">
           <Paragraph color="disabled" noMargin size="lg">
             Recipient

@@ -174,8 +174,6 @@ export const ReviewConfirm = ({
             <Text size="md" strong>{`${ethBalance} ${nativeCurrency.symbol}`}</Text>
           </StyledBlock>
 
-          <Divider withArrow />
-
           {/* Txs decoded */}
           <BasicTxInfo
             txRecipient={txRecipient}
