@@ -34,6 +34,7 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { ChainId } from 'src/config/chain'
 import { Dispatch } from 'src/logic/safe/store/actions/types'
 import { isEqual } from 'lodash'
+import { red } from '@material-ui/core/colors'
 
 export const FILTER_TYPE_FIELD_NAME = 'type'
 export const DATE_FROM_FIELD_NAME = 'execution_date__gte'
@@ -378,10 +379,10 @@ const StyledFormLabel = styled(FormLabel)`
 `
 
 const StyledRadioFormControlLabel = styled(FormControlLabel)`
+  color: #06fc99;
   .MuiFormControlLabel-root {
     font-size: ${largeFontSize};
     color: #06fc99;
-    
   }
 `
 
