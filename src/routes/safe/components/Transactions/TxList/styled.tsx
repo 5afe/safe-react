@@ -39,6 +39,7 @@ export const NoPaddingAccordion = styled(Accordion).attrs((props) =>
 
   .MuiAccordionSummary-root.Mui-expanded {
     background-color: #000;
+    border-bottom: 2px solid #60fc99;
   }
 
 `
@@ -343,7 +344,7 @@ export const DisclaimerContainer = styled(StyledTransaction)`
 export const TxDetailsContainer = styled.div`
   ${willBeReplaced};
 
-  background-color: ${({ theme }) => theme.colors.separator} !important;
+  background-color: #06fc99 !important;
   display: grid;
   gap: 2px;
   grid-template-columns: 2fr 1fr;
