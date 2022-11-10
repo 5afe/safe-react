@@ -249,7 +249,7 @@ const theme = createTheme({
         },
         '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
           borderColor: black400,
-          borderWidth: '1px',
+          borderWidth: '2px',
         },
         '&.Mui-error .MuiOutlinedInput-notchedOutline': {
           borderColor: error,
@@ -451,8 +451,9 @@ const theme = createTheme({
     },
     MuiFormLabel: {
       root: {
+        color: primary,
         '&$focused': {
-          color: black400,
+          color: primary,
         },
       },
     },
