@@ -81,7 +81,7 @@ const theme = createTheme({
       containedSecondary: {
         backgroundColor: error,
         '&:hover': {
-          backgroundColor: '#d4d5d3',
+          // backgroundColor: '#d4d5d3',
         },
       },
       outlinedPrimary: {
@@ -310,18 +310,17 @@ const theme = createTheme({
     },
     MuiStepLabel: {
       label: {
+        color: primary,
         textAlign: 'left',
-        '&.MuiStepLabel-label > p': {
-          color: 'green',
+        '&.MuiStepLabel-label': {
+          color: primary,
         },
         '&$active > p': {
           color: primary,
         },
         '&$completed > p': {
-          color: primary, 
+          color: primary,
         },
-        
-        
       },
     },
     MuiSvgIcon: {
@@ -335,6 +334,7 @@ const theme = createTheme({
         fontWeight: 'normal',
         fontSize: extraSmallFontSize,
         '&$selected': {
+          backgroundColor: 'black',
           fontWeight: boldFont,
         },
         '@media (min-width: 960px)': {
