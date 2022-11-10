@@ -13,6 +13,7 @@ import useDarkMode from 'src/logic/hooks/useDarkMode'
 import { screenSm } from 'src/theme/variables'
 import TransactionQueueBar from '../TransactionQueueBar/TransactionQueueBar'
 import { InvalidMasterCopyError } from 'src/components/AppLayout/InvalidMasterCopyError'
+import Footer from './Footer'
 
 const Container = styled.div`
   height: 100vh;
@@ -172,6 +173,7 @@ const Layout: React.FC<Props> = ({
           <TransactionQueueBar />
         </ContentWrapper>
       </BodyWrapper>
+      <Footer />
 
       {!mobileNotSupportedClosed && <MobileNotSupported onClose={closeMobileNotSupported} />}
     </Container>

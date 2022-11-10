@@ -136,13 +136,6 @@ const Sidebar = ({
               </StyledListItem>
             </Track>
           )}
-
-          <Track {...OVERVIEW_EVENTS.HELP_CENTER}>
-            <HelpCenterLink href="https://help.gnosis-safe.io/en/" target="_blank" title="Help Center of Gnosis Safe">
-              <ListIcon type="question" size="sm" color="primary" />
-              <StyledListItemText>Help Center</StyledListItemText>
-            </HelpCenterLink>
-          </Track>
         </HelpList>
       </HelpContainer>
     </>
