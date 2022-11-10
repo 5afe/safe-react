@@ -5,10 +5,14 @@ on: workflow_dispatch
 
 env:
   REACT_APP_FORTMATIC_KEY: ${{ secrets.REACT_APP_FORTMATIC_KEY }}
-  REACT_APP_INFURA_TOKEN: ${{ secrets.REACT_APP_INFURA_TOKEN }}
+  REACT_APP_INFURA_TOKEN: ${{ secrets.REACT_APP_DESKTOP_RPC_INFURA_TOKEN }}
+  REACT_APP_SAFE_APPS_RPC_INFURA_TOKEN: ${{ secrets.REACT_APP_SAFE_APPS_RPC_INFURA_TOKEN }}
   REACT_APP_PORTIS_ID: ${{ secrets.REACT_APP_PORTIS_ID }}
   REACT_APP_INTERCOM_ID: ${{ secrets.REACT_APP_INTERCOM_ID }}
   REACT_APP_IPFS_GATEWAY: ${{ secrets.REACT_APP_IPFS_GATEWAY }}
+  REACT_APP_TENDERLY_SIMULATE_ENDPOINT_URL: ${{ secrets.REACT_APP_TENDERLY_SIMULATE_ENDPOINT_URL }}
+  REACT_APP_TENDERLY_PROJECT_NAME: ${{ secrets.REACT_APP_TENDERLY_PROJECT_NAME  }}
+  REACT_APP_TENDERLY_ORG_NAME: ${{ secrets.REACT_APP_TENDERLY_ORG_NAME }}
 jobs:
   release:
     runs-on: ${{ matrix.os }}
@@ -17,16 +21,17 @@ jobs:
       fail-fast: false
       max-parallel: 15
       matrix:
-        os: [macos-10.15, windows-2019, ubuntu-18.04]
+        os: [macos-11, windows-2019, ubuntu-18.04]
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 16
+          cache: 'yarn'
 
       # Linux build patches
       - name: Install linux dependencies
@@ -34,10 +39,10 @@ jobs:
         run: sudo apt-get update && sudo apt-get install libudev-dev libusb-1.0-0-dev
 
       # Load node_modules cache action
-      - uses: actions/cache@v2
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      # - uses: actions/cache@v3
+      #   with:
+      #     path: '**/node_modules'
+      #     key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Run yarn install
         run: yarn install --frozen-lockfile --network-timeout 1000000
@@ -67,21 +72,21 @@ jobs:
 
       - name: 'Upload Artifacts OSX'
         if: startsWith(matrix.os, 'macos')
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Desktop OSX
           path: ./dist/Safe*.dmg
 
       - name: 'Upload Artifacts Linux'
         if: startsWith(matrix.os, 'ubuntu')
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Desktop Linux
           path: ./dist/Safe*.AppImage
 
       - name: 'Upload Artifacts Windows'
         if: startsWith(matrix.os, 'windows')
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Desktop Windows
           path: ./dist/Safe*.exe

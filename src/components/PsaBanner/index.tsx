@@ -5,6 +5,8 @@ import Close from '@material-ui/icons/Close'
 import { currentChainId } from 'src/logic/config/store/selectors'
 import { hasFeature } from 'src/logic/safe/utils/safeVersion'
 import useCachedState from 'src/utils/storage/useCachedState'
+import { IS_DESKTOP } from 'src/utils/constants'
+
 import styles from './index.module.scss'
 
 const NEW_URL = 'https://app.safe.global'
@@ -34,7 +36,7 @@ const PsaBanner = (): ReactElement | null => {
     true,
   )
 
-  const showBanner = Boolean(isEnabled && banner && !closed)
+  const showBanner = Boolean(!IS_DESKTOP && isEnabled && banner && !closed)
 
   const onClose = () => {
     setClosed(true)

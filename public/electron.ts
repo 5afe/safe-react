@@ -92,11 +92,12 @@ const createWindow = (port = DEFAULT_PORT) => {
       preload: path.join(__dirname, '../scripts/preload.js'),
       // experimentalFeatures not needed now unless migrating to WebHID Electron >= 16
       // experimentalFeatures: true,
+      nodeIntegration: true,
       // Needed to load Ledger from preload scripts, sharing context with main window
       contextIsolation: false,
       nativeWindowOpen: true, // need to be set in order to display modal. Not needed for Electron >= 15
     },
-    icon: nativeImage.createFromPath(path.join(__dirname, '../build/resources/safe.png')),
+    icon: nativeImage.createFromPath(path.join(__dirname, '../build/resources/desktop-icon.png')),
   })
 
   mainWindow.once('ready-to-show', () => {
@@ -146,10 +147,11 @@ process.on('uncaughtException', (error) => {
   log.error(error)
 })
 
+// Can be removed once we get to electron >= 16 and ledger hid >= 6.28
 app.allowRendererProcessReuse = false
 
 app.userAgentFallback =
-  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) old-airport-include/1.0.0 Chrome Electron/13.6.9 Safari/537.36'
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) old-airport-include/1.0.0 Chrome Electron/13.6.9'
 
 app.whenReady().then(async () => {
   // Hide the menu
