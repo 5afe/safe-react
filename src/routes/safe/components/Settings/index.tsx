@@ -69,9 +69,7 @@ const Settings = (): React.ReactElement => {
     case currentSafeRoutes.SETTINGS_ADVANCED:
       settingsSection = 'Advanced'
       break
-    case currentSafeRoutes.SETTINGS_SAFE_APPS_PERMISSIONS:
-      settingsSection = 'Safe Apps permissions'
-      break
+    
     default:
       settingsSection = ''
   }

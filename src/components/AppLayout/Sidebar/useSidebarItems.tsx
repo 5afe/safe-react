@@ -106,11 +106,7 @@ const useSidebarItems = (): ListItemType[] => {
         iconType: 'settingsTool',
         href: currentSafeRoutes.SETTINGS_ADVANCED,
       }),
-      makeEntryItem({
-        label: 'Safe Apps Permissions',
-        iconType: 'info',
-        href: currentSafeRoutes.SETTINGS_SAFE_APPS_PERMISSIONS,
-      }),
+  
     ].filter(Boolean)
 
     return [
