@@ -13,7 +13,7 @@ import { getChainById } from 'src/config'
 
 const useStyles = makeStyles({
   network: {
-    fontFamily: 'Averta, sans-serif',
+    fontFamily: 'IBM Plex Mono, monospace',
   },
   networkLabel: {
     '& div': {

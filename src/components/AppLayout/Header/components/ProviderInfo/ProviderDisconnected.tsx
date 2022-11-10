@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 const styles = () => ({
   network: {
-    fontFamily: 'Averta, sans-serif',
+    fontFamily: 'IBM Plex Mono, monospace',
   },
   account: {
     display: 'flex',

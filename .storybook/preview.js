@@ -6,15 +6,12 @@ import { ThemeProvider, createGlobalStyle } from 'styled-components'
 import { theme } from '@gnosis.pm/safe-react-components'
 
 import { aNewStore } from 'src/store'
-import averta from 'src/assets/fonts/Averta-normal.woff2'
-import avertaBold from 'src/assets/fonts/Averta-ExtraBold.woff2'
 
 const GlobalStyles = createGlobalStyle`
    @font-face {
-        font-family: 'Averta';
-        src: local('Averta'), local('Averta Bold'),
-        url(${averta}) format('woff2'),
-        url(${avertaBold}) format('woff');
+        font-family: 'IBM Plex Mono';
+        src: local("IBM Plex Mono-Regular"),
+    url('../../assets/fonts/IBMPlexMono-Regular.ttf') format("ttf");
     }
 `
 

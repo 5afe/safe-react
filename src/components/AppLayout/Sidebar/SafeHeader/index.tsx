@@ -279,9 +279,9 @@ const SafeHeader = ({
           variant="contained"
           onClick={handleNewTransactionClick}
         >
-          <Text size="xl" color="text">
+          <StyledCXText size="xl" color="text">
             {granted ? 'New Transaction' : 'Read Only'}
-          </Text>
+          </StyledCXText>
         </StyledButton>
       </Container>
     </>
@@ -289,3 +289,7 @@ const SafeHeader = ({
 }
 
 export default SafeHeader
+
+const StyledCXText = styled(Text)`
+  font-family: 'IBM Plex Mono, monospace, sans-serif';
+`
