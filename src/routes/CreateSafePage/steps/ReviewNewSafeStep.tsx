@@ -156,7 +156,9 @@ const DetailsContainer = styled(Block)`
 const SafeNameParagraph = styled(Paragraph)`
   text-overflow: ellipsis;
   overflow: hidden;
-`
+  color: #06fc99;
+  font-weight: 700;
+  `
 const TitleContainer = styled(Block)`
   padding: ${lg};
 `
