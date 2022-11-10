@@ -24,6 +24,12 @@ const StyledLink = styled(Link)`
   }
 `
 
+const StyledTab = styled(Tab)`
+  .MuiTab-root {
+    background: red;
+  }
+`
+
 const GatewayTransactions = (): ReactElement => {
   const history = useHistory()
   const { path } = useRouteMatch()
@@ -57,7 +63,8 @@ const GatewayTransactions = (): ReactElement => {
         </Col>
       </Menu>
 
-      {!isTxDetails && <Tab onChange={onTabChange} items={TRANSACTION_TABS} selectedTab={path} />}
+      {/* wip */}
+      {!isTxDetails && <StyledTab onChange={onTabChange} items={TRANSACTION_TABS} selectedTab={path} />}
 
       <ContentWrapper>
         <Switch>

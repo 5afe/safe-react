@@ -51,7 +51,6 @@ const palette = {
 const theme = createTheme({
   typography: {
     fontFamily: 'monospace',
-    // useNextVariants: true,
   },
   overrides: {
     MuiButton: {
