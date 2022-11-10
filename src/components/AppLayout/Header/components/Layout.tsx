@@ -77,9 +77,9 @@ const styles = () => ({
 
 const LogoText = styled.a`
   color: #06fc99;
-  font-size: 1.5rem;
+  font-size: 2rem;
   text-decoration: none;
-  margin-left: 2rem;
+  margin-left: 5rem;
   font-weight: 700;
 `
 
@@ -117,7 +117,7 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
       <Col className={classes.logo} middle="xs" start="xs">
         <Track {...OVERVIEW_EVENTS.HOME}>
           <Link to={ROOT_ROUTE}>
-            <LogoText>NeoBase</LogoText>
+            <LogoText>Safe</LogoText>
           </Link>
         </Track>
       </Col>
