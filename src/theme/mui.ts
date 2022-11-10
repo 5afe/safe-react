@@ -313,6 +313,9 @@ const theme = createTheme({
         '&.MuiStepLabel-label': {
           color: primary,
         },
+        '&.MuiStepLabel-label > p': {
+          color: "green",
+        },
         '&$active > p': {
           color: primary,
         },
