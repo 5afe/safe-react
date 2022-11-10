@@ -100,7 +100,7 @@ const SafeAppsPermissions = (): ReactElement => {
     <StyledContainer>
       <Heading tag="h2">Safe Apps Permissions</Heading>
       <br />
-      {!domains.length && <StyledText size="lg">There are no Safe Apps using permissions</StyledText>}
+      {!domains.length && <StyledText color='primary' size="lg">There are no Safe Apps using permissions</StyledText>}
       {domains.map((domain) => (
         <StyledPermissionsCard item key={domain}>
           <StyledPermissionsCardBody container>
@@ -155,7 +155,7 @@ const SafeAppsPermissions = (): ReactElement => {
 }
 
 const StyledContainer = styled(Block)`
-  padding: ${lg};
+  padding: 2rem;
 `
 
 const StyledPermissionsCard = styled(Grid)`
