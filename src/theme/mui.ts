@@ -57,7 +57,9 @@ const theme = createTheme({
       label: {
         lineHeight: '1',
         fontSize: largeFontSize,
+        fontFamily: 'monospace',
         fontWeight: regularFont,
+        color: "#000",
       },
       root: {
         fontFamily: 'monospace',
