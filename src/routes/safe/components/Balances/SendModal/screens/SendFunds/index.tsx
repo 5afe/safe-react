@@ -321,7 +321,7 @@ const SendFunds = ({
                   <SpendingLimitRow selectedToken={selectedToken} tokenSpendingLimit={tokenSpendingLimit} />
                 )}
                 <Row margin="xs">
-                  <Col between="lg">
+                  <Col style={{display: 'flex', justifyContent: 'space-between'}} between="lg">
                     <Paragraph color="disabled" noMargin size="md">
                       Amount
                     </Paragraph>
