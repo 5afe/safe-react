@@ -23,6 +23,7 @@ import { getExplorerInfo } from 'src/config'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { MODALS_EVENTS } from 'src/utils/events/modals'
 import Track from 'src/components/Track'
+import styled from 'styled-components'
 
 type ActiveScreen = 'sendFunds' | 'sendCollectible' | 'contractInteraction'
 
@@ -123,20 +124,20 @@ const ChooseTxType = ({
           {contractInteractionEnabled && (
             <Track {...MODALS_EVENTS.CONTRACT_INTERACTION}>
               <Button
-                color="primary"
                 disabled={disableContractInteraction}
                 minHeight={52}
                 minWidth={240}
                 onClick={() => setActiveScreen('contractInteraction')}
-                variant="outlined"
-                testId="modal-contract-interaction-btn"
               >
                 <Img
                   alt="Contract Interaction"
                   className={classNames(classes.leftIcon, classes.iconSmall)}
                   src={ContractInteractionIcon}
                 />
+                <ButtonText >
+
                 Contract interaction
+                </ButtonText>
               </Button>
             </Track>
           )}
@@ -147,3 +148,8 @@ const ChooseTxType = ({
 }
 
 export default ChooseTxType
+
+
+const ButtonText = styled.p`
+  color: #06fc99;
+`
