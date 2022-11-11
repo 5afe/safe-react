@@ -80,7 +80,7 @@
     "@gnosis.pm/safe-core-sdk": "^2.0.0",
     "@gnosis.pm/safe-deployments": "npm:@neobase-one/safe-deployments@1.16.0-canto",
     "@gnosis.pm/safe-modules-deployments": "^1.0.0",
-    "@gnosis.pm/safe-react-components": "^1.1.2",
+    "@gnosis.pm/safe-react-components": "npm:@neobase-one/safe-react-components@1.2.0-canto",
     "@gnosis.pm/safe-react-gateway-sdk": "^3.1.1",
     "@gnosis.pm/safe-web3-lib": "^1.0.0",
     "@material-ui/core": "^4.12.3",

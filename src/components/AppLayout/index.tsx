@@ -1,14 +1,14 @@
 import { useCallback, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
-import { useLocation, matchPath, useRouteMatch } from 'react-router-dom'
+import { useRouteMatch } from 'react-router-dom'
 
 import { ListItemType } from 'src/components/List'
-import { StaticOverlay, ThemedBackground } from '..'
+import { StaticOverlay, ThemedBackgroundMovingLines } from '..'
 
 import Header from './Header'
 import Sidebar from './Sidebar'
 import { MobileNotSupported } from './MobileNotSupported'
-import { SAFE_APP_LANDING_PAGE_ROUTE, SAFE_ROUTES, WELCOME_ROUTE } from 'src/routes/routes'
+import { SAFE_APP_LANDING_PAGE_ROUTE } from 'src/routes/routes'
 import useDarkMode from 'src/logic/hooks/useDarkMode'
 import { screenSm } from 'src/theme/variables'
 import TransactionQueueBar from '../TransactionQueueBar/TransactionQueueBar'
@@ -126,7 +126,6 @@ const Layout: React.FC<Props> = ({
 }): React.ReactElement => {
   const [mobileNotSupportedClosed, setMobileNotSupportedClosed] = useState(false)
   const [expanded, setExpanded] = useState(false)
-  const { pathname } = useLocation()
   useDarkMode()
 
   const closeMobileNotSupported = () => setMobileNotSupportedClosed(true)
@@ -146,7 +145,7 @@ const Layout: React.FC<Props> = ({
 
   return (
     <Container onClick={() => setExpanded(false)}>
-      <ThemedBackground />
+      <ThemedBackgroundMovingLines />
       <StaticOverlay />
       <HeaderWrapper>
         <Header />

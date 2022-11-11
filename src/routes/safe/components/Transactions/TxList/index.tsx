@@ -1,7 +1,6 @@
-import { Menu, Breadcrumb, BreadcrumbElement, Tab } from '@gnosis.pm/safe-react-components'
-import { Item } from '@gnosis.pm/safe-react-components/dist/navigation/Tab'
+import { Menu, Breadcrumb, BreadcrumbElement } from '@gnosis.pm/safe-react-components'
 import { ReactElement } from 'react'
-import { Redirect, Route, Switch, useHistory, useRouteMatch, Link } from 'react-router-dom'
+import { Redirect, Route, Switch, useRouteMatch, Link } from 'react-router-dom'
 import styled from 'styled-components'
 
 import Col from 'src/components/layout/Col'
@@ -12,11 +11,6 @@ import { ContentWrapper, Wrapper } from './styled'
 import TxSingularDetails from './TxSingularDetails'
 import { isDeeplinkedTx } from './utils'
 
-const TRANSACTION_TABS: Item[] = [
-  { label: 'Queue', id: SAFE_ROUTES.TRANSACTIONS_QUEUE },
-  { label: 'History', id: SAFE_ROUTES.TRANSACTIONS_HISTORY },
-]
-
 const StyledLink = styled(Link)`
   text-decoration: none;
   & * {
@@ -24,14 +18,7 @@ const StyledLink = styled(Link)`
   }
 `
 
-const StyledTab = styled(Tab)`
-  .MuiTab-root {
-    background: red;
-  }
-`
-
 const GatewayTransactions = (): ReactElement => {
-  const history = useHistory()
   const { path } = useRouteMatch()
   const isTxDetails = isDeeplinkedTx()
 
@@ -41,8 +28,6 @@ const GatewayTransactions = (): ReactElement => {
   } else if (path === SAFE_ROUTES.TRANSACTIONS_QUEUE) {
     breadcrumbText = 'Queue'
   }
-
-  const onTabChange = (path: string) => history.replace(generateSafeRoute(path, extractPrefixedSafeAddress()))
 
   return (
     <Wrapper>
@@ -56,15 +41,12 @@ const GatewayTransactions = (): ReactElement => {
                 <StyledLink to={generateSafeRoute(SAFE_ROUTES.TRANSACTIONS, extractPrefixedSafeAddress())}>
                   {parentCrumb}
                 </StyledLink>
-              ))(<BreadcrumbElement iconType="transactionsInactive" text="TRANSACTIONS" />)}
+              ))(<BreadcrumbElement iconType="transactionsInactive" text="TRANSACTIONS" color="cantoGreen" />)}
 
-            <BreadcrumbElement text={breadcrumbText.toUpperCase()} color="primary" />
+            <BreadcrumbElement text={breadcrumbText.toUpperCase()} color="cantoGreen" />
           </Breadcrumb>
         </Col>
       </Menu>
-
-      {/* wip */}
-      {!isTxDetails && <StyledTab onChange={onTabChange} items={TRANSACTION_TABS} selectedTab={path} />}
 
       <ContentWrapper>
         <Switch>
