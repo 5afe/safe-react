@@ -91,6 +91,7 @@ export const SubTitle = styled(Text)`
   line-height: 1.5;
   letter-spacing: 1px;
   color: #06fc99;
+  font-family: monospace;
   text-transform: uppercase;
 `
 
@@ -460,6 +461,9 @@ export const TxDetailsContainer = styled.div`
 
 export const InlineEthHashInfo = styled(EthHashInfo)`
   display: inline-flex;
+  p {
+    color: #06fc99;
+  }
 
   span {
     font-weight: bold;

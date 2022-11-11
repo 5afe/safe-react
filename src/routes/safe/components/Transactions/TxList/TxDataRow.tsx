@@ -87,7 +87,7 @@ export const TxDataRow = ({
   return (
     <StyledGridRow>
       <Text size="xl" as="span" color="primary">
-        {title}
+        <StyledText>{title}</StyledText>
       </Text>
       {isArray && value && method && paramType && (
         <ValueWrapper>
@@ -97,10 +97,15 @@ export const TxDataRow = ({
       {!isArray && generateInlineTypeValue(inlineType, value, hasExplorer)}
       {!isArray && !inlineType && value && (
         <Text size="xl" as="span" color="primary">
-          {value}
+          <StyledText>{value}</StyledText>
         </Text>
       )}
       {children}
     </StyledGridRow>
   )
 }
+
+const StyledText = styled.p`
+  font-family: monospace;
+  margin: 0;
+`
