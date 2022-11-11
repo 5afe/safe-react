@@ -325,12 +325,18 @@ const StyledFilterButton = styled(Button)<{ $isFiltered: boolean }>`
   &.MuiButton-root {
     align-items: center;
     background-color: ${({ $isFiltered }) => ($isFiltered ? primary200 : 'transparent')};
-    color: #06fc99;
+
     align-self: flex-end;
     margin-right: ${md};
     margin-top: -51px;
     margin-bottom: ${md};
+
+      span {
+        color: #06fc99;
+      }
   }
+
+ 
 `
 
 const StyledFilterIconImage = styled.img`
