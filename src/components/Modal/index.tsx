@@ -28,6 +28,8 @@ const ModalStyled = styled(ModalMUI)`
     width: 525px;
     border-radius: 8px;
     background-color: #000;
+
+    padding: 1rem;
     border: 1px solid #69fc99;
     display: flex;
     flex-direction: column;
@@ -226,7 +228,6 @@ const Buttons = ({ cancelButtonProps = {}, confirmButtonProps = {} }: ButtonsPro
       <Button
         size="md"
         color="primary"
-        variant={cancelButtonProps.variant || 'outlined'}
         type={cancelOnClick ? 'button' : 'submit'}
         disabled={cancelDisabled || [ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(cancelStatus)}
         data-testid={cancelTestId}
