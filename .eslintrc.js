@@ -34,6 +34,7 @@ module.exports = {
      */
     '@typescript-eslint/no-explicit-any': 'off',
     'react/prop-types': 'off',
+    '@typescript-eslint/no-var-requires': 0,
   },
   settings: {
     react: {

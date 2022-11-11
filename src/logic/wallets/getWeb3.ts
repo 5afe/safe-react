@@ -20,6 +20,10 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { Wallet } from 'bnc-onboard/dist/src/interfaces'
 
+const masterCopyAbi = require('./abi/master_copy.json')
+const proxyFactoryAbi = require('./abi/proxy_factory.json')
+const multiSendAbi = require('./abi/proxy_factory.json')
+
 // This providers have direct relation with name assigned in bnc-onboard configuration
 export enum WALLET_PROVIDER {
   METAMASK = 'METAMASK',
@@ -173,10 +177,20 @@ export const getSafeSDK = async (signerAddress: string, safeAddress: string, saf
   } else {
     isL1SafeMasterCopy = networkId === CHAIN_ID.ETHEREUM
   }
-
+  const contractNetworks = {
+    '11115': {
+      multiSendAddress: '0x11d70E46432011192e30E59E77D4cCb723E5ECFd',
+      safeProxyFactoryAddress: '0x9ede2D10e78c22919Bc3C22F53aeB6923Cb53FaE',
+      safeMasterCopyAddress: '0x33eF3698B7E794B249E5C94DAFCAc7FED509C663',
+      multiSendAbi: multiSendAbi,
+      safeMasterCopyAbi: masterCopyAbi,
+      safeProxyFactoryAbi: proxyFactoryAbi,
+    },
+  }
   return await Safe.create({
     ethAdapter,
     safeAddress,
     isL1SafeMasterCopy,
+    contractNetworks,
   })
 }
