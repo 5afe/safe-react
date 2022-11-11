@@ -10,7 +10,7 @@ import ListMui from '@material-ui/core/List'
 import ListItem, { ListItemProps } from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import Collapse from '@material-ui/core/Collapse'
-import { primary, secondary, black500 } from 'src/theme/variables'
+import { primary, secondary, secondaryText } from 'src/theme/variables'
 
 const ListItemWrapper = styled.div`
   padding: 0 12px;
@@ -122,11 +122,10 @@ export const StyledListItemText = styled(ListItemText)`
 
 const StyledListSubItemText = styled(ListItemText)`
   span {
-    font-family: ${({ theme }) => theme.fonts.fontFamily};
     font-size: 14px;
-    font-weight: 400;
+    font-weight: 500;
     letter-spacing: 0;
-    color: ${black500} !important;
+    color: ${secondaryText} !important;
   }
 `
 
