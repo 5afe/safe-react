@@ -80,6 +80,7 @@ const IconContainer = styled.div`
   margin: 14px 0;
 `
 const StyledButton = styled(Button)`
+  margin: 0;
   &&.MuiButton-root {
     width: 100%;
     height: 38px;
@@ -171,6 +172,7 @@ const StyledText = styled(Title)`
   font-family: monospace;
   color: #000;
   font-size: 1rem;
+  margin: 0;
 `
 
 const ToggleSafeListButton = styled.button`
@@ -279,7 +281,7 @@ const SafeHeader = ({
           variant="contained"
           onClick={handleNewTransactionClick}
         >
-          <StyledText size="xl">
+          <StyledText size="sm">
             {granted ? 'New Transaction' : 'Read Only'}
           </StyledText>
         </StyledButton>
@@ -289,7 +291,3 @@ const SafeHeader = ({
 }
 
 export default SafeHeader
-
-// const StyledText = styled(Text)`
-//   font-family: 'IBM Plex Mono, monospace, sans-serif';
-// `
