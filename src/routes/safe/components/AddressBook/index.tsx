@@ -52,14 +52,20 @@ import { ADDRESS_BOOK_EVENTS } from 'src/utils/events/addressBook'
 import Track from 'src/components/Track'
 
 const StyledButton = styled(Button)`
+
   &&.MuiButton-root {
     margin: 4px 12px 4px 0px;
-    padding: 0 12px;
+    padding: 0 16px;
     min-width: auto;
+  }
+
+  p {
+    color: #000;
   }
 
   svg {
     margin: 0 6px 0 0;
+    display: none;
   }
 `
 
