@@ -79,7 +79,7 @@ const LogoText = styled.a`
   color: #06fc99;
   font-size: 2rem;
   text-decoration: none;
-  margin-left: 5rem;
+  margin-left: 3rem;
   font-weight: 700;
 `
 
