@@ -156,6 +156,7 @@ const StyledTextLabel = styled(Text)`
 const StyledTextSafeName = styled(Text)`
   width: 90%;
   overflow: hidden;
+  font-family: monospace;
   text-overflow: ellipsis;
   color: #06fc99;
 `
