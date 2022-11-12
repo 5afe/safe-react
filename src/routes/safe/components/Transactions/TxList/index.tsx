@@ -41,7 +41,7 @@ const GatewayTransactions = (): ReactElement => {
                 <StyledLink to={generateSafeRoute(SAFE_ROUTES.TRANSACTIONS, extractPrefixedSafeAddress())}>
                   {parentCrumb}
                 </StyledLink>
-              ))(<BreadcrumbElement iconType="transactionsInactive" text="TRANSACTIONS" color="cantoGreen" />)}
+              ))(<BreadcrumbElement iconType="transactionsInactive" text="TRANSACTIONS" color="primary" />)}
 
             <BreadcrumbElement text={breadcrumbText.toUpperCase()} color="cantoGreen" />
           </Breadcrumb>
