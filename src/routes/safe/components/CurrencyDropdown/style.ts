@@ -5,6 +5,8 @@ export const useDropdownStyles = makeStyles({
   listItem: {
     maxWidth: (props: any) => (props.buttonWidth ? props.buttonWidth : buttonWidth),
     boxSizing: 'border-box',
+    background: 'black',
+    //needs to add correct border here
   },
   listItemSearch: {
     maxWidth: (props: any) => (props.buttonWidth ? props.buttonWidth : buttonWidth),
@@ -32,18 +34,19 @@ export const useDropdownStyles = makeStyles({
     marginLeft: '18px',
   },
   button: {
-    backgroundColor: '#e8e7e6',
+    backgroundColor: '#000',
     border: 'none',
     borderRadius: '3px',
     boxSizing: 'border-box',
-    color: '#5d6d74',
+    color: '#05de87',
     cursor: 'pointer',
     fontSize: '12px',
     fontWeight: 'normal',
     height: '24px',
+    width: '30px',
     lineHeight: '1.33',
     marginRight: '20px',
-    minWidth: (props: any) => (props.buttonWidth ? props.buttonWidth : buttonWidth),
+    minWidth: "80px", // this should be enough for any 3 letter text
     outline: 'none',
     padding: '0',
     textAlign: 'left',
@@ -63,7 +66,7 @@ export const useDropdownStyles = makeStyles({
     '&::after': {
       borderLeft: '5px solid transparent',
       borderRight: '5px solid transparent',
-      borderTop: '5px solid #5d6d74',
+      borderTop: '5px solid #05de87',
       content: '""',
       height: '0',
       position: 'absolute',
@@ -74,7 +77,7 @@ export const useDropdownStyles = makeStyles({
   },
   openMenuButton: {
     '&::after': {
-      borderBottom: '5px solid #5d6d74',
+      borderBottom: '5px solid #05de87',
       borderLeft: '5px solid transparent',
       borderRight: '5px solid transparent',
       borderTop: 'none',
@@ -87,12 +90,10 @@ export const useDropdownStyles = makeStyles({
   search: {
     position: 'relative',
     borderRadius: '0',
-    backgroundColor: '#fff',
-    '&:hover': {
-      backgroundColor: '#fff',
-    },
+    background: '#000',
     marginRight: 0,
     width: '100%',
+    border: '2px solid #05de87',
   },
   searchIcon: {
     alignItems: 'center',
@@ -107,11 +108,11 @@ export const useDropdownStyles = makeStyles({
     transform: 'translateY(-50%)',
     width: '18px',
     '& path': {
-      fill: '#b2b5b2',
+      fill: '#05de87',
     },
   },
   inputRoot: {
-    color: '#5d6d74',
+    color: '#05de87',
     fontSize: '14px',
     fontWeight: 'normal',
     lineHeight: '1.43',

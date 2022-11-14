@@ -24,8 +24,12 @@ const Step = styled.div`
 const StepsLine = styled.div`
   height: 2px;
   flex: 1;
-  background: #d4d5d3;
+  background: #06fc99;
   margin: 46px 0;
+`
+
+const StyledText = styled(Text)`
+  color: #06fc99;
 `
 
 export const NewLimitSteps = (): ReactElement => (
@@ -33,17 +37,17 @@ export const NewLimitSteps = (): ReactElement => (
     <Step>
       <Img alt="Select Beneficiary" title="Beneficiary" height={96} src={Beneficiary} />
 
-      <Text size="lg" color="placeHolder" strong center>
+      <StyledText size="lg" color="primary" strong center>
         Select Beneficiary
-      </Text>
+      </StyledText>
 
-      <Text size="lg" color="placeHolder" center>
+      <StyledText size="lg" color="primary" center>
         Define beneficiary that will be able to use the allowance.
-      </Text>
+      </StyledText>
 
-      <Text size="lg" color="placeHolder" center>
+      <StyledText size="lg" color="primary" center>
         The beneficiary does not have to be an owner of this Safe
-      </Text>
+      </StyledText>
     </Step>
 
     <StepsLine />
@@ -51,13 +55,13 @@ export const NewLimitSteps = (): ReactElement => (
     <Step>
       <Img alt="Select asset and amount" title="Asset and Amount" height={96} src={AssetAmount} />
 
-      <Text size="lg" color="placeHolder" strong center>
+      <StyledText size="lg" color="primary" strong center>
         Select asset and amount
-      </Text>
+      </StyledText>
 
-      <Text size="lg" color="placeHolder" center>
+      <StyledText size="lg" color="primary" center>
         You can set a spending limit for any asset stored in your Safe
-      </Text>
+      </StyledText>
     </Step>
 
     <StepsLine />
@@ -65,13 +69,13 @@ export const NewLimitSteps = (): ReactElement => (
     <Step>
       <Img alt="Select time" title="Time" height={96} src={Time} />
 
-      <Text size="lg" color="placeHolder" strong center>
+      <StyledText size="lg" color="primary" strong center>
         Select time
-      </Text>
+      </StyledText>
 
-      <Text size="lg" color="placeHolder" center>
+      <StyledText size="lg" color="primary" center>
         You can choose to set a one-time spending limit or to have it automatically refill after a defined time-period
-      </Text>
+      </StyledText>
     </Step>
   </StepWrapper>
 )

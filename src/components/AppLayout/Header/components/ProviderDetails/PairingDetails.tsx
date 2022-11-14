@@ -40,6 +40,7 @@ const StyledTitle = styled.h5`
   font-weight: 600;
   letter-spacing: 0.4px;
   margin: 0;
+  color: #06fc99;
 `
 
 const StyledDivider = styled(Divider)`
@@ -96,7 +97,7 @@ const PairingDetails = ({ vertical = false }: PairingDetailsProps): ReactElement
 
   const content = (
     <StyledContent>
-      <Paragraph size="sm">
+      <Paragraph size="sm" color='#06fc99'>
         Scan this code in the Safe mobile app to sign transactions with your mobile device.{' '}
         <Link href="https://help.gnosis-safe.io/en/articles/5584901-desktop-pairing">
           Learn more about this feature.

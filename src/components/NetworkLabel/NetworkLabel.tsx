@@ -40,8 +40,8 @@ const StyledLabel = styled.span<StyledLabelTypes>`
   min-width: 70px;
   font-size: ${extraSmallFontSize};
   padding: ${xs} ${sm};
-  background-color: ${({ backgroundColor }) => backgroundColor ?? border};
-  color: ${({ textColor }) => textColor ?? fontColor};
+  border: #06fc99 2px solid;
+  color: #06fc99;
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'inherit')};
   text-align: center;
   border-radius: 4px;

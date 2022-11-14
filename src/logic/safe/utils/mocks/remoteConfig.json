@@ -33,7 +33,7 @@
         "logoUri": "https://safe-transaction-assets.staging.gnosisdev.com/chains/1/currency_logo.png"
       },
       "theme": {
-        "textColor": "#001428",
+        "textColor": "#06fc99",
         "backgroundColor": "#DDDDDD"
       },
       "ensRegistryAddress": "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",

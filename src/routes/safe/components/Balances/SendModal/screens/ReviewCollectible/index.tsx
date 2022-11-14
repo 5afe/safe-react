@@ -106,7 +106,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
       <Hairline />
       <Block className={classes.container}>
         <SafeInfo text="Sending from" />
-        <Divider withArrow />
+
         <Row margin="xs">
           <Paragraph color="disabled" noMargin size="lg">
             Recipient

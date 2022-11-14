@@ -4,6 +4,15 @@ import InputLabel from '@material-ui/core/InputLabel'
 import Select, { SelectProps } from '@material-ui/core/Select'
 import { FieldMetaState } from 'react-final-form'
 import { FormControlProps } from '@material-ui/core/FormControl/FormControl'
+import { makeStyles } from '@material-ui/core'
+
+const useStyles = makeStyles({
+  paper: {
+    background: '#000',
+    padding: '3px 5px',
+    border: '2px solid #60fc99',
+  },
+})
 
 const style = {
   minWidth: '100%',
@@ -41,10 +50,17 @@ const SelectInput = ({
     name,
   }
 
+  const listClasses = useStyles()
+
   return (
     <FormControl {...formControlProps} error={showError} style={style}>
       <InputLabel htmlFor={name}>{label}</InputLabel>
       <Select
+        MenuProps={{
+          classes: {
+            paper: listClasses.paper,
+          },
+        }}
         classes={classes}
         inputProps={inputProps}
         onChange={onChange}

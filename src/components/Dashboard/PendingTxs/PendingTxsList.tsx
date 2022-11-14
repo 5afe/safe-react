@@ -33,11 +33,16 @@ const StyledWidgetTitle = styled.div`
   justify-content: space-between;
 `
 
+const StyledText = styled(Text)`
+  color: #06fc99;
+  font-family: monospace;
+`
+
 const EmptyState = (
   <Card>
     <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column" height={1} gridGap="16px">
       <Img alt="No Transactions yet" src={NoTransactionsImage} />
-      <Text size="xl">This Safe has no queued transactions</Text>
+      <StyledText size="xl">This Safe has no queued transactions</StyledText>
     </Box>
   </Card>
 )

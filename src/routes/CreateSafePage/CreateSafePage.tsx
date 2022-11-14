@@ -123,7 +123,7 @@ function CreateSafePage(): ReactElement {
           <BackIcon disableRipple onClick={history.goBack}>
             <ChevronLeft />
           </BackIcon>
-          <Heading tag="h2">Create new Safe</Heading>
+          <MainHeading color="#06fc99">Create new Safe</MainHeading>
         </Row>
         <StepperForm
           initialValues={initialFormValues}
@@ -136,17 +136,21 @@ function CreateSafePage(): ReactElement {
             nextButtonLabel="Continue"
             disableNextButton={isInitializing}
           >
-            <SelectWalletAndNetworkStep />
+              <SelectWalletAndNetworkStep />
           </StepFormElement>
+
           <StepFormElement label={nameNewSafeStepLabel} nextButtonLabel="Continue">
             <NameNewSafeStep />
           </StepFormElement>
+
           <StepFormElement label={ownersAndConfirmationsNewSafeStepLabel} nextButtonLabel="Continue">
             <OwnersAndConfirmationsNewSafeStep />
           </StepFormElement>
+
           <StepFormElement label={reviewNewSafeStepLabel} nextButtonLabel="Create">
             <ReviewNewSafeStep />
           </StepFormElement>
+          
         </StepperForm>
       </Block>
     </Page>
@@ -225,4 +229,8 @@ const BackIcon = styled(IconButton)`
   color: ${secondary};
   padding: ${sm};
   margin-right: 5px;
+`
+
+const MainHeading = styled.h2`
+  color: #06fc99;
 `

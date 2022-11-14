@@ -13,33 +13,32 @@ import { headerHeight, md, screenSm, sm } from 'src/theme/variables'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
 import { ROOT_ROUTE } from 'src/routes/routes'
 import WalletSwitch from 'src/components/WalletSwitch'
-import Divider from 'src/components/layout/Divider'
 import { shouldSwitchWalletChain } from 'src/logic/wallets/store/selectors'
 import { useSelector } from 'react-redux'
 import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
 import Track from 'src/components/Track'
 import Notifications from 'src/components/AppLayout/Header/components/Notifications'
-import AnimatedLogo from 'src/components/AppLayout/Header/components/AnimatedLogo'
 import SafeTokenWidget, { getSafeTokenAddress } from './SafeTokenWidget'
 import { _getChainId } from 'src/config'
+import GnosisLogo from '../assets/safe-logo.svg'
 
 const styles = () => ({
   root: {
-    backgroundColor: 'white',
+    backgroundColor: 'black',
     borderRadius: sm,
-    boxShadow: 'rgb(40 54 61 / 18%) 1px 2px 10px 0px',
+    border: '2px solid #06fc99',
     marginTop: '11px',
     minWidth: '280px',
     padding: 0,
   },
   summary: {
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: 'black',
     flexWrap: 'nowrap',
     height: headerHeight,
     position: 'fixed',
     width: '100%',
-    zIndex: 1301,
+    zIndex: 99999,
   },
   logo: {
     [`@media (min-width: ${screenSm}px)`]: {
@@ -48,7 +47,6 @@ const styles = () => ({
       paddingRight: md,
     },
     [`@media (max-width: ${screenSm}px)`]: {
-      maxWidth: '95px',
       overflow: 'hidden',
       '& img': {
         width: '72px',
@@ -59,6 +57,7 @@ const styles = () => ({
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
+      textDecoration: 'none',
     },
   },
   wallet: {
@@ -66,11 +65,10 @@ const styles = () => ({
   },
   popper: {
     zIndex: 1301,
+    color: '#06fc99',
   },
   network: {
-    backgroundColor: 'white',
     borderRadius: sm,
-    boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
     marginTop: '11px',
     minWidth: '180px',
     padding: '0',
@@ -101,7 +99,7 @@ const WalletPopup = ({ anchorEl, providerDetails, classes, open, onClose }) => {
 const Layout = ({ classes, providerDetails, providerInfo }) => {
   const { clickAway: clickAwayNotifications, open: openNotifications, toggle: toggleNotifications } = useStateHandler()
   const { clickAway: clickAwayWallet, open: openWallet, toggle: toggleWallet } = useStateHandler()
-  const { clickAway: clickAwayNetworks, open: openNetworks, toggle: toggleNetworks } = useStateHandler()
+  const { clickAway: clickAwayNetworks, open: openNetworks } = useStateHandler()
   const isWrongChain = useSelector(shouldSwitchWalletChain)
   const chainId = _getChainId()
   const chainHasSafeToken = Boolean(getSafeTokenAddress(chainId))
@@ -111,7 +109,9 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
       <Col className={classes.logo} middle="xs" start="xs">
         <Track {...OVERVIEW_EVENTS.HOME}>
           <Link to={ROOT_ROUTE}>
-            <AnimatedLogo />
+            <span style={{ paddingLeft: '35%' }}>
+              <img alt="Safe" src={`${GnosisLogo}`} id="safe-logo" height={36} />
+            </span>
           </Link>
         </Track>
       </Col>
@@ -121,21 +121,12 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
       {isWrongChain && (
         <div className={classes.wallet}>
           <WalletSwitch />
-          <Divider />
         </div>
       )}
 
-      {chainHasSafeToken && (
-        <>
-          <Divider />
-          <SafeTokenWidget />
-        </>
-      )}
-
-      <Divider />
+      {chainHasSafeToken && <SafeTokenWidget />}
       <Notifications open={openNotifications} toggle={toggleNotifications} clickAway={clickAwayNotifications} />
 
-      <Divider />
       <Provider
         info={providerInfo}
         open={openWallet}
@@ -153,8 +144,8 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
         }
       />
 
-      <Divider />
-      <NetworkSelector open={openNetworks} toggle={toggleNetworks} clickAway={clickAwayNetworks} />
+      {/* network selector in navbar */}
+      <NetworkSelector open={openNetworks} toggle={() => {}} clickAway={clickAwayNetworks} />
     </Row>
   )
 }

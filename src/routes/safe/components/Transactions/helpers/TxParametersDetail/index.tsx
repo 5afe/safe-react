@@ -156,7 +156,7 @@ export const TxParametersDetail = ({
       </Track>
       <AccordionDetails>
         <AccordionDetailsWrapper>
-          <StyledText size="md" color="placeHolder">
+          <StyledText size="md" color="primary">
             Safe transaction parameters
           </StyledText>
           <TxParameterWrapper>

@@ -7,16 +7,11 @@ import { ErrorFooter } from 'src/routes/opening/components/Footer'
 import { isConfirmationStep, steps } from './steps'
 
 import Heading from 'src/components/layout/Heading'
-import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3ReadOnly, isTxPendingError } from 'src/logic/wallets/getWeb3'
-import { background, connected, fontColor } from 'src/theme/variables'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 
-import SuccessSvg from 'src/assets/icons/safe-created.svg'
-import VaultErrorSvg from './assets/vault-error.svg'
-import VaultLoading from './assets/creation-process.gif'
 import { TransactionReceipt } from 'web3-core'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { NOTIFICATIONS } from 'src/logic/notifications'
@@ -87,18 +82,6 @@ export const SafeDeployment = ({
     setStepIndex(0)
     setError(false)
     onRetry()
-  }
-
-  const getImage = () => {
-    if (error) {
-      return VaultErrorSvg
-    }
-
-    if (stepIndex <= 4) {
-      return VaultLoading
-    }
-
-    return SuccessSvg
   }
 
   useEffect(() => {
@@ -269,10 +252,6 @@ export const SafeDeployment = ({
         <Stepper activeStepIndex={stepIndex} error={error} orientation="vertical" steps={steps} />
       </Nav>
       <Body>
-        <BodyImage>
-          <Img alt="Vault" height={92} src={getImage()} />
-        </BodyImage>
-
         <BodyDescription>
           <CardTitle>{steps[stepIndex].description || steps[stepIndex].label}</CardTitle>
         </BodyDescription>
@@ -360,11 +339,10 @@ const Body = styled.div`
   grid-column: 2;
   grid-row: 2;
   text-align: center;
-  background-color: ${({ theme }) => theme.colors.white};
+  background-color: #000;
   border-radius: 5px;
   min-width: 700px;
   padding-top: 70px;
-  box-shadow: 0 0 10px 0 rgba(33, 48, 77, 0.1);
 
   display: grid;
   grid-template-rows: 100px 50px 110px 1fr;
@@ -376,8 +354,7 @@ const CardTitle = styled.div`
 `
 
 const FullParagraph = styled(Paragraph)<FullParagraphProps>`
-  background-color: ${({ $stepIndex }) => ($stepIndex === 0 ? connected : background)};
-  color: ${({ theme, $stepIndex }) => ($stepIndex === 0 ? theme.colors.white : fontColor)};
+  background-color: #000;
   padding: 28px;
   font-size: 20px;
   margin-bottom: 16px;
@@ -392,9 +369,6 @@ const Center = styled.div`
   margin-bottom: -10px;
 `
 
-const BodyImage = styled.div`
-  grid-row: 1;
-`
 const BodyDescription = styled.div`
   grid-row: 2;
 `

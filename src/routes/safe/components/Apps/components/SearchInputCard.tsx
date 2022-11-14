@@ -11,6 +11,8 @@ import { SAFE_APPS_EVENTS } from 'src/utils/events/safeApps'
 const Container = styled(Card)`
   width: 100%;
   box-sizing: border-box;
+  background-color: #000;
+  border: 2px solid #06fc99;
 `
 
 type Props = {
@@ -35,7 +37,7 @@ const SearchInputCard = ({ value, onValueChange }: Props): React.ReactElement =>
       onChange={(event: React.ChangeEvent<HTMLInputElement>) => onValueChange(event.target.value)}
       placeholder="e.g. Compound"
       value={value}
-      style={{ width: '100%' }}
+      style={{ width: '100%', background: '#000' }}
       onBlur={() => {
         if (value) {
           trackEvent({ ...SAFE_APPS_EVENTS.SEARCH, label: value })

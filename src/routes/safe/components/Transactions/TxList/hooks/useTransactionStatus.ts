@@ -31,7 +31,7 @@ export const useTransactionStatus = (transaction: Transaction): TransactionStatu
         setStatus({ color: 'error', text: 'Cancelled' })
         break
       case LocalTransactionStatus.WILL_BE_REPLACED:
-        setStatus({ color: 'placeHolder', text: 'Transaction will be replaced' })
+        setStatus({ color: 'primary', text: 'Transaction will be replaced' })
         break
       case LocalTransactionStatus.AWAITING_CONFIRMATIONS:
         const signaturePending = addressInList((executionInfo as MultisigExecutionInfo)?.missingSigners ?? undefined)

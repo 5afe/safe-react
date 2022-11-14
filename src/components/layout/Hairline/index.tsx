@@ -7,7 +7,7 @@ const calculateStyleFrom = (color, margin) => ({
   width: '100%',
   minHeight: '2px',
   height: '2px',
-  backgroundColor: color || border,
+  backgroundColor: "#000",
   margin: `${getSize(margin)} 0px`,
 })
 

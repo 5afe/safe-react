@@ -19,6 +19,7 @@ import Track from 'src/components/Track'
 
 const InfoText = styled(Text)`
   margin-top: 16px;
+  color: #06fc99;
 `
 
 const SpendingLimit = (): ReactElement => {
@@ -54,8 +55,8 @@ const SpendingLimit = (): ReactElement => {
             <Col end="xs">
               <Track {...SETTINGS_EVENTS.SPENDING_LIMIT.NEW_LIMIT}>
                 <Button
+                style={{color: '#000'}}
                   className={classes.actionButton}
-                  color="primary"
                   size="md"
                   data-testid="new-spending-limit-button"
                   onClick={openNewSpendingLimitModal}

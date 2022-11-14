@@ -127,7 +127,7 @@ const SafeDetails = (): ReactElement => {
   return (
     <GnoForm onSubmit={handleSubmit}>
       {() => (
-        <>
+        <div style={{background: '#000'}}>
           <Block className={classes.formContainer}>
             <Heading tag="h2">Contract Version</Heading>
             <Row align="end" grow>
@@ -203,7 +203,7 @@ const SafeDetails = (): ReactElement => {
           <Modal description="Update Safe" handleClose={toggleModal} open={isModalOpen} title="Update Safe">
             <UpdateSafeModal onClose={toggleModal} safeAddress={safeAddress} safeCurrentVersion={safeCurrentVersion} />
           </Modal>
-        </>
+        </div>
       )}
     </GnoForm>
   )

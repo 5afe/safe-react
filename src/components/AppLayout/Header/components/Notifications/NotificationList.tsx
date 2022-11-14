@@ -5,7 +5,7 @@ import { List, Typography } from '@material-ui/core'
 import { NotificationsState } from 'src/logic/notifications/store/notifications'
 import { NOTIFICATION_LIMIT } from 'src/components/AppLayout/Header/components/Notifications'
 import { StyledScrollableBar } from 'src/routes/safe/components/Transactions/TxList/styled'
-import { gray500 } from 'src/theme/variables'
+import { primary } from 'src/theme/variables'
 import NotificationItem from 'src/components/AppLayout/Header/components/Notifications/NotificationItem'
 
 import Bell from './assets/bell.svg'
@@ -45,7 +45,7 @@ const Wrapper = styled.div`
 `
 
 const Description = styled(Typography)`
-  color: ${gray500};
+  color: ${primary};
   padding-top: 8px;
 `
 

@@ -202,7 +202,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
 
         {/* SafeInfo */}
         <SafeInfo text="Sending from" />
-        <Divider withArrow />
+
 
         {/* Recipient */}
         <Row margin="xs">

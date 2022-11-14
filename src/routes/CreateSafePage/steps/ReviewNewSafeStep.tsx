@@ -66,19 +66,23 @@ function ReviewNewSafeStep(): ReactElement | null {
     createSafeForm.change(FIELD_NEW_SAFE_GAS_MAX_PRIO_FEE, gasMaxPrioFee)
   }, [gasLimit, gasPrice, createSafeForm, gasMaxPrioFee])
 
+  const StyledParagrah = styled(Paragraph)`
+    color: #69fc99;
+  `
+
   return (
     <Row data-testid={'create-safe-review-step'}>
       <Col xs={4} layout="column">
         <DetailsContainer>
           <Block margin="lg">
-            <Paragraph color="primary" noMargin size="lg">
+            <StyledParagrah noMargin size="lg">
               Details
-            </Paragraph>
+            </StyledParagrah>
           </Block>
           <Block margin="lg">
-            <Paragraph color="disabled" noMargin size="sm">
+            <StyledParagrah noMargin size="sm">
               Name of new Safe
-            </Paragraph>
+            </StyledParagrah>
             <SafeNameParagraph
               color="primary"
               noMargin
@@ -90,27 +94,21 @@ function ReviewNewSafeStep(): ReactElement | null {
             </SafeNameParagraph>
           </Block>
           <Block margin="lg">
-            <Paragraph color="disabled" noMargin size="sm">
+            <StyledParagrah noMargin size="sm">
               Any transaction requires the confirmation of:
-            </Paragraph>
-            <Paragraph
-              color="primary"
-              noMargin
-              size="md"
-              weight="bolder"
-              data-testid={'create-safe-review-threshold-label'}
-            >
+            </StyledParagrah>
+            <StyledParagrah noMargin size="md" weight="bolder" data-testid={'create-safe-review-threshold-label'}>
               {`${threshold} out of ${numberOfOwners} owners`}
-            </Paragraph>
+            </StyledParagrah>
           </Block>
         </DetailsContainer>
       </Col>
       <Col layout="column" xs={8}>
         <TableContainer>
           <TitleContainer>
-            <Paragraph color="primary" noMargin size="lg">
+            <StyledParagrah noMargin size="lg">
               {`${numberOfOwners} Safe owners`}
-            </Paragraph>
+            </StyledParagrah>
           </TitleContainer>
           <Hairline />
           {owners.map(({ nameFieldName, addressFieldName }) => {
@@ -123,6 +121,7 @@ function ReviewNewSafeStep(): ReactElement | null {
                     <PrefixedEthHashInfo
                       hash={ownerAddress}
                       name={ownerName}
+                      textColor="primary"
                       showAvatar
                       showCopyBtn
                       explorerUrl={getExplorerInfo(ownerAddress)}
@@ -136,11 +135,11 @@ function ReviewNewSafeStep(): ReactElement | null {
         </TableContainer>
       </Col>
       <DescriptionContainer align="center">
-        <Paragraph color="primary" noMargin size="lg">
+        <StyledParagrah color="primary" noMargin size="lg">
           You&apos;re about to create a new Safe on <NetworkLabel /> and will have to confirm a transaction with your
           currently connected wallet. The creation will cost approximately {gasCostFormatted} {nativeCurrency.symbol}.
           The exact amount will be determined by your wallet.
-        </Paragraph>
+        </StyledParagrah>
       </DescriptionContainer>
     </Row>
   )
@@ -157,7 +156,9 @@ const DetailsContainer = styled(Block)`
 const SafeNameParagraph = styled(Paragraph)`
   text-overflow: ellipsis;
   overflow: hidden;
-`
+  color: #06fc99;
+  font-weight: 700;
+  `
 const TitleContainer = styled(Block)`
   padding: ${lg};
 `

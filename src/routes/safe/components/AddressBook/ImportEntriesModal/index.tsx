@@ -23,7 +23,8 @@ const ImportContainer = styled.div`
 `
 
 const InfoContainer = styled.div`
-  background-color: ${({ theme }) => theme.colors.background};
+  background-color: "#000";
+  color: #69fc99;
   flex-direction: column;
   justify-content: center;
   padding: 24px;
@@ -113,28 +114,27 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
             onRemoveFile={handleOnRemoveFile}
             style={{
               dropArea: {
-                borderColor: '#B2B5B2',
+                borderColor: '#05de87',
                 borderRadius: 8,
               },
               dropAreaActive: {
-                borderColor: '#008C73',
+                borderColor: '#05de87',
               },
               dropFile: {
                 width: 200,
                 height: 100,
                 background: '#fff',
-                boxShadow: 'rgb(40 54 61 / 18%) 1px 2px 10px 0px',
                 borderRadius: 8,
               },
               fileSizeInfo: {
-                color: '#001428',
+                color: '#06fc99',
                 lineHeight: 1,
                 position: 'absolute',
                 left: '10px',
                 top: '12px',
               },
               fileNameInfo: {
-                color: importError === '' ? '#008C73' : '#DB3A3D',
+                color: importError === '' ? '#05de87' : '#DB3A3D',
                 backgroundColor: '#fff',
                 fontSize: 14,
                 lineHeight: 1.4,
@@ -144,14 +144,14 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
                 overflow: 'hidden',
               },
               progressBar: {
-                backgroundColor: '#008C73',
+                backgroundColor: '#05de87',
               },
               removeButton: {
                 color: '#DB3A3D',
               },
             }}
           >
-            <Text size="xl">
+            <Text color="primary" size="xl">
               Drop your CSV file here <br />
               or click to upload.
             </Text>
@@ -164,7 +164,7 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
             </Text>
           )}
           {!csvLoaded && importError === '' && (
-            <Text color="text" as="p" size="xl">
+            <Text color="primary" as="p" size="xl">
               Only CSV files exported from the Safe are allowed. <br />
               <HelpInfo />
             </Text>

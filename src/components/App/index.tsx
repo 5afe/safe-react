@@ -45,8 +45,6 @@ const App: React.FC = ({ children }) => {
 
   return (
     <Frame>
-      <PsaBanner />
-
       <AppLayout
         sidebarItems={sidebarItems}
         safeAddress={safeAddress}
@@ -78,7 +76,7 @@ const App: React.FC = ({ children }) => {
           <ReceiveModal onClose={onReceiveHide} safeAddress={safeAddress} safeName={safeName} />
         </Modal>
       )}
-      <CookiesBanner />
+      {/* <CookiesBanner /> */}
     </Frame>
   )
 }

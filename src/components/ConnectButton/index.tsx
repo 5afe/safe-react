@@ -18,6 +18,7 @@ export const onConnectButtonClick = async (): Promise<void> => {
 
 const StyledContainer = styled.div`
   text-align: center;
+  background-color: #000;
 `
 
 const StyledTitle = styled.h5`

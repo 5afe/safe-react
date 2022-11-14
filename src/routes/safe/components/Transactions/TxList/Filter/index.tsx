@@ -34,6 +34,7 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { ChainId } from 'src/config/chain'
 import { Dispatch } from 'src/logic/safe/store/actions/types'
 import { isEqual } from 'lodash'
+import { red } from '@material-ui/core/colors'
 
 export const FILTER_TYPE_FIELD_NAME = 'type'
 export const DATE_FROM_FIELD_NAME = 'execution_date__gte'
@@ -224,6 +225,7 @@ const Filter = (): ReactElement => {
                       )}
                     />
                   </TxTypeFormControl>
+
                   <ParamsFormControl>
                     <StyledFormLabel>Parameters</StyledFormLabel>
                     <ParametersFormWrapper>
@@ -302,7 +304,7 @@ const Filter = (): ReactElement => {
                       <Button type="submit" variant="contained" color="primary">
                         Apply
                       </Button>
-                      <Button variant="contained" onClick={clearFilter} color="default" disabled={!search}>
+                      <Button variant="contained" onClick={clearFilter} color="primary" disabled={!search}>
                         Clear
                       </Button>
                     </ButtonWrapper>
@@ -323,13 +325,18 @@ const StyledFilterButton = styled(Button)<{ $isFiltered: boolean }>`
   &.MuiButton-root {
     align-items: center;
     background-color: ${({ $isFiltered }) => ($isFiltered ? primary200 : 'transparent')};
-    border: ${({ $isFiltered }) => `2px solid ${$isFiltered ? primary300 : fontColor}`};
-    color: #162d45;
+
     align-self: flex-end;
     margin-right: ${md};
     margin-top: -51px;
     margin-bottom: ${md};
+
+      span {
+        color: #06fc99;
+      }
   }
+
+ 
 `
 
 const StyledFilterIconImage = styled.img`
@@ -346,13 +353,13 @@ const Wrapper = styled.div`
 `
 
 const StyledPaper = styled(Paper)`
-  border: 2px solid ${primary300};
+  border: 2px solid #06fc99;
+  background-color: black; 
   position: absolute;
   width: calc(100% - 30px);
   margin-left: 10px;
   top: 0;
   left: 0;
-  box-shadow: 1px 2px 10px 0 rgba(40, 54, 61, 0.18);
 `
 
 const FilterWrapper = styled.div`
@@ -373,13 +380,15 @@ const StyledFormLabel = styled(FormLabel)`
   &.MuiFormLabel-root {
     margin-bottom: ${lg};
     font-size: 12px;
-    color: #b2bbc0;
+    color: #06fc99;
   }
 `
 
 const StyledRadioFormControlLabel = styled(FormControlLabel)`
+  color: #06fc99;
   .MuiFormControlLabel-root {
     font-size: ${largeFontSize};
+    color: #06fc99;
   }
 `
 

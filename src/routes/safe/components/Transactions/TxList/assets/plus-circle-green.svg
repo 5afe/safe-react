@@ -3,8 +3,8 @@
         <g>
             <g>
                 <path d="M0 0H16V16H0z" transform="translate(-589 -275) translate(589 275)"/>
-                <path fill="#008C73" fill-rule="nonzero" d="M8 15c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm0-2c-2.761 0-5-2.239-5-5s2.239-5 5-5 5 2.239 5 5-2.239 5-5 5z" transform="translate(-589 -275) translate(589 275)"/>
-                <path fill="#008C73" d="M9 7h2c.552 0 1 .448 1 1s-.448 1-1 1H9v2c0 .552-.448 1-1 1s-1-.448-1-1V9H5c-.552 0-1-.448-1-1s.448-1 1-1h2V5c0-.552.448-1 1-1s1 .448 1 1v2z" transform="translate(-589 -275) translate(589 275)"/>
+                <path fill="#05de87" fill-rule="nonzero" d="M8 15c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm0-2c-2.761 0-5-2.239-5-5s2.239-5 5-5 5 2.239 5 5-2.239 5-5 5z" transform="translate(-589 -275) translate(589 275)"/>
+                <path fill="#05de87" d="M9 7h2c.552 0 1 .448 1 1s-.448 1-1 1H9v2c0 .552-.448 1-1 1s-1-.448-1-1V9H5c-.552 0-1-.448-1-1s.448-1 1-1h2V5c0-.552.448-1 1-1s1 .448 1 1v2z" transform="translate(-589 -275) translate(589 275)"/>
             </g>
         </g>
     </g>

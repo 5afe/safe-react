@@ -6,7 +6,6 @@ import StepLabel from '@material-ui/core/StepLabel'
 import Paper from '@material-ui/core/Paper'
 import { makeStyles } from '@material-ui/core/'
 
-import Hairline from 'src/components/layout/Hairline'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
@@ -60,7 +59,13 @@ function StepperComponent(): ReactElement {
         const nextButtonLabel = customNextButtonLabel || 'Next'
 
         const backButton = (
-          <Button onClick={onClickPreviousStep} size="small" className={classes.backButton} type="button">
+          <Button
+            onClick={onClickPreviousStep}
+            size="small"
+            className={classes.nextButton}
+            type="button"
+            color="primary"
+          >
             {backButtonLabel}
           </Button>
         )
@@ -87,17 +92,20 @@ function StepperComponent(): ReactElement {
             <StepContent>
               <Paper className={classes.root} elevation={1}>
                 {currentComponent}
-                <Hairline />
                 <Row align="center" grow className={classes.controlStyle}>
                   <Col center="xs" xs={12}>
                     {trackingCategory ? (
                       <>
-                        <Track category={trackingCategory} action={backButtonLabel} label={currentStep}>
-                          {backButton}
-                        </Track>
-                        <Track category={trackingCategory} action={nextButtonLabel} label={currentStep}>
-                          {nextButton}
-                        </Track>
+                        <span style={{ padding: '5px' }}>
+                          <Track category={trackingCategory} action={backButtonLabel} label={currentStep}>
+                            {backButton}
+                          </Track>
+                        </span>
+                        <span style={{ padding: '5px' }}>
+                          <Track category={trackingCategory} action={nextButtonLabel} label={currentStep}>
+                            {nextButton}
+                          </Track>
+                        </span>
                       </>
                     ) : (
                       <>
@@ -124,27 +132,33 @@ export default function Stepper(props: StepperProps): ReactElement {
   )
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
+    border: '#06fc99 2px solid',
+    backgroundColor: 'black',
     margin: '10px 0 10px 10px',
     maxWidth: '800px',
-    boxShadow: '0 0 10px 0 rgba(33,48,77,0.10)',
   },
   controlStyle: {
-    backgroundColor: 'white',
+    backgroundColor: 'black',
     padding: lg,
     borderRadius: sm,
   },
   backButton: {
     marginRight: sm,
     fontWeight: boldFont,
-    color: theme.palette.secondary.main,
+    // color: theme.palette.secondary.main,
+    color: '#06fc99',
   },
   nextButton: {
     fontWeight: boldFont,
+    backgroundColor: '#06fc99',
+    boxShadow: 'none',
+    color: '#000',
   },
   stepLabel: {
     cursor: ({ isStepLabelClickable }: any) => (isStepLabelClickable ? 'pointer' : 'inherit'),
+    color: '#06fc99',
   },
 }))
 

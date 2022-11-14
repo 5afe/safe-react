@@ -19,7 +19,7 @@ const ModalStyled = styled(ModalMUI)`
   }
 
   .overlay {
-    background-color: rgba(232, 231, 230, 0.75) !important;
+    background-color: rgba(0, 0, 0, 0.65) !important;
   }
 
   .paper {
@@ -27,8 +27,10 @@ const ModalStyled = styled(ModalMUI)`
     top: 68px;
     width: 525px;
     border-radius: 8px;
-    background-color: #ffffff;
-    box-shadow: 1px 2px 10px 0 rgba(40, 54, 61, 0.18);
+    background-color: #000;
+
+    padding: 1rem;
+    border: 1px solid #69fc99;
     display: flex;
     flex-direction: column;
 
@@ -168,7 +170,7 @@ const FooterSection = styled.div<{ withoutBorder: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  border-top: ${({ withoutBorder }) => (withoutBorder ? '0' : '2px')} solid ${({ theme }) => theme.colors.separator};
+  /* border-top: ${({ withoutBorder }) => (withoutBorder ? '0' : '2px')} solid ${({ theme }) => theme.colors.separator}; */
   height: 84px;
   gap: 16px;
 `
@@ -226,7 +228,6 @@ const Buttons = ({ cancelButtonProps = {}, confirmButtonProps = {} }: ButtonsPro
       <Button
         size="md"
         color="primary"
-        variant={cancelButtonProps.variant || 'outlined'}
         type={cancelOnClick ? 'button' : 'submit'}
         disabled={cancelDisabled || [ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(cancelStatus)}
         data-testid={cancelTestId}

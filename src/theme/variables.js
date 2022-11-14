@@ -1,33 +1,33 @@
-const border = '#e8e7e6'
-const connectedColor = '#008C73'
-const disabled = '#5D6D74'
-const errorColor = '#f02525'
-const fancyColor = '#f02525'
-const fontColor = '#001428'
-const headerHeight = '52px'
+const border = '#06fc99'
+const connectedColor = '#05de87'
+const disabled = '#05de87'
+const errorColor = '#05de87'
+const fancyColor = '#05de87'
+const fontColor = '#06fc99'
+const headerHeight = '5rem'
 const lg = '24px'
 const marginButtonImg = '12px'
 const md = '16px'
-const primary = '#001428'
-const primaryLite = '#EFFAF8'
-const primaryActive = '#008C73'
-const secondary = '#008C73'
-const secondaryTextOrSvg = '#B2B5B2'
-const secondaryBackground = '#f0efee'
+const primary = '#06fc99'
+const primaryLite = '#06fc99'
+const primaryActive = '#05de87'
+const secondary = '#05de87'
+const secondaryTextOrSvg = '#05de87'
+const secondaryBackground = '#06fc99'
 const sm = '8px'
-const warningColor = '#ffc05f'
-const alertWarningColor = '#FBE5C5'
-const infoColor = '#ECF5F4'
+const warningColor = '#05de87'
+const alertWarningColor = '#05de87'
+const infoColor = '#06fc99'
 const xl = '32px'
 const xs = '4px'
 const xxl = '40px'
 
 module.exports = {
-  background: '#F6F7F8',
-  black300: '#B2BBC0',
-  black400: '#566976',
-  black500: '#162D45',
-  black600: '#111B22',
+  background: '#000',
+  black300: '#05de87',
+  black400: '#05de87',
+  black500: '#05de87',
+  black600: '#000',
   boldFont: 700,
   bolderFont: 500,
   border,
@@ -44,25 +44,25 @@ module.exports = {
   fontSizeHeadingMd: 20,
   fontSizeHeadingSm: 16,
   fontSizeHeadingXs: 13,
-  grey400: '#EEEFF0',
-  gray500: '#E2E3E3',
-  green200: '#EFFAF1',
-  green500: '#008C30',
+  grey400: '#05de87',
+  gray500: '#05de87',
+  green200: '#05de87',
+  green500: '#05de87',
   headerHeight,
   largeFontSize: '16px',
   lg,
   lightFont: 300,
-  mainFontFamily: 'Averta, sans-serif',
+  mainFontFamily: 'IBM Plex Mono',
   marginButtonImg,
   md,
   mediumFontSize: '14px',
-  orange500: '#e8663d',
-  orange200: '#FFF4E3',
+  orange500: '#05de87',
+  orange200: '#05de87',
   primary,
   primaryLite,
   primaryActive,
   primary200: primaryLite,
-  primary300: '#92C9BE',
+  primary300: '#05de87',
   primary400: primaryActive,
   infoColor,
   regularFont: 400,
@@ -75,7 +75,7 @@ module.exports = {
   screenXs: 480,
   screenXsMax: 767,
   secondary,
-  secondaryFontFamily: 'Averta, monospace',
+  secondaryFontFamily: 'monospace',
   secondaryText: secondaryTextOrSvg,
   secondaryBackground,
   sm,

@@ -27,6 +27,9 @@ const StyledGrid = styled(Grid)`
 const StyledGridItem = styled(Grid)`
   min-width: 300px;
 `
+const StyledText = styled(Text)`
+  color: #06fc99;
+`
 
 export const FeaturedApps = (): ReactElement | null => {
   const { allApps, isLoading } = useAppList()
@@ -57,7 +60,7 @@ export const FeaturedApps = (): ReactElement | null => {
                       </Grid>
                       <Grid item xs={12} md={9}>
                         <Box mb={1.01}>
-                          <Text size="xl">{app.description}</Text>
+                          <StyledText size="xl">{app.description}</StyledText>
                         </Box>
                         <Text color="primary" size="lg" strong>
                           Use {app.name}

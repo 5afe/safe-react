@@ -25,14 +25,11 @@ const StyledIcon = styled(Icon)<{ checked: boolean }>`
 `
 
 const StyledButton = styled(Button)`
+  border: #69fc99 solid 2px;
   &.MuiButton-root.MuiButton-text {
     padding: 8px 16px;
     min-width: auto;
     height: 100%;
-
-    &:hover {
-      background-color: #cbf1eb;
-    }
   }
 `
 
@@ -43,15 +40,6 @@ const StyledText = styled(Text)`
   padding: 0 16px;
 `
 
-const StyledPrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
-  & > div > p:first-of-type {
-    width: 210px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-`
-
 const AddressContainer = styled.div`
   display: flex;
   align-items: center;
@@ -60,6 +48,13 @@ const AddressContainer = styled.div`
   & img {
     display: block;
   }
+`
+
+const AddressInfoContainer = styled.div`
+  background-color: black;
+  padding: 0rem 1rem;
+  margin-top: 0.5rem;
+  margin-right: 1rem;
 `
 
 type Props = {
@@ -121,6 +116,10 @@ const SafeListItem = ({
     setChainId(networkId)
   }
 
+  const parseAddress = (address: string): string => {
+    return `${address.substring(0, 5)}....${address.substring(address.length - 3)}`
+  }
+
   return (
     <ListItem button onClick={handleOpenSafe} ref={safeRef}>
       <StyledIcon type="check" size="md" color="primary" checked={isCurrentSafe} />
@@ -129,7 +128,9 @@ const SafeListItem = ({
           {threshold && owners && <Threshold threshold={threshold} owners={owners.length} size={11} />}
           <Identicon address={address} size="md" />
         </Box>
-        <StyledPrefixedEthHashInfo hash={address} name={safeName} shortName={shortName} shortenHash={4} />
+        <AddressInfoContainer>
+          <p>{`${shortName}: ${parseAddress(address)}`}</p>
+        </AddressInfoContainer>
       </AddressContainer>
       <ListItemSecondaryAction>
         {ethBalance ? (

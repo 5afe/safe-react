@@ -67,6 +67,7 @@ const ContentWrapper = styled.div`
 const SectionHeading = styled(Text)`
   width: 100%;
   margin: ${({ theme }) => `${theme.margin.xl} 0 ${theme.margin.md} 0`};
+  color: #06fc99;
 `
 
 const CenterIconText = styled(IconText)`
@@ -82,11 +83,17 @@ const AddCustomSafeAppCard = styled(Card)`
   padding: 0;
   flex-direction: column;
   box-shadow: none;
+  background-color: #000;
+  border: 2px solid #06fc99;
 `
 
 const AddCustomAppLogo = styled.img`
   height: 90px;
   margin-bottom: 4px;
+`
+
+const StyledText = styled(Text)`
+  color: #06fc99;
 `
 
 type AppListProps = {
@@ -127,9 +134,9 @@ const AppsList = ({ onRemoveApp }: AppListProps): React.ReactElement => {
         {showPinnedApps && (
           <Collapse
             title={
-              <Text color="placeHolder" strong size="md">
+              <StyledText color="primary" strong size="md">
                 BOOKMARKED APPS
-              </Text>
+              </StyledText>
             }
             defaultExpanded
           >
@@ -153,9 +160,9 @@ const AppsList = ({ onRemoveApp }: AppListProps): React.ReactElement => {
         {showCustomApps && (
           <Collapse
             title={
-              <Text color="placeHolder" strong size="md">
+              <StyledText color="primary" strong size="md">
                 CUSTOM APPS
-              </Text>
+              </StyledText>
             }
             defaultExpanded
           >
@@ -176,7 +183,7 @@ const AppsList = ({ onRemoveApp }: AppListProps): React.ReactElement => {
           </Collapse>
         )}
 
-        <SectionHeading color="placeHolder" strong size="md">
+        <SectionHeading color="primary" strong size="md">
           {appSearch ? 'SEARCH RESULTS' : 'ALL APPS'}
         </SectionHeading>
         {noAppsFound && <NoAppsFound query={appSearch} onWalletConnectSearch={() => setAppSearch('WalletConnect')} />}
@@ -185,7 +192,7 @@ const AppsList = ({ onRemoveApp }: AppListProps): React.ReactElement => {
             {!appSearch && (
               <AddCustomSafeAppCard>
                 <AddCustomAppLogo src={AddAppIcon} alt="Add Custom Safe App logo" />
-                <Button size="md" color="primary" variant="contained" onClick={() => openAddAppModal()}>
+                <Button style={{ color: '#000' }} size="md" variant="contained" onClick={() => openAddAppModal()}>
                   Add custom app
                 </Button>
               </AddCustomSafeAppCard>

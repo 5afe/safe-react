@@ -62,7 +62,7 @@ const StyledIcon = styled(Icon)`
     transform: rotateZ(-90deg);
 
     .icon-color {
-      fill: ${black400};
+      fill: #06fc99;
     }
 
     path:nth-child(2) {
@@ -80,10 +80,12 @@ const IconContainer = styled.div`
   margin: 14px 0;
 `
 const StyledButton = styled(Button)`
+  margin: 0;
   &&.MuiButton-root {
     width: 100%;
     height: 38px;
     padding: 0 12px;
+    background-color: #60fc99;
   }
 `
 
@@ -154,26 +156,30 @@ const StyledTextLabel = styled(Text)`
 const StyledTextSafeName = styled(Text)`
   width: 90%;
   overflow: hidden;
+  font-family: monospace;
   text-overflow: ellipsis;
+  color: #06fc99;
 `
 
 const StyledPrefixedEthHashInfo = styled(PrefixedEthHashInfo)`
-  p {
-    color: ${({ theme }) => theme.colors.placeHolder};
+  p, span {
+    color: #06fc99;
     font-size: 14px;
     line-height: 20px;
   }
 `
 
 const StyledText = styled(Title)`
-  margin: 0 0 14px 0;
+  font-family: monospace;
+  color: #000;
+  font-size: 1rem;
+  margin: 0;
 `
 
 const ToggleSafeListButton = styled.button`
   cursor: pointer;
   border: 0;
-  background-color: ${secondaryBackground};
-  border-radius: 50%;
+  background-color: black;
   width: 42px;
   height: 42px;
   position: absolute;
@@ -184,10 +190,6 @@ const ToggleSafeListButton = styled.button`
 
   & span {
     margin-left: -15px;
-  }
-
-  &:hover {
-    background-color: ${primaryLite};
   }
 `
 
@@ -200,6 +202,12 @@ type Props = {
   onReceiveClick: () => void
   onNewTransactionClick: () => void
 }
+
+const SidebarText = styled.h2`
+  color: #06fc99;
+  font-size: 1rem;
+`
+
 
 const SafeHeader = ({
   address,
@@ -226,7 +234,7 @@ const SafeHeader = ({
       <Container>
         <IdenticonContainer>
           <FlexSpacer />
-          <FixedIcon type="notConnected" />
+          <SidebarText>Not connected</SidebarText>
           <ToggleSafeListButton onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
             <StyledIcon size="md" type="circleDropdown" />
           </ToggleSafeListButton>
@@ -234,15 +242,9 @@ const SafeHeader = ({
       </Container>
     )
   }
-  const chainInfo = getChainInfo()
 
   return (
     <>
-      {/* Network */}
-      <StyledTextLabel size="sm" chainInfo={chainInfo}>
-        {chainInfo.chainName}
-      </StyledTextLabel>
-
       <Container>
         {/* Identicon */}
         <IdenticonContainer>
@@ -259,7 +261,7 @@ const SafeHeader = ({
         <StyledTextSafeName size="xl" center>
           {safeName}
         </StyledTextSafeName>
-        <StyledPrefixedEthHashInfo hash={address} shortenHash={4} textSize="sm" />
+        <StyledPrefixedEthHashInfo textColor='primary' hash={address} shortenHash={4} textSize="sm" />
         <IconContainer>
           <Track {...OVERVIEW_EVENTS.SHOW_QR}>
             <StyledQRCodeButton onClick={onReceiveClick}>
@@ -273,11 +275,6 @@ const SafeHeader = ({
             <StyledExplorerButton explorerUrl={getExplorerInfo(address)} />
           </Track>
         </IconContainer>
-
-        {/* <Paragraph color="black400" noMargin size="md">
-          Total Balance
-        </Paragraph>
-        <StyledText size="xs">{balance}</StyledText> */}
         <StyledButton
           size="md"
           disabled={!granted}
@@ -285,9 +282,9 @@ const SafeHeader = ({
           variant="contained"
           onClick={handleNewTransactionClick}
         >
-          <Text size="xl" color="white">
+          <StyledText size="sm">
             {granted ? 'New Transaction' : 'Read Only'}
-          </Text>
+          </StyledText>
         </StyledButton>
       </Container>
     </>

@@ -16,22 +16,24 @@ const useStyles = makeStyles({
   },
   root: {
     width: '340px',
+    border: '#06fc99 solid 2px',
+    borderRadius: '5px',
+    background: '#000000',
   },
   success: {
-    background: '#CBF1EB',
+    background: '#000000',
   },
   error: {
-    background: '#ffe6ea',
+    background: '#000000',
   },
   warning: {
-    background: '#fff3e2',
+    background: '#000000',
   },
   info: {
-    background: '#EBF7FF',
+    background: '#000000',
   },
   snackbar: {
     borderRadius: `${sm}`,
-    boxShadow: '0 0 10px 0 rgba(212, 212, 211, 0.59)',
     flexWrap: 'nowrap',
     padding: '20px',
     alignItems: 'space-between',

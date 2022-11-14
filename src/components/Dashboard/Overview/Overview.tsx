@@ -7,7 +7,6 @@ import { Box, Grid } from '@material-ui/core'
 import { Skeleton } from '@material-ui/lab'
 
 import { currentSafeLoaded, currentSafeWithNames } from 'src/logic/safe/store/selectors'
-import PrefixedEthHashInfo from 'src/components/PrefixedEthHashInfo'
 import { md, lg } from 'src/theme/variables'
 import NetworkLabel from 'src/components/NetworkLabel/NetworkLabel'
 import { nftLoadedSelector, nftTokensSelector } from 'src/logic/collectibles/store/selectors'
@@ -28,6 +27,15 @@ const StyledText = styled(Text)`
   margin-top: 8px;
   font-size: 24px;
   font-weight: bold;
+  color: #06fc99;
+  font-family: monospace;
+`
+const StyledP = styled(Text)`
+  margin-top: 8px;
+  font-size: 16px;
+  color: #06fc99;
+  font-family: monospace;
+  
 `
 
 const StyledLink = styled(Link)`
@@ -112,10 +120,15 @@ const Overview = (): ReactElement => {
                   <Identicon address={address} size="xl" />
                 </IdenticonContainer>
                 <Box mb={2} overflow="hidden">
-                  <Text size="xl" strong>
+                  <StyledText size="xl" strong>
                     {name}
-                  </Text>
-                  <PrefixedEthHashInfo hash={address} textSize="xl" textColor="placeHolder" />
+                  </StyledText>
+                  <div style={{marginTop: '1rem'}}>
+          
+                  <StyledP size="lg">
+                    {address}
+                  </StyledP>
+                  </div>
                 </Box>
                 <NetworkLabelContainer>
                   <NetworkLabel />
@@ -126,19 +139,19 @@ const Overview = (): ReactElement => {
             <Grid container>
               <Grid item xs={3}>
                 <StyledLink to={assetsLink}>
-                  <Text color="inputDefault" size="lg">
+                  <StyledP size="lg">
                     Tokens
-                  </Text>
-                  <StyledText size="xl">{tokenCount}</StyledText>
+                  </StyledP>
+                  <StyledP size="xl">{tokenCount}</StyledP>
                 </StyledLink>
               </Grid>
 
               <Grid item xs={3}>
                 <StyledLink to={nftsLink}>
-                  <Text color="inputDefault" size="lg">
+                  <StyledP size="lg">
                     NFTs
-                  </Text>
-                  {nftTokens && <StyledText size="xl">{nftLoaded ? nftTokens.length : ValueSkeleton}</StyledText>}
+                  </StyledP>
+                  {nftTokens && <StyledP size="xl">{nftLoaded ? nftTokens.length : ValueSkeleton}</StyledP>}
                 </StyledLink>
               </Grid>
 

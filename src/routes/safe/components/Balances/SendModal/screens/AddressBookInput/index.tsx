@@ -21,6 +21,7 @@ import { currentChainId } from 'src/logic/config/store/selectors'
 import { FEATURES } from '@gnosis.pm/safe-react-gateway-sdk'
 import { parsePrefixedAddress } from 'src/utils/prefixedAddress'
 import { hasFeature } from 'src/logic/safe/utils/safeVersion'
+import { Paper } from '@material-ui/core'
 
 export interface AddressBookProps {
   fieldMutator: (address: string) => void
@@ -155,6 +156,7 @@ const BaseAddressBookInput = ({
 
   return (
     <Autocomplete<AddressBookEntry, false, false, true>
+      PaperComponent={({ children }) => <Paper style={{ background: 'black' }}>{children}</Paper>}
       closeIcon={null}
       openOnFocus={false}
       filterOptions={filterAddressEntries}

@@ -31,7 +31,8 @@ export const WidgetBody = styled.div`
 `
 
 export const Card = styled.div`
-  background: ${({ theme }) => theme.colors.white};
+  background-color: #000;
+  border: #06fc99 solid 2px;
   padding: ${lg};
   border-radius: 8px;
   flex-grow: 1;
@@ -46,7 +47,7 @@ export const Card = styled.div`
 
 const StyledLink = styled(Link)`
   text-decoration: none;
-  color: ${({ theme }) => theme.colors.primary};
+  color: #05de87;
   font-weight: bold;
   display: flex;
   align-items: center;

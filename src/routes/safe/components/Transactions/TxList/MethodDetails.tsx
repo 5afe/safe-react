@@ -19,7 +19,7 @@ export const MethodDetails = ({ data }: { data: DataDecoded }): React.ReactEleme
   const methodName = camelCaseToSpaces(data.method)
   return (
     <TxInfo>
-      <StyledDetailsTitle size="sm" strong color="placeHolder" uppercase>
+      <StyledDetailsTitle size="sm" strong color="primary" uppercase>
         {methodName}
       </StyledDetailsTitle>
 
