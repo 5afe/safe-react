@@ -74,6 +74,7 @@ function StepperComponent(): ReactElement {
           <Button
             onClick={onClickNextStep}
             color="primary"
+            variant="contained"
             type={nextButtonType || 'button'}
             disabled={disableNextButton || step.props.disableNextButton}
             size="small"

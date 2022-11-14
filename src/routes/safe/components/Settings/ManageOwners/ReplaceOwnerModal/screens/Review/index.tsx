@@ -140,7 +140,7 @@ export const ReviewReplaceOwnerModal = ({
               <Overline noMargin>REMOVING OWNER &darr;</Overline>
             </Row>
             <Hairline />
-            <Row className={classes.selectedOwnerRemoved} data-testid="remove-owner-review">
+            <Row className={classes.selectedOwnerAdded} data-testid="remove-owner-review">
               <Col align="center" xs={12}>
                 <PrefixedEthHashInfo
                   hash={owner.address}
