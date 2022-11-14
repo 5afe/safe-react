@@ -65,6 +65,7 @@ function StepperComponent(): ReactElement {
             className={classes.nextButton}
             type="button"
             color="primary"
+            variant="contained"
           >
             {backButtonLabel}
           </Button>
@@ -79,7 +80,6 @@ function StepperComponent(): ReactElement {
             disabled={disableNextButton || step.props.disableNextButton}
             size="small"
             className={classes.nextButton}
-            variant="contained"
           >
             {nextButtonLabel}
           </Button>
