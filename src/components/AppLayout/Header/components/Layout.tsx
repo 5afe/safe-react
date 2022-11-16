@@ -109,8 +109,8 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
       <Col className={classes.logo} middle="xs" start="xs">
         <Track {...OVERVIEW_EVENTS.HOME}>
           <Link to={ROOT_ROUTE}>
-            <span style={{ paddingLeft: '35%' }}>
-              <img alt="Safe" src={`${GnosisLogo}`} id="safe-logo" height={36} />
+            <span style={{ paddingLeft: '25%', paddingTop: '20%' }}>
+              <img alt="Safe" src={`${GnosisLogo}`} id="safe-logo" height={46} />
             </span>
           </Link>
         </Track>
