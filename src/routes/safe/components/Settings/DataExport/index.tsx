@@ -1,4 +1,5 @@
 import { ReactElement } from 'react'
+import { Link } from '@material-ui/core'
 import Button from 'src/components/layout/Button'
 import Heading from 'src/components/layout/Heading'
 import Paragraph from 'src/components/layout/Paragraph'
@@ -24,9 +25,13 @@ const DataExport = (): ReactElement => {
     <>
       <Heading tag="h2">Export your data</Heading>
       <Paragraph>
-        Download your local data with your added Safes and address book. You can import it on app.safe.global.
+        Download your local data with your added Safes and address book. You can import it on{' '}
+        <Link target="_blank" href="https://app.safe.global/import" color="secondary">
+          app.safe.global/import
+        </Link>
+        .
       </Paragraph>
-      <Button onClick={handleExport} color="primary" size="small" variant="outlined">
+      <Button onClick={handleExport} color="primary" size="small" variant="contained">
         Download
       </Button>
     </>
