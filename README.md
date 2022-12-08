@@ -12,7 +12,7 @@
 
 Safe is the most trusted platform to store digital assets on Ethereum. More info at [safe.global](https://safe.global/)
 
-For technical information please refer to the [Safe Developer Portal](https://docs.safe.global/safe/).
+For technical information please refer to the [Safe Developer Portal](https://docs.safe.global/).
 
 For support requests, please open up a [bug issue](https://github.com/safe-global/safe-react/issues/new?template=bug-report.md) or reach out via [Discord](https://chat.safe.global).
 
