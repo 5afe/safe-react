@@ -1,19 +1,20 @@
 # ‼️ This repository is in maintenance mode and will be eventually archived.
+
 # Please use [safe-global/web-core](https://github.com/safe-global/web-core)
 
 # Legacy Safe web UI
 
-![license](https://img.shields.io/github/license/gnosis/safe-react)
-![build](https://img.shields.io/github/workflow/status/gnosis/safe-react/Deploy%20to%20Mainnet%20network/main)
-![tests](https://img.shields.io/github/workflow/status/gnosis/safe-react/Unit%20tests%20&%20coverage/main?label=tests)
-![coverage](https://coveralls.io/repos/github/gnosis/safe-react/badge.svg?branch=main)
-![release](https://img.shields.io/github/v/release/gnosis/safe-react)
+![license](https://img.shields.io/github/license/safe-global/safe-react)
+![build](https://img.shields.io/github/workflow/status/safe-global/safe-react/Deploy%20to%20Mainnet%20network/main)
+![tests](https://img.shields.io/github/workflow/status/safe-global/safe-react/Unit%20tests%20&%20coverage/main?label=tests)
+![coverage](https://coveralls.io/repos/github/safe-global/safe-react/badge.svg?branch=main)
+![release](https://img.shields.io/github/v/release/safe-global/safe-react)
 
-Safe is the most trusted platform to store digital assets on Ethereum. More info at [gnosis-safe.io](https://gnosis-safe.io/)
+Safe is the most trusted platform to store digital assets on Ethereum. More info at [safe.global](https://safe.global/)
 
-For technical information please refer to the [Gnosis Developer Portal](https://docs.gnosis.io/safe/).
+For technical information please refer to the [Safe Developer Portal](https://docs.safe.global/).
 
-For support requests, please open up a [bug issue](https://github.com/gnosis/safe-react/issues/new?template=bug-report.md) or reach out via [Discord](https://chat.gnosis-safe.io).
+For support requests, please open up a [bug issue](https://github.com/safe-global/safe-react/issues/new?template=bug-report.md) or reach out via [Discord](https://chat.safe.global).
 
 ## Transactions
 
@@ -21,16 +22,13 @@ Please see the [transaction](docs/transactions.md) notes for more information ab
 
 ## Related repos
 
-- [safe-react-e2e-tests](https://github.com/gnosis/safe-react-e2e-tests)
-- [safe-react-gateway-sdk](https://github.com/gnosis/safe-react-gateway-sdk)
-- [safe-react-components](https://github.com/gnosis/safe-react-components)
+- [safe-react-e2e-tests](https://github.com/safe-global/safe-react-e2e-tests)
+- [safe-react-gateway-sdk](https://github.com/safe-global/safe-react-gateway-sdk)
+- [safe-react-components](https://github.com/safe-global/safe-react-components)
 
 ## Deployed environments
 
 - Production: https://gnosis-safe.io/app/
-- Staging: https://safe-team.staging.gnosisdev.com/app/
-- Dev: https://safe-team.dev.gnosisdev.com/app/
-- PRs: `https://pr<PR_NUMBER>--safereact.review-safe.gnosisdev.com/app/`
 
 ## Getting Started
 
@@ -120,8 +118,6 @@ yarn lint:fix
 The code is deployed to a testing website automatically on each push via a GitHub Action.
 The GitHub Action will create a new subdomain and post the link as a comment in the PR.
 
-When pushing to the `main` branch, the code will be automatically deployed to [staging](https://safe-team.staging.gnosisdev.com/).
-
 ### Production
 
 Deployment to production is done manually. Please see the [release procedure](docs/release-procedure.md) notes for details.
@@ -140,7 +136,7 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 
 ## Versioning
 
-We use [SemVer](https://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/gnosis/gnosis-team-safe/tags).
+We use [SemVer](https://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/safe-global/safe-react/tags).
 
 ## License
 
