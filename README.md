@@ -1,13 +1,12 @@
-# ‼️ This repository is in maintenance mode and will be eventually archived.
+# <div align="center">‼️ This repository is deprecated ‼️</div>
 
-# Please use [safe-global/web-core](https://github.com/safe-global/web-core)
+<div align="center"> Please use <a href="https://github.com/safe-global/web-core">safe-global/web-core</a> instead </div>
+
+---
 
 # Legacy Safe web UI
 
 ![license](https://img.shields.io/github/license/safe-global/safe-react)
-![build](https://img.shields.io/github/workflow/status/safe-global/safe-react/Deploy%20to%20Mainnet%20network/main)
-![tests](https://img.shields.io/github/workflow/status/safe-global/safe-react/Unit%20tests%20&%20coverage/main?label=tests)
-![coverage](https://coveralls.io/repos/github/safe-global/safe-react/badge.svg?branch=main)
 ![release](https://img.shields.io/github/v/release/safe-global/safe-react)
 
 Safe is the most trusted platform to store digital assets on Ethereum. More info at [safe.global](https://safe.global/)
