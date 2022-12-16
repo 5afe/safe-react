@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = require('path')
-const { notarize } = require('electron-notarize')
+const { notarize } = require('@electron/notarize')
 const envConfig = require('dotenv').config({ path: path.join(__dirname, '../.env') })
 
 Object.entries(envConfig.parsed || {}).forEach(([key, value]) => {
@@ -13,7 +13,7 @@ module.exports = async function (params) {
     return
   }
   // Same appId in electron-builder.
-  let appId = 'io.gnosis.safe.macos'
+  let appId = 'global.safe.app.macos'
   let appPath = path.join(params.appOutDir, `${params.packager.appInfo.productFilename}.app`)
   if (!fs.existsSync(appPath)) {
     throw new Error(`Cannot find application at: ${appPath}`)
@@ -27,6 +27,7 @@ module.exports = async function (params) {
       appPath: appPath,
       appleId: process.env.APPLEID,
       appleIdPassword: process.env.APPLEIDPASS,
+      ascProvider: process.env.APPLEIDTEAM,
     })
   } catch (error) {
     console.error(error)
