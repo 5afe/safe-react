@@ -13,7 +13,7 @@ const WARNING_BANNER = 'WARNING_BANNER'
 const WebCoreBanner = (): ReactElement | null => {
   return (
     <>
-      ⚠️ This URL will be deprecated on February the 1st. ⚠️
+      ⚠️ This is the legacy Safe app which will be deprecated on <b>February the 1st</b>. ⚠️
       <br />
       Please migrate to our new official URL <a href={NEW_URL}>app.safe.global</a>, with a fully rebranded and
       refurbished application.
