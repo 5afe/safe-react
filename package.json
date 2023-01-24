@@ -136,7 +136,7 @@
     "reselect": "^4.0.0",
     "semver": "^7.3.2",
     "styled-components": "^5.3.0",
-    "ua-parser-js": "^1.0.2",
+    "ua-parser-js": "^1.0.33",
     "web3": "1.7.0",
     "web3-core": "^1.7.0",
     "web3-eth-contract": "^1.7.0",
