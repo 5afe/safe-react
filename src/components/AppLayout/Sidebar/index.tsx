@@ -105,7 +105,7 @@ const Sidebar = ({
   }
 
   return (
-    <>
+    <div id="sidebar">
       <SafeHeader
         address={safeAddress}
         safeName={safeName}
@@ -146,7 +146,7 @@ const Sidebar = ({
           </Track>
         </HelpList>
       </HelpContainer>
-    </>
+    </div>
   )
 }
 
