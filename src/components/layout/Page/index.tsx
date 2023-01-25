@@ -5,7 +5,9 @@ import styles from './index.module.scss'
 const cx = classNames.bind(styles)
 
 const Page = ({ align, children, overflow }: any) => (
-  <main className={cx(styles.page, align, { overflow })}>{children}</main>
+  <main className={cx(styles.page, align, { overflow })} style={{ position: 'relative' }}>
+    {children}
+  </main>
 )
 
 export default Page

@@ -2,7 +2,6 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import List from '@material-ui/core/List'
 import Popper from '@material-ui/core/Popper'
 import { withStyles } from '@material-ui/core/styles'
-import { Link } from 'react-router-dom'
 
 import Provider from './Provider'
 import NetworkSelector from './NetworkSelector'
@@ -11,13 +10,10 @@ import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
 import { headerHeight, md, screenSm, sm } from 'src/theme/variables'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
-import { ROOT_ROUTE } from 'src/routes/routes'
 import WalletSwitch from 'src/components/WalletSwitch'
 import Divider from 'src/components/layout/Divider'
 import { shouldSwitchWalletChain } from 'src/logic/wallets/store/selectors'
 import { useSelector } from 'react-redux'
-import { OVERVIEW_EVENTS } from 'src/utils/events/overview'
-import Track from 'src/components/Track'
 import Notifications from 'src/components/AppLayout/Header/components/Notifications'
 import AnimatedLogo from 'src/components/AppLayout/Header/components/AnimatedLogo'
 import SafeTokenWidget, { getSafeTokenAddress } from './SafeTokenWidget'
@@ -107,13 +103,11 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
   const chainHasSafeToken = Boolean(getSafeTokenAddress(chainId))
 
   return (
-    <Row className={classes.summary}>
+    <Row className={classes.summary} id="header">
       <Col className={classes.logo} middle="xs" start="xs">
-        <Track {...OVERVIEW_EVENTS.HOME}>
-          <Link to={ROOT_ROUTE}>
-            <AnimatedLogo />
-          </Link>
-        </Track>
+        <a href="https://app.safe.global">
+          <AnimatedLogo />
+        </a>
       </Col>
 
       <Spacer />
