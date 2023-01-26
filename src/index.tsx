@@ -6,6 +6,9 @@ import Root from 'src/components/Root'
 import { SENTRY_DSN } from './utils/constants'
 import { disableMMAutoRefreshWarning } from './utils/mm_warnings'
 
+import 'react-grid-layout/css/styles.css'
+import 'react-resizable/css/styles.css'
+
 disableMMAutoRefreshWarning()
 
 BigNumber.set({ EXPONENTIAL_AT: [-7, 255] })

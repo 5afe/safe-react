@@ -7,7 +7,6 @@ import { xs, lg, black500, extraLargeFontSize, largeFontSize } from 'src/theme/v
 export const WidgetContainer = styled.section`
   display: flex;
   flex-direction: column;
-  height: 100%;
 `
 
 export const DashboardTitle = styled.h1`
