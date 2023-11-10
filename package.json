@@ -93,7 +93,7 @@
     "@truffle/hdwallet-provider": "^2.0.8",
     "@unstoppabledomains/resolution": "^7.1.4",
     "abi-decoder": "^2.4.0",
-    "axios": "0.21.4",
+    "axios": "1.6.0",
     "bignumber.js": "9.0.1",
     "bnc-onboard": "^1.38.2",
     "classnames": "^2.2.6",
